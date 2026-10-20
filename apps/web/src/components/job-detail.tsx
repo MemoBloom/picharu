@@ -4,12 +4,12 @@ import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ApiError, UserFacingError, api } from '../lib/api';
 import { findToolContent } from '../lib/tool-content';
+import { jobStageMessage } from '../lib/job-state';
 import type { ImageAsset, Job } from '../lib/types';
 import { AuthGate, ErrorNotice, Loading, Notice, PageHeading } from './ui';
 
 const terminal = new Set(['completed', 'failed', 'cancelled']);
 const statusText: Record<string, string> = { queued: '順番を待っています', processing: '写真を編集しています', completed: '仕上がりを確認しましょう', failed: '編集を完了できませんでした', cancelled: '編集をキャンセルしました' };
-const stageText: Record<string, string> = { queued: '受付が完了しました。処理が始まるまでお待ちください。', validating: '写真と編集内容を確認しています。', submitting: '編集を依頼しています。', polling: '仕上がりを待っています。', generating: '仕上がりを待っています。', persisting: '仕上がりを保存しています。', settling: '編集の完了を確認しています。' };
 
 export function JobDetail({ jobId }: { jobId: string }) {
   return <AuthGate><JobContent jobId={jobId} /></AuthGate>;
@@ -171,7 +171,7 @@ function JobContent({ jobId }: { jobId: string }) {
           <p className="small muted">プレビューは確認用の縮小画像です。保存するときは「ダウンロード」を選んでください。</p>
         </> : <div className="job-preview panel stack">
           {original?.preview_url && <img src={original.preview_url} alt="編集に使用した写真" className="job-original-preview" />}
-          <div role="status" aria-live="polite"><h2>{statusText[job.status]}</h2><p>{job.status === 'queued' || job.status === 'processing' ? stageText[job.stage] || '編集の状況を確認しています。画面を閉じても、履歴から再び確認できます。' : job.status === 'cancelled' ? 'この依頼の処理をキャンセルしました。クレジットの残高はアカウントで確認できます。' : '残高と編集内容を確認してから、もう一度お試しください。'}</p></div>
+          <div role="status" aria-live="polite"><h2>{statusText[job.status]}</h2><p>{job.status === 'queued' || job.status === 'processing' ? jobStageMessage(job.stage) : job.status === 'cancelled' ? 'この依頼の処理をキャンセルしました。クレジットの残高はアカウントで確認できます。' : '残高と編集内容を確認してから、もう一度お試しください。'}</p></div>
           {(job.status === 'queued' || job.status === 'processing') && <div className="indeterminate" aria-hidden="true" />}
         </div>}
         {!!imageError && <ErrorNotice error={imageError} onRetry={refreshAssets} />}
