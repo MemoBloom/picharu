@@ -176,7 +176,7 @@ describe('generated OpenAPI document', () => {
   it('is reproducible and covers every implemented public route', () => {
     const generated = createOpenApiDocument();
     const saved = JSON.parse(readFileSync('docs/interfaces/openapi.json', 'utf8'));
-    expect(saved).toEqual(generated);
+    expect(saved).toEqual(JSON.parse(JSON.stringify(generated)));
     expect(generated.openapi).toBe('3.0.3');
     const expected: Record<string, string[]> = {
       '/api/health': ['get'], '/api/tools': ['get'], '/api/me': ['get'],
@@ -186,6 +186,8 @@ describe('generated OpenAPI document', () => {
       '/api/jobs/{id}/cancel': ['post'], '/api/recommend': ['post'], '/api/credits': ['get'],
       '/api/credit-packages': ['get'], '/api/checkout': ['post'], '/api/orders': ['get'],
       '/api/stripe/webhook': ['post'],
+      '/api/seo/consent':['post','delete'], '/api/seo/events':['post'], '/api/seo/ga4-session':['post'],
+      '/api/seo/admin/revision':['get'], '/api/seo/admin/overview':['get'], '/api/seo/admin/baseline':['get'], '/api/seo/admin/drafts':['post'], '/api/seo/admin/transitions':['post'], '/api/seo/revalidate':['post'],
     };
     for (const [path, methods] of Object.entries(expected)) {
       for (const method of methods) expect(generated.paths?.[path]).toHaveProperty(method);
@@ -221,7 +223,7 @@ describe('generated OpenAPI document', () => {
     }
     visit(generated);
     expect(new Set(operationIds).size).toBe(operationIds.length);
-    expect(operationIds).toHaveLength(23);
+    expect(operationIds).toHaveLength(33);
   });
 
   it('documents real body-limit, media-type and unavailable responses plus versioned health', () => {

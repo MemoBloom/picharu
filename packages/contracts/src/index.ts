@@ -1,4 +1,5 @@
 import { z } from 'zod';
+export * from './seo';
 
 export const CONTRACT_VERSION = '1.0.0' as const;
 export const ToolId = z.enum(['remove_person','remove_object','change_background','photo_color_grade','weather_season','light_time','ai_avatar','natural_beauty','hair_color','hairstyle','professional_headshot','anime_photo','illustration_photo','chibi_person','pet_illustration','pet_humanization','multi_photo_composite','product_background','room_redesign','clothing_recolor']);

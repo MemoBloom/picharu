@@ -1,4 +1,5 @@
 import { getBrowserAuth } from './auth';
+import { analyticsChoice, trackSeoEvent } from './seo-analytics';
 import { z } from 'zod';
 import { ToolView,ImageView,JobView,CreditView,PublicRecommendation,OrderView,CreditPackage,CheckoutResponse,EditAccepted,UploadResponse,ErrorEnvelope,DeleteImageResponse,DownloadResponse } from '@picjp/contracts';
 export class UserFacingError extends Error{}
@@ -25,12 +26,13 @@ function responseSchema(path:string,method:string):z.ZodTypeAny|undefined{
 }
 export async function api<T>(path:string,options:Options={}):Promise<T>{
  if(!path.startsWith('/api/')||path.startsWith('//')||path.includes('\\'))throw new ApiError(400,'INVALID_REQUEST');
- const method=options.method??'GET';const authenticated=options.authenticated!==false;const client=authenticated?getBrowserAuth():null;
+ const method=options.method??'GET';
+ if(path==='/api/images/upload-url'&&method==='POST')void trackSeoEvent('upload_start');const authenticated=options.authenticated!==false;const client=authenticated?getBrowserAuth():null;
  let token:string|undefined;let ownerId:string|undefined;
  if(authenticated){if(!client)throw new ApiError(401,'UNAUTHORIZED');const {data,error}=await client.auth.getSession();if(error||!data.session)throw new ApiError(401,'UNAUTHORIZED');token=data.session.access_token;ownerId=data.session.user.id;}
  async function assertOwner(){if(!authenticated||!client)return;const {data,error}=await client.auth.getSession();if(error||data.session?.user.id!==ownerId)throw new ApiError(401,'UNAUTHORIZED');}
  const body=options.body===undefined?undefined:JSON.stringify(options.body);
- async function send(accessToken?:string){return fetch(path,{method,body,cache:'no-store',credentials:'same-origin',headers:{...(body?{'Content-Type':'application/json'}:{}),...(accessToken?{Authorization:`Bearer ${accessToken}`}:{})},signal:options.signal?AbortSignal.any([options.signal,AbortSignal.timeout(30000)]):AbortSignal.timeout(30000)});}
+ async function send(accessToken?:string){return fetch(path,{method,body,cache:'no-store',credentials:'same-origin',headers:{'X-Analytics-Consent':analyticsChoice()==='allow'?'granted':'denied',...(body?{'Content-Type':'application/json'}:{}),...(accessToken?{Authorization:`Bearer ${accessToken}`}:{})},signal:options.signal?AbortSignal.any([options.signal,AbortSignal.timeout(30000)]):AbortSignal.timeout(30000)});}
  let res:Response;try{res=await send(token);if(res.status===401&&authenticated&&client){await assertOwner();const {data,error}=await client.auth.refreshSession();if(!error&&data.session&&data.session.user.id===ownerId){await assertOwner();res=await send(data.session.access_token);}else if(data.session?.user.id&&data.session.user.id!==ownerId)throw new ApiError(401,'UNAUTHORIZED');}}catch(error){if(options.signal?.aborted||error instanceof ApiError)throw error;throw new ApiError(0,'SERVICE_UNAVAILABLE',true);}
  await assertOwner();
  if(res.status===401&&authenticated&&typeof window!=='undefined')window.dispatchEvent(new CustomEvent('picjp:auth-required',{detail:{ownerId}}));
@@ -38,5 +40,6 @@ export async function api<T>(path:string,options:Options={}):Promise<T>{
  if(!res.ok){const parsed=ErrorEnvelope.safeParse(payload);const retry=Number(res.headers.get('Retry-After'));throw new ApiError(res.status,parsed.success?parsed.data.error.code:'SERVICE_UNAVAILABLE',parsed.success?parsed.data.error.retryable:res.status>=500,parsed.success?parsed.data.error.request_id:res.headers.get('X-Request-ID')??undefined,Number.isFinite(retry)&&retry>0?retry:undefined);}
  await assertOwner();
  const schema=responseSchema(path,method);if(schema&&!schema.safeParse(payload).success)throw new ApiError(502,'INVALID_RESPONSE',false,res.headers.get('X-Request-ID')??undefined);
+ if(/^\/api\/images\/[^/]+\/download$/.test(path))void trackSeoEvent('result_download');
  return payload as T;
 }

@@ -1,3 +1,4 @@
+export const metadata = { robots: { index: false, follow: false } };
 import { JobDetail } from '../../../../components/job-detail';
 
 export default async function JobPage({ params }: { params: Promise<{ jobId: string }> }) {

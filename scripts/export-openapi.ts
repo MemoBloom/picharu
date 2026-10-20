@@ -137,6 +137,22 @@ export function createOpenApiDocument() {
     'x-implementation-status': 'local-implementation-requires-configured-services',
   });
 
+  registry.registerComponent('securitySchemes', 'SeoConsentCookie', { type:'apiKey', in:'cookie', name:'picmoko_seo', description:'HttpOnly signed consent session, max 30 minutes. Same-origin Origin header is additionally required. This cookie is not user authentication.' });
+  registry.registerComponent('securitySchemes', 'SeoHmac', { type:'apiKey', in:'header', name:'X-Seo-Signature', description:'Hex HMAC-SHA256(secret, exact raw JSON body). Signed Unix timestamp within 300s and one-time nonce. Server-side secret at least 32 characters.' });
+  const seoJson=(schema:z.ZodTypeAny,description='SEO response')=>({description,headers:{'Cache-Control':{schema:{type:'string' as const,enum:['no-store']}},'X-Robots-Tag':{schema:{type:'string' as const,enum:['noindex']}}},content:{'application/json':{schema}}});
+  const seoErrors=Object.fromEntries([400,401,403,404,409,413,415,429,503].map(code=>[code,seoJson(schemas.SeoErrorEnvelope,'Bounded SEO error; details and credentials are never exposed.')]));
+  const seoRoute=(method:'get'|'post'|'delete',path:string,operationId:string,summary:string,input:z.ZodTypeAny|undefined,output:z.ZodTypeAny,security:RouteConfig['security'],status=200)=>registry.registerPath({method,path,operationId,summary,tags:['SEO'],security,...(input?{request:{body:body(input)}}:{}),responses:{[status]:seoJson(output),...seoErrors},'x-implementation-status':'local-implementation-requires-configured-services'});
+  seoRoute('post','/api/seo/consent','seoConsent','Opt in to bounded first-party measurement; same-origin only',schemas.SeoConsentRequest,z.object({consent:z.literal(true),expires_in:z.number().int()}),[],201);
+  seoRoute('delete','/api/seo/consent','seoRevokeConsent','Revoke consent and clear HttpOnly cookie; same-origin only',undefined,z.object({revoked:z.literal(true)}),[]);
+  seoRoute('post','/api/seo/events','seoEvent','Record an allowlisted browser event; no private URLs, photos or business facts',schemas.SeoEventRequest,z.object({received:z.literal(true),inserted:z.boolean()}),[{SeoConsentCookie:[]}]);
+  seoRoute('post','/api/seo/ga4-session','seoGa4Session','Bind the tag-generated client/session IDs to a consent session; never accept a user ID',schemas.SeoGa4SessionRequest,z.object({received:z.literal(true)}),[{SeoConsentCookie:[]}]);
+  seoRoute('get','/api/seo/admin/overview','seoOverview','Member-only content, imports, distinct source metrics and consented business report; fixture=true excludes real business data',undefined,z.record(z.unknown()),[{SupabaseBearer:[]}]);
+  registry.registerPath({method:'get',path:'/api/seo/admin/baseline',operationId:'seoBaseline',summary:'Member-only baseline for an existing tool or guide',tags:['SEO'],security:[{SupabaseBearer:[]}],request:{query:z.object({path:schemas.SeoPath})},responses:{200:seoJson(z.object({revision:z.string(),source:z.literal('git'),content:schemas.SeoContent})),...seoErrors}});
+  registry.registerPath({method:'get',path:'/api/seo/admin/revision',operationId:'seoRevision',summary:'Member-only immutable revision for comparison and editing',tags:['SEO'],security:[{SupabaseBearer:[]}],request:{query:z.object({revision_id:z.string().uuid()})},responses:{200:seoJson(schemas.SeoRevisionView),...seoErrors}});
+  seoRoute('post','/api/seo/admin/drafts','seoDraft','Create an immutable draft after comparing current published revision',schemas.SeoDraftRequest,z.object({id:z.string().uuid(),state:z.literal('draft'),path:schemas.SeoPath}),[{SupabaseBearer:[]}],201);
+  seoRoute('post','/api/seo/admin/transitions','seoTransition','Submit, independent approval, CAS publication or rollback. Publishing requires database content mode; operation UUID is idempotent.',schemas.SeoTransitionRequest,z.object({revision_id:z.string().uuid(),path:schemas.SeoPath,action:z.string(),previous_revision:z.string().uuid().nullable()}),[{SupabaseBearer:[]}]);
+  seoRoute('post','/api/seo/revalidate','seoRevalidate','Invalidate only the exact current published revision; signed timestamp and single-use nonce',schemas.SeoRevalidationRequest,z.object({invalidated:z.literal(true),path:schemas.SeoPath,revision_id:z.string().uuid()}),[{SeoHmac:[]}]);
+
   const jevServer = [{ url: 'https://jev.example.invalid', description: 'DESIGN ONLY placeholder; no JEV service is deployed by this code.' }];
   const workerServer = [{ url: 'https://worker.example.invalid', description: 'DESIGN ONLY placeholder for the future Cloud Run service.' }];
   const internal = (route: RouteConfig) => registry.registerPath({ ...route, 'x-implementation-status': 'design-only' });
@@ -166,7 +182,7 @@ export function createOpenApiDocument() {
       description: 'Generated from executable Zod contracts and the V1 interface design. Public /api routes are the local Vercel backend; operation-level .invalid servers mark JEV/Worker designs only, not deployed services. Cross-resource authorization, idempotency, ownership, payment facts, binary image validation and refined invariants require runtime enforcement; schemas alone do not prove those properties.',
     },
     servers: [{ url: '/', description: 'Current Vercel application origin; real external services require deployment configuration.' }],
-    tags: [{ name: 'Vercel BFF' }, { name: 'JEV design only' }, { name: 'Worker design only' }],
+    tags: [{ name: 'SEO' }, { name: 'Vercel BFF' }, { name: 'JEV design only' }, { name: 'Worker design only' }],
   });
 }
 

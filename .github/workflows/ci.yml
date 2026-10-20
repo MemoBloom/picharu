@@ -91,3 +91,57 @@ jobs:
             docker logs "$PICJP_PG_CONTAINER" || true
             docker rm --force "$PICJP_PG_CONTAINER" || true
           fi
+
+  seo-production:
+    name: SEO production HTML (${{ matrix.mode }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [enabled, disabled, preview]
+    env:
+      SEO_INDEXING_ENABLED: ${{ matrix.mode == 'disabled' && 'false' || 'true' }}
+      VERCEL_ENV: ${{ matrix.mode == 'preview' && 'preview' || 'production' }}
+      SEO_CONTENT_BACKEND: git
+      SEO_ANALYTICS_ENABLED: 'false'
+      NEXT_PUBLIC_ANALYTICS_ENABLED: 'false'
+      NEXT_PUBLIC_GA4_ENABLED: 'false'
+      SEO_TEST_OUTPUT: /tmp/seo-production.json
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run test:seo:production
+
+  seo-publishing:
+    name: SEO database publication and ISR
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - run: npm run test:seo:publishing
+
+  seo-collector-image:
+    name: SEO Node22 collector image
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - run: docker build -f Dockerfile.seo -t picmoko-seo-test .
+      - run: docker run --rm --network none picmoko-seo-test --help

@@ -47,3 +47,7 @@ git push -u origin main
 将OWNER/REPOSITORY替换为自己的地址。main push或指向main的PR触发Verify与PostgreSQL concurrency检查；Version tag手动输入版本后完整检查并创建不可覆盖的注释标签。流水线不发布npm包、不自动部署Vercel。没有remote时GitHub runner和标签推送尚未验证。
 
 本仓库可单独clone、安装与运行CI，不要求检出父工作区或兄弟仓库。项目级产品规划和跨服务设计属于父工作区；未来Worker/GPU通过固定版本Schema/OpenAPI对接，不从本机兄弟路径直接导入代码。
+
+## SEO 工程
+
+独立 SEO 实施见 [交付与验收](docs/seo/DELIVERY.md) 和 [云端接入指南](docs/seo/CLOUD_SETUP.md)。公开正文服务端输出；工具/教程索引和分析采集默认关闭，等待真实样例、日语审校及云配置验收。`npm run test:seo:production` 检查已构建的本机服务，`npm run test:seo:publishing` 使用隔离 SQL/TLS 替身验证实际发布和 ISR；后者会生成测试构建，普通预览前需重新运行 `npm run build`。

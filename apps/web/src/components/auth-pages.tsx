@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { finishReauthentication, getBrowserAuth, useAuth } from '../lib/auth';
 import { api } from '../lib/api';
+import { trackSeoEvent } from '../lib/seo-analytics';
 import { browserLoginStorage, consumeLoginTarget, createLoginCompletion, LoginFlowError, loginTarget, parseLoginCallback, startEmailLogin, startGoogleLogin } from '../lib/auth-flow';
 import { Loading, Notice, PageHeading } from './ui';
 
@@ -41,13 +42,13 @@ export function LoginPage() {
   const waiting = Math.max(0, Math.ceil((resendAt - now) / 1000));
   async function google() {
     const client = getBrowserAuth(); if (!client || busy) return;
-    setBusy('google'); setError('');
+    setBusy('google'); setError(''); void trackSeoEvent('login_start');
     try { const result = await startGoogleLogin(client, window.location.origin, next, browserLoginStorage()); if (result.error || !result.data.url) { setError(authError(result.error?.code)); setBusy(null); } }
     catch { setError(authError()); setBusy(null); }
   }
   async function sendEmail(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); const client = getBrowserAuth(); if (!client || busy || waiting) return;
-    setBusy('email'); setError('');
+    setBusy('email'); setError(''); void trackSeoEvent('login_start');
     try {
       const result = await startEmailLogin(client, window.location.origin, email, next, browserLoginStorage());
       if (result.error) { setSent(false); setError(authError(result.error.code)); }
@@ -94,6 +95,7 @@ export function AuthCallbackPage() {
       completion.current(controller.signal).then(async ownerId => {
         if (!alive) return;
         await finishReauthentication(ownerId);
+        void trackSeoEvent('login_complete');
         if (alive) router.replace(callbackTarget.current);
       }).catch(cause => {
         if (!alive) return;

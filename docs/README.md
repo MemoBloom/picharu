@@ -13,3 +13,5 @@
 
 - 邮件公开Logo/字体资源：apps/web/public/email-assets/v1/README.md；独立静态路径与公开字体跨域头，不变更Auth或网站页面样式。
 - [已确认的注册/登录邮件](../supabase/templates/README.md)：HTML权威源码、Subject及Supabase手动保存步骤。
+
+- [SEO S0–S4 实施与验收](seo/DELIVERY.md)、[Google与云端配置指南](seo/CLOUD_SETUP.md)
