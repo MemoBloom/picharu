@@ -5,5 +5,6 @@
 - [统一协议](interfaces/INTERFACE_SPEC_V1.md)、[前端接入](interfaces/FRONTEND_API_GUIDE.md)、[生成OpenAPI](interfaces/openapi.json)
 - [Vercel后端说明](backend/VERCEL_BACKEND.md)、[数据库说明](backend/DATABASE_SCHEMA.md)
 - [验证记录](verification/VERIFICATION.md)
+- [Vercel构建故障审查与修复](verification/VERCEL_BUILD_REVIEW.md)
 
 项目级产品、计划、跨服务架构和研究仍保留在父工作区docs；在工作区内可以沿链接追溯。单独clone本仓库时父级文档可能不存在，运行/构建/CI不依赖它们；接口字段及Web实现说明均已随本仓库保留。

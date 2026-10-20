@@ -43,7 +43,7 @@ Node.js 22+；根目录 `npm ci`。将根 `.env.example` 复制至 `apps/web/.en
 3. 新用户余额初始化为 0，credit_packages 初始为空。上线前以运营批准的日元价格建立套餐并启用，不内置生产价格或免费额度。
 4. R2 建私有桶，配置本站 origin 的 PUT CORS；允许 Content-Type。上传签名同时绑定 Content-Length，由浏览器根据 Blob/File 实际长度自动生成，JS 不手动设置该禁用头。必须在真实浏览器/R2 联调确认签名与 CORS。
 5. `staging/` 配短生命周期（建议 1 天）；工作图/分析图/结果采用数据库归属与期限。未实现清理 Worker 前不开放长期用户流量；过期读取已拒绝，但物理清理、孤立对象清理与 cleanup_pending 重试仍是 Worker 后续任务。
-6. Vercel 项目 Root Directory 设 `apps/web`；框架 Next.js，构建 `npm run build`，安装在仓库根执行 `npm ci`（控制台可配置 `cd ../.. && npm ci`）。monorepo 允许访问根 packages，hnd1 见 apps/web/vercel.json；账号是否可用该区域需实配验证。环境变量按 Preview/Production 分开。
+6. Vercel 项目 Root Directory 设 `apps/web`；框架 Next.js，使用 `apps/web/vercel.json` 中的命令：构建 `npm run build`，安装 `cd ../.. && npm ci --include=dev --workspaces --include-workspace-root`。启用 Include source files outside of the Root Directory 以访问根 packages；构建需要 TypeScript 和类型包，不能只装生产依赖。hnd1 见 apps/web/vercel.json；账号是否可用该区域需实配验证。环境变量按 Preview/Production 分开。构建错误的复现及修复见 [Vercel构建审查](../verification/VERCEL_BUILD_REVIEW.md)。
 7. Stripe 测试 Webhook 指向 `/api/stripe/webhook`，订阅 checkout.session.completed、checkout.session.async_payment_succeeded、charge.refunded、charge.dispute.created。成功页面不发积分；前端支付页面未实现。
 8. 部署后先保持 GENERATION_ENABLED=false；完成实际 Auth→上传→complete→推荐回退→支付沙盒→查询的联调。Worker 经审阅、实现、恢复测试与 evaluation 后，才配置真实模型并启用生成。
 

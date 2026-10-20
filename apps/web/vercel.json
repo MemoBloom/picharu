@@ -1,1 +1,7 @@
-{"regions":["hnd1"]}
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "installCommand": "cd ../.. && npm ci --include=dev --workspaces --include-workspace-root",
+  "buildCommand": "npm run build",
+  "regions": ["hnd1"]
+}

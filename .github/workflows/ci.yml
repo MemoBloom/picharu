@@ -34,7 +34,16 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
-      - run: npm ci
+      - name: Install with Vercel settings
+        working-directory: apps/web
+        env:
+          NODE_ENV: production
+        run: |
+          node <<'NODE'
+          const { execSync } = require('node:child_process');
+          const { installCommand } = require('./vercel.json');
+          execSync(installCommand, { stdio: 'inherit' });
+          NODE
       - run: npm run verify
 
   postgres-concurrency:
