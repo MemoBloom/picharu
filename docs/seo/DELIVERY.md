@@ -1,6 +1,6 @@
 # SEO S0–S4 工程交付与验收
 
-更新：2026-10-21。目标 worktree 为 `worktrees/picjp-web-seo`，分支 `feat/seo-platform`，基线 main `f7f640a`。工程在该 worktree 独立实现；原 UI、认证与 Worker checkout 的修改没有混入。
+更新：2026-10-21。目标 worktree 为 `worktrees/picjp-web-seo`，分支 `feat/seo-platform`，基线 main `f7f640a`。草稿评审：[PR #6](https://github.com/MemoBloom/picharu/pull/6)，尚未合并。工程在该 worktree 独立实现；原 UI、认证与 Worker checkout 的修改没有混入。
 
 ## 阶段状态
 
@@ -20,7 +20,7 @@
 - 管理员：`/admin/seo`，未登录时保留登录返回地址；Supabase JWT 验证和 SEO 角色检查分别执行。
 - 契约：`packages/contracts/src/seo.ts`；生成接口见 [OpenAPI](../interfaces/openapi.json)，新增 SEO 路径不改变原任务/支付字段。
 - 数据与事务：`supabase/migrations/20261020153000_seo.sql`、`20261020160000_seo_analytics.sql`。只在服务端经受限 RPC 使用，普通 Auth 用户不能直读/写 SEO 表或执行函数。
-- 内容：`apps/web/src/content/seo` 和 `server/seo/content.ts`；20 是初期意图目录，新增内容/模型证据继续走同一版本发布管线，不把效果版本写入工具 URL。
+- 内容：`apps/web/src/content/seo` 和 `server/seo/content.ts`；20 是初期意图目录，Git 基线按内容生成指纹，新增内容/模型证据继续走同一版本发布管线，不把效果版本写入工具 URL。
 - 采集：`scripts/seo`；与图片 Worker 使用不同命令、身份和任务，不启动模型生成。
 - 后台示例字段仍须负责人审校。工具页开启索引需真实图像资产；构建校验哈希、格式/体积/动画限制，服务器只读取生成的证据清单，避免把整个文件目录打入函数部署。
 

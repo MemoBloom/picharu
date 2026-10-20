@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { cache } from 'react';
 import { unstable_cache } from 'next/cache';
 import { SeoContent } from '@picjp/contracts';
@@ -6,10 +7,11 @@ import { guides } from '../../content/seo/guides';
 import { seoIntents } from '../../content/seo/intent-map';
 import { seoRpc } from './repository';
 
+function contentRevision(content:SeoContent){return 'git-sha256-'+createHash('sha256').update(JSON.stringify(content)).digest('hex').slice(0,24);}
 export type PublishedContent = { revision: string; content: SeoContent; source: 'git' | 'database' };
 export function baselineContent(path: string): PublishedContent | null {
   const guide = guides.find(item => item.path === path);
-  if (guide) return { revision: 'git-20261020-guides-v1', content: SeoContent.parse(guide), source: 'git' };
+  if (guide) {const content=SeoContent.parse(guide);return {revision:contentRevision(content),content,source:'git'};}
   const tool = publicToolContent.find(item => `/ja/tools/${item.tool_id}` === path);
   if (!tool) return null;
   const content = SeoContent.parse({
@@ -19,7 +21,7 @@ export function baselineContent(path: string): PublishedContent | null {
     faq: [tool.faq], keywords: [seoIntents.find(intent=>intent.tool_id===tool.tool_id)?.primary_keyword_ja||tool.name_ja], related_tools: publicToolContent.filter(other => other.category_ja === tool.category_ja && other.tool_id !== tool.tool_id).slice(0, 4).map(other => other.tool_id),
     indexable: false, examples: [], updated_at: '2026-10-20T00:00:00Z',
   });
-  return { revision: `git-20261020-${tool.tool_id}-v1`, content, source: 'git' };
+  return { revision: contentRevision(content), content, source: 'git' };
 }
 const databaseContent=unstable_cache(async()=>{
  const rows=await seoRpc<PublishedContent[]>('seo_get_published',{p_path:null});
