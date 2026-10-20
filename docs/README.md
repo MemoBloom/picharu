@@ -8,3 +8,5 @@
 - [Vercel构建故障审查与修复](verification/VERCEL_BUILD_REVIEW.md)
 
 项目级产品、计划、跨服务架构和研究仍保留在父工作区docs；在工作区内可以沿链接追溯。单独clone本仓库时父级文档可能不存在，运行/构建/CI不依赖它们；接口字段及Web实现说明均已随本仓库保留。
+
+- [真实登录发布与后台设置](backend/AUTH_SETUP.md)：生产环境、Google/邮箱回调、账户初始化及实际验收。

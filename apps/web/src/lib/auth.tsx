@@ -1,16 +1,17 @@
 'use client';
 import { createClient,type SupabaseClient,type User } from '@supabase/supabase-js';
-import { createContext,useContext,useEffect,useRef,useState,type ReactNode } from 'react';
+import { createContext,useContext,useEffect,useRef,useState,useSyncExternalStore,type ReactNode } from 'react';
 import { clearUserState } from './drafts';
+import { publicAuthConfig } from './auth-config';
 let browserClient:SupabaseClient|null|undefined;
 export function getBrowserAuth(){
  if(typeof window==='undefined')return null;
  if(browserClient!==undefined)return browserClient;
  const url=process.env.NEXT_PUBLIC_SUPABASE_URL;
  const key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.trim()||process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
- if(!url||!key)return browserClient=null;
- try{const u=new URL(url);if(u.protocol!=='https:'&&!(process.env.NODE_ENV!=='production'&&['localhost','127.0.0.1'].includes(u.hostname)))return browserClient=null;
- return browserClient=createClient(url,key,{auth:{flowType:'pkce',detectSessionInUrl:false,persistSession:true,autoRefreshToken:true}});}catch{return browserClient=null;}
+ const config=publicAuthConfig(url,key,process.env.NODE_ENV!=='production');
+ if(!config)return browserClient=null;
+ try{return browserClient=createClient(config.url,config.key,{auth:{flowType:'pkce',detectSessionInUrl:false,persistSession:true,autoRefreshToken:true}});}catch{return browserClient=null;}
 }
 type AuthState={user:User|null;ready:boolean;configured:boolean;signOut:()=>Promise<void>};
 const AuthContext=createContext<AuthState>({user:null,ready:false,configured:false,signOut:async()=>{}});
@@ -31,6 +32,15 @@ export function AuthProvider({children}:{children:ReactNode}){
  async function signOut(){const client=getBrowserAuth();if(user)clearUserState(user.id);if(client){const {error}=await client.auth.signOut();if(error)throw new Error('ログアウトできませんでした。もう一度お試しください。');}previous.current=null;setUser(null);}
  return <AuthContext.Provider value={{user,ready,configured,signOut}}>{children}</AuthContext.Provider>;
 }
-export const useAuth=()=>useContext(AuthContext);
+const subscribeToHydration=()=>()=>{};
+const clientSnapshot=()=>true;
+const serverSnapshot=()=>false;
+export function useAuth(){
+ const state=useContext(AuthContext);
+ // Streamed children can hydrate after the provider has loaded its session.
+ // Keep their first hydration snapshot identical to the server render.
+ const hydrated=useSyncExternalStore(subscribeToHydration,clientSnapshot,serverSnapshot);
+ return hydrated?state:{...state,user:null,ready:false,configured:false};
+}
 
-export async function finishReauthentication(){const client=getBrowserAuth();if(!client)return;const {data,error}=await client.auth.getSession();if(error||!data.session)throw new Error("Unable to complete authentication");window.dispatchEvent(new CustomEvent("picjp:auth-complete",{detail:{user:data.session.user}}));}
+export async function finishReauthentication(expectedOwnerId?:string){const client=getBrowserAuth();if(!client)throw new Error("Unable to complete authentication");const {data,error}=await client.auth.getSession();if(error||!data.session||(expectedOwnerId&&data.session.user.id!==expectedOwnerId))throw new Error("Unable to complete authentication");window.dispatchEvent(new CustomEvent("picjp:auth-complete",{detail:{user:data.session.user}}));}
