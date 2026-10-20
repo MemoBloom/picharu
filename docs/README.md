@@ -12,3 +12,4 @@
 - [真实登录发布与后台设置](backend/AUTH_SETUP.md)：生产环境、Google/邮箱回调、账户初始化及实际验收。
 
 - 邮件公开Logo/字体资源：apps/web/public/email-assets/v1/README.md；独立静态路径与公开字体跨域头，不变更Auth或网站页面样式。
+- [已确认的注册/登录邮件](../supabase/templates/README.md)：HTML权威源码、Subject及Supabase手动保存步骤。
