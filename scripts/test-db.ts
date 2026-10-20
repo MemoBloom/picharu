@@ -37,6 +37,7 @@ try {
  create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;
  grant execute on function auth.uid() to anon,authenticated,service_role;`);
  await db.exec(await readFile('supabase/migrations/202610190001_web_backend.sql','utf8'));
+ await db.exec(await readFile('supabase/migrations/202610200400_worker.sql','utf8'));
  await sql('insert into auth.users(id) values($1),($2)',[owner,other]);
  check(await account(),{available:0,reserved:0,status:'active'},'new accounts have zero credits');
  await upload(image); await upload(foreignImage,other);

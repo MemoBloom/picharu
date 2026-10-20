@@ -87,6 +87,7 @@ async function main(){
    create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;
    grant execute on function auth.uid() to anon,authenticated,service_role;`);
   await db.query(await readFile('supabase/migrations/202610190001_web_backend.sql','utf8'));
+  await db.query(await readFile('supabase/migrations/202610200400_worker.sql','utf8'));
   await db.query('insert into auth.users(id) values($1)',[owner]);await seedImage(image);
   const cs=await clients(20);
   await db.query('update credit_accounts set available=100 where owner_id=$1',[owner]);

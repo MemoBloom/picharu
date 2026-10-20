@@ -38,7 +38,7 @@ export function createOpenApiDocument() {
   });
   registry.registerComponent('securitySchemes', 'GoogleOidc', {
     type: 'http', scheme: 'bearer', bearerFormat: 'Google-signed OIDC ID token',
-    description: 'DESIGN ONLY. Token audience is the Cloud Run service URL; grant invoker only to approved Scheduler/dispatcher identities. Separate from end-user Supabase authentication.',
+    description: 'Cloud Run IAM authentication; not cloud-verified yet. Token audience is the Cloud Run service URL; grant invoker only to approved Scheduler/dispatcher identities. Separate from end-user Supabase authentication.',
   });
 
   const headerSchemas = {
@@ -138,7 +138,7 @@ export function createOpenApiDocument() {
   });
 
   const jevServer = [{ url: 'https://jev.example.invalid', description: 'DESIGN ONLY placeholder; no JEV service is deployed by this code.' }];
-  const workerServer = [{ url: 'https://worker.example.invalid', description: 'DESIGN ONLY placeholder for the future Cloud Run service.' }];
+  const workerServer = [{ url: 'https://worker.example.invalid', description: 'Undeployed placeholder; Worker implementation is maintained in its separate repository.' }];
   const internal = (route: RouteConfig) => registry.registerPath({ ...route, 'x-implementation-status': 'design-only' });
   internal({
     method: 'post', path: '/v1/recommend', operationId: 'jevRecommendDesign', tags: ['JEV design only'], servers: jevServer,
@@ -154,19 +154,19 @@ export function createOpenApiDocument() {
     401: { description: 'Cloud Run platform rejected a missing/invalid Google OIDC ID token before application handling. Platform response body is not the application ErrorEnvelope.' },
     403: { description: 'Cloud Run IAM denied invocation for this identity or audience. Platform response body is not the application ErrorEnvelope.' },
   };
-  internal({ method: 'post', path: '/internal/v1/drain', operationId: 'workerDrainDesign', tags: ['Worker design only'], servers: workerServer, summary: 'DESIGN ONLY — claim and checkpoint a bounded batch of durable jobs', description: 'limit defaults to 5 (1..20). processed counts stages durably advanced in this request, not terminal jobs, and must be <= the requested limit. remaining is an advisory due-work signal, not a consistent queue length. Job and billing truth remains in PG checkpoints.', security: [{ GoogleOidc: [] }], request: { body: body(schemas.WorkerDrainRequest) }, responses: { 200: json(schemas.WorkerAck), ...errorResponses([400, 413, 415, 429, 503]), ...cloudIamErrors } });
-  internal({ method: 'post', path: '/internal/v1/process-job', operationId: 'workerProcessDesign', tags: ['Worker design only'], servers: workerServer, summary: 'DESIGN ONLY — optional authenticated bounded-stage trigger', description: 'Advance at most one durable stage for the specified job; processed must be 0 or 1. remaining signals possible due work, not a guaranteed queue count. Response loss never authorizes blind provider resubmission.', security: [{ GoogleOidc: [] }], request: { body: body(schemas.WorkerTrigger) }, responses: { 200: json(schemas.WorkerAck), ...errorResponses([400, 404, 409, 413, 415, 503]), ...cloudIamErrors } });
+  internal({ method: 'post', path: '/internal/v1/drain', operationId: 'workerDrain', tags: ['Worker (local implementation)'], servers: workerServer, summary: 'LOCAL IMPLEMENTATION — claim and checkpoint a bounded batch of durable jobs', description: 'limit defaults to 5 (1..20). processed counts stages durably advanced in this request, not terminal jobs, and must be <= the requested limit. remaining is an advisory due-work signal, not a consistent queue length. Job and billing truth remains in PG checkpoints.', security: [{ GoogleOidc: [] }], request: { body: body(schemas.WorkerDrainRequest) }, responses: { 200: json(schemas.WorkerAck), ...errorResponses([400, 404, 503]), ...cloudIamErrors } });
+  internal({ method: 'post', path: '/internal/v1/process-job', operationId: 'workerProcess', tags: ['Worker (local implementation)'], servers: workerServer, summary: 'LOCAL IMPLEMENTATION — optional authenticated bounded-stage trigger', description: 'Advance at most one durable stage for the specified job; processed must be 0 or 1. remaining signals possible due work, not a guaranteed queue count. Response loss never authorizes blind provider resubmission.', security: [{ GoogleOidc: [] }], request: { body: body(schemas.WorkerTrigger) }, responses: { 200: json(schemas.WorkerAck), ...errorResponses([400, 404, 503]), ...cloudIamErrors } });
   const InternalHealth = registry.register('InternalHealthResponse', z.object({ status: z.literal('ok'), contract_version: z.literal(contracts.CONTRACT_VERSION) }).strict().openapi({ description: 'DESIGN ONLY liveness/readiness response with the V1 protocol version. No model paths, credentials or host metadata.' }));
-  internal({ method: 'get', path: '/health', operationId: 'internalHealthDesign', tags: ['Worker design only', 'JEV design only'], servers: [...workerServer, ...jevServer], summary: 'DESIGN ONLY — internal process liveness', description: 'Cloud Run service IAM protects every path, including /health, so the Worker server requires GoogleOidc. Lambda uses a local/private health probe with no application secret in its response. This shared-path multi-server document expresses the alternatives; callers must follow the selected server requirement.', security: [{ GoogleOidc: [] }, {}], 'x-security-by-server': { 'https://worker.example.invalid': 'GoogleOidc required', 'https://jev.example.invalid': 'local/private probe only' }, responses: { 200: json(InternalHealth), ...errorResponses([503]), ...cloudIamErrors } });
+  internal({ method: 'get', path: '/health', operationId: 'internalHealthDesign', tags: ['Worker (local implementation)', 'JEV design only'], servers: [...workerServer, ...jevServer], summary: 'DESIGN ONLY — internal process liveness', description: 'Cloud Run service IAM protects every path, including /health, so the Worker server requires GoogleOidc. Lambda uses a local/private health probe with no application secret in its response. This shared-path multi-server document expresses the alternatives; callers must follow the selected server requirement.', security: [{ GoogleOidc: [] }, {}], 'x-security-by-server': { 'https://worker.example.invalid': 'GoogleOidc required', 'https://jev.example.invalid': 'local/private probe only' }, responses: { 200: json(InternalHealth), ...errorResponses([503]), ...cloudIamErrors } });
   internal({ method: 'get', path: '/ready', operationId: 'jevReadyDesign', tags: ['JEV design only'], servers: jevServer, summary: 'DESIGN ONLY — model and warm inference readiness', security: [], responses: { 200: json(InternalHealth), ...errorResponses([503]) } });
 
   return new OpenApiGeneratorV3(registry.definitions).generateDocument({
     openapi: '3.0.3', info: {
       title: 'PicJP modular API', version: contracts.CONTRACT_VERSION,
-      description: 'Generated from executable Zod contracts and the V1 interface design. Public /api routes are the local Vercel backend; operation-level .invalid servers mark JEV/Worker designs only, not deployed services. Cross-resource authorization, idempotency, ownership, payment facts, binary image validation and refined invariants require runtime enforcement; schemas alone do not prove those properties.',
+      description: 'Generated from executable Zod contracts and the V1 interface design. Public /api routes are the local Vercel backend; operation-level .invalid servers mark undeployed JEV design/Worker local implementation. Cross-resource authorization, idempotency, ownership, payment facts, binary image validation and refined invariants require runtime enforcement; schemas alone do not prove those properties.',
     },
     servers: [{ url: '/', description: 'Current Vercel application origin; real external services require deployment configuration.' }],
-    tags: [{ name: 'Vercel BFF' }, { name: 'JEV design only' }, { name: 'Worker design only' }],
+    tags: [{ name: 'Vercel BFF' }, { name: 'JEV design only' }, { name: 'Worker (local implementation)' }],
   });
 }
 

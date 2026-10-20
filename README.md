@@ -1,6 +1,6 @@
 # PicJP Web
 
-本仓库包含日本消费者图片编辑网站的 **网页前端和 Vercel Web API**。Cloud Run Worker 与 GPU 推荐服务是独立仓库边界，不放在本仓库，也不在本轮开发。
+本仓库包含日本消费者图片编辑网站的 **网页前端和 Vercel Web API**。Cloud Run Worker 与 GPU 推荐服务是独立仓库边界。Worker已获授权在独立picjp-worker开发，共享契约及PG增量留在本库；GPU仍仅设计。
 
 ## 目录
 

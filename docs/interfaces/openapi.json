@@ -3,7 +3,7 @@
   "info": {
     "title": "PicJP modular API",
     "version": "1.0.0",
-    "description": "Generated from executable Zod contracts and the V1 interface design. Public /api routes are the local Vercel backend; operation-level .invalid servers mark JEV/Worker designs only, not deployed services. Cross-resource authorization, idempotency, ownership, payment facts, binary image validation and refined invariants require runtime enforcement; schemas alone do not prove those properties."
+    "description": "Generated from executable Zod contracts and the V1 interface design. Public /api routes are the local Vercel backend; operation-level .invalid servers mark undeployed JEV design/Worker local implementation. Cross-resource authorization, idempotency, ownership, payment facts, binary image validation and refined invariants require runtime enforcement; schemas alone do not prove those properties."
   },
   "servers": [
     {
@@ -19,7 +19,7 @@
       "name": "JEV design only"
     },
     {
-      "name": "Worker design only"
+      "name": "Worker (local implementation)"
     }
   ],
   "components": {
@@ -46,7 +46,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "Google-signed OIDC ID token",
-        "description": "DESIGN ONLY. Token audience is the Cloud Run service URL; grant invoker only to approved Scheduler/dispatcher identities. Separate from end-user Supabase authentication."
+        "description": "Cloud Run IAM authentication; not cloud-verified yet. Token audience is the Cloud Run service URL; grant invoker only to approved Scheduler/dispatcher identities. Separate from end-user Supabase authentication."
       }
     },
     "schemas": {
@@ -1650,6 +1650,1623 @@
         ],
         "additionalProperties": false
       },
+      "WorkerArtifact": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "provider_output",
+              "result",
+              "preview"
+            ]
+          },
+          "storage_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "mime_type": {
+            "type": "string",
+            "enum": [
+              "image/png",
+              "image/jpeg",
+              "image/webp"
+            ]
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 33554432
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
+          }
+        },
+        "required": [
+          "kind",
+          "storage_key",
+          "sha256",
+          "mime_type",
+          "bytes",
+          "width",
+          "height"
+        ],
+        "additionalProperties": false
+      },
+      "WorkerAttempt": {
+        "type": "object",
+        "properties": {
+          "attempt_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "attempt_no": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
+          },
+          "provider": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "model_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "adapter_version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "provider_request_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "provider_job_id": {
+            "type": "string",
+            "nullable": true,
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "prepared",
+              "accepted",
+              "succeeded",
+              "failed",
+              "uncertain"
+            ]
+          },
+          "submitted_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "result_ref": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "url",
+                  "provider_asset"
+                ]
+              },
+              "locator": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "provider": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              }
+            },
+            "required": [
+              "kind",
+              "locator",
+              "provider"
+            ],
+            "additionalProperties": false
+          },
+          "result_expires_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "poll_count": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "transport_retry_count": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "estimated_cost": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "string",
+                "pattern": "^[A-Z]{3}$"
+              },
+              "amount_minor": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "evidence": {
+                "type": "string",
+                "enum": [
+                  "provider_report",
+                  "invoice",
+                  "estimate"
+                ]
+              },
+              "provider_reference": {
+                "type": "string",
+                "nullable": true,
+                "maxLength": 128
+              }
+            },
+            "required": [
+              "currency",
+              "amount_minor",
+              "evidence",
+              "provider_reference"
+            ],
+            "additionalProperties": false
+          },
+          "actual_cost": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "currency": {
+                "type": "string",
+                "pattern": "^[A-Z]{3}$"
+              },
+              "amount_minor": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "evidence": {
+                "type": "string",
+                "enum": [
+                  "provider_report",
+                  "invoice",
+                  "estimate"
+                ]
+              },
+              "provider_reference": {
+                "type": "string",
+                "nullable": true,
+                "maxLength": 128
+              }
+            },
+            "required": [
+              "currency",
+              "amount_minor",
+              "evidence",
+              "provider_reference"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "attempt_id",
+          "attempt_no",
+          "provider",
+          "model_id",
+          "adapter_version",
+          "provider_request_key",
+          "provider_job_id",
+          "state",
+          "submitted_at",
+          "result_ref",
+          "result_expires_at",
+          "poll_count",
+          "transport_retry_count",
+          "estimated_cost",
+          "actual_cost"
+        ],
+        "additionalProperties": false
+      },
+      "WorkerCheckpoint": {
+        "type": "object",
+        "properties": {
+          "provider_state": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "pending",
+              "succeeded",
+              "failed",
+              "unknown"
+            ]
+          },
+          "result_ref": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "url",
+                  "provider_asset"
+                ]
+              },
+              "locator": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "provider": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              }
+            },
+            "required": [
+              "kind",
+              "locator",
+              "provider"
+            ],
+            "additionalProperties": false
+          },
+          "result_expires_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "provider_output",
+                    "result",
+                    "preview"
+                  ]
+                },
+                "storage_key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "mime_type": {
+                  "type": "string",
+                  "enum": [
+                    "image/png",
+                    "image/jpeg",
+                    "image/webp"
+                  ]
+                },
+                "bytes": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "exclusiveMinimum": true,
+                  "maximum": 33554432
+                },
+                "width": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "exclusiveMinimum": true
+                },
+                "height": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "exclusiveMinimum": true
+                }
+              },
+              "required": [
+                "kind",
+                "storage_key",
+                "sha256",
+                "mime_type",
+                "bytes",
+                "width",
+                "height"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 3
+          },
+          "poll_count": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "transport_retry_count": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "error_class": {
+            "type": "string",
+            "nullable": true,
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "provider_state",
+          "result_ref",
+          "result_expires_at",
+          "artifacts",
+          "poll_count",
+          "transport_retry_count",
+          "error_class"
+        ],
+        "additionalProperties": false
+      },
+      "WorkerClaim": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "owner_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "processing"
+            ]
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "submitting",
+              "waiting_provider",
+              "storing",
+              "settling",
+              "needs_reconciliation",
+              "done"
+            ]
+          },
+          "lease_token": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "lease_version": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "exclusiveMinimum": true,
+            "maximum": 9007199254740991
+          },
+          "lease_expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "recovery_deadline_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "snapshot": {
+            "type": "object",
+            "additionalProperties": {
+              "nullable": true
+            }
+          },
+          "input_assets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "image_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "primary",
+                    "subject_reference",
+                    "background_reference",
+                    "style_reference",
+                    "identity_reference"
+                  ]
+                },
+                "position": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 3
+                },
+                "storage_key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "mime_type": {
+                  "type": "string",
+                  "enum": [
+                    "image/png"
+                  ]
+                },
+                "bytes": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "exclusiveMinimum": true,
+                  "maximum": 33554432
+                },
+                "width": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "exclusiveMinimum": true
+                },
+                "height": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "exclusiveMinimum": true
+                }
+              },
+              "required": [
+                "image_id",
+                "role",
+                "position",
+                "storage_key",
+                "sha256",
+                "mime_type",
+                "bytes",
+                "width",
+                "height"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 4
+          },
+          "attempt": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "attempt_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "attempt_no": {
+                "type": "integer",
+                "minimum": 0,
+                "exclusiveMinimum": true
+              },
+              "provider": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "model_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "adapter_version": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "provider_request_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "provider_job_id": {
+                "type": "string",
+                "nullable": true,
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "state": {
+                "type": "string",
+                "enum": [
+                  "prepared",
+                  "accepted",
+                  "succeeded",
+                  "failed",
+                  "uncertain"
+                ]
+              },
+              "submitted_at": {
+                "type": "string",
+                "nullable": true,
+                "format": "date-time"
+              },
+              "result_ref": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "url",
+                      "provider_asset"
+                    ]
+                  },
+                  "locator": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "provider": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  }
+                },
+                "required": [
+                  "kind",
+                  "locator",
+                  "provider"
+                ],
+                "additionalProperties": false
+              },
+              "result_expires_at": {
+                "type": "string",
+                "nullable": true,
+                "format": "date-time"
+              },
+              "poll_count": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "transport_retry_count": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "estimated_cost": {
+                "type": "object",
+                "properties": {
+                  "currency": {
+                    "type": "string",
+                    "pattern": "^[A-Z]{3}$"
+                  },
+                  "amount_minor": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "enum": [
+                      "provider_report",
+                      "invoice",
+                      "estimate"
+                    ]
+                  },
+                  "provider_reference": {
+                    "type": "string",
+                    "nullable": true,
+                    "maxLength": 128
+                  }
+                },
+                "required": [
+                  "currency",
+                  "amount_minor",
+                  "evidence",
+                  "provider_reference"
+                ],
+                "additionalProperties": false
+              },
+              "actual_cost": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "currency": {
+                    "type": "string",
+                    "pattern": "^[A-Z]{3}$"
+                  },
+                  "amount_minor": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "enum": [
+                      "provider_report",
+                      "invoice",
+                      "estimate"
+                    ]
+                  },
+                  "provider_reference": {
+                    "type": "string",
+                    "nullable": true,
+                    "maxLength": 128
+                  }
+                },
+                "required": [
+                  "currency",
+                  "amount_minor",
+                  "evidence",
+                  "provider_reference"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "attempt_id",
+              "attempt_no",
+              "provider",
+              "model_id",
+              "adapter_version",
+              "provider_request_key",
+              "provider_job_id",
+              "state",
+              "submitted_at",
+              "result_ref",
+              "result_expires_at",
+              "poll_count",
+              "transport_retry_count",
+              "estimated_cost",
+              "actual_cost"
+            ],
+            "additionalProperties": false
+          },
+          "artifact_manifest": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "provider_output",
+                    "result",
+                    "preview"
+                  ]
+                },
+                "storage_key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "mime_type": {
+                  "type": "string",
+                  "enum": [
+                    "image/png",
+                    "image/jpeg",
+                    "image/webp"
+                  ]
+                },
+                "bytes": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "exclusiveMinimum": true,
+                  "maximum": 33554432
+                },
+                "width": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "exclusiveMinimum": true
+                },
+                "height": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "exclusiveMinimum": true
+                }
+              },
+              "required": [
+                "kind",
+                "storage_key",
+                "sha256",
+                "mime_type",
+                "bytes",
+                "width",
+                "height"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 3
+          },
+          "preflight_error": {
+            "type": "string",
+            "nullable": true,
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "fresh_submission": {
+            "type": "boolean"
+          },
+          "checkpoint": {
+            "type": "object",
+            "properties": {
+              "provider_state": {
+                "type": "string",
+                "nullable": true,
+                "enum": [
+                  "pending",
+                  "succeeded",
+                  "failed",
+                  "unknown"
+                ]
+              },
+              "result_ref": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "url",
+                      "provider_asset"
+                    ]
+                  },
+                  "locator": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "provider": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  }
+                },
+                "required": [
+                  "kind",
+                  "locator",
+                  "provider"
+                ],
+                "additionalProperties": false
+              },
+              "result_expires_at": {
+                "type": "string",
+                "nullable": true,
+                "format": "date-time"
+              },
+              "artifacts": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "provider_output",
+                        "result",
+                        "preview"
+                      ]
+                    },
+                    "storage_key": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 1024
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "mime_type": {
+                      "type": "string",
+                      "enum": [
+                        "image/png",
+                        "image/jpeg",
+                        "image/webp"
+                      ]
+                    },
+                    "bytes": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "exclusiveMinimum": true,
+                      "maximum": 33554432
+                    },
+                    "width": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "exclusiveMinimum": true
+                    },
+                    "height": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "exclusiveMinimum": true
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "storage_key",
+                    "sha256",
+                    "mime_type",
+                    "bytes",
+                    "width",
+                    "height"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 3
+              },
+              "poll_count": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "transport_retry_count": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "error_class": {
+                "type": "string",
+                "nullable": true,
+                "minLength": 1,
+                "maxLength": 128
+              }
+            },
+            "required": [
+              "provider_state",
+              "result_ref",
+              "result_expires_at",
+              "artifacts",
+              "poll_count",
+              "transport_retry_count",
+              "error_class"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "job_id",
+          "owner_id",
+          "status",
+          "stage",
+          "lease_token",
+          "lease_version",
+          "lease_expires_at",
+          "recovery_deadline_at",
+          "snapshot",
+          "input_assets",
+          "attempt",
+          "artifact_manifest",
+          "preflight_error",
+          "fresh_submission",
+          "checkpoint"
+        ],
+        "additionalProperties": false
+      },
+      "WorkerClaimResponse": {
+        "type": "object",
+        "properties": {
+          "claims": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "job_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "owner_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "processing"
+                  ]
+                },
+                "stage": {
+                  "type": "string",
+                  "enum": [
+                    "queued",
+                    "submitting",
+                    "waiting_provider",
+                    "storing",
+                    "settling",
+                    "needs_reconciliation",
+                    "done"
+                  ]
+                },
+                "lease_token": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "lease_version": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "exclusiveMinimum": true,
+                  "maximum": 9007199254740991
+                },
+                "lease_expires_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "recovery_deadline_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "snapshot": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "nullable": true
+                  }
+                },
+                "input_assets": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "image_id": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "role": {
+                        "type": "string",
+                        "enum": [
+                          "primary",
+                          "subject_reference",
+                          "background_reference",
+                          "style_reference",
+                          "identity_reference"
+                        ]
+                      },
+                      "position": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 3
+                      },
+                      "storage_key": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 1024
+                      },
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^[a-f0-9]{64}$"
+                      },
+                      "mime_type": {
+                        "type": "string",
+                        "enum": [
+                          "image/png"
+                        ]
+                      },
+                      "bytes": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "exclusiveMinimum": true,
+                        "maximum": 33554432
+                      },
+                      "width": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "exclusiveMinimum": true
+                      },
+                      "height": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "exclusiveMinimum": true
+                      }
+                    },
+                    "required": [
+                      "image_id",
+                      "role",
+                      "position",
+                      "storage_key",
+                      "sha256",
+                      "mime_type",
+                      "bytes",
+                      "width",
+                      "height"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "maxItems": 4
+                },
+                "attempt": {
+                  "type": "object",
+                  "nullable": true,
+                  "properties": {
+                    "attempt_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "attempt_no": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "exclusiveMinimum": true
+                    },
+                    "provider": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "model_id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 512
+                    },
+                    "adapter_version": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "provider_request_key": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "provider_job_id": {
+                      "type": "string",
+                      "nullable": true,
+                      "minLength": 1,
+                      "maxLength": 512
+                    },
+                    "state": {
+                      "type": "string",
+                      "enum": [
+                        "prepared",
+                        "accepted",
+                        "succeeded",
+                        "failed",
+                        "uncertain"
+                      ]
+                    },
+                    "submitted_at": {
+                      "type": "string",
+                      "nullable": true,
+                      "format": "date-time"
+                    },
+                    "result_ref": {
+                      "type": "object",
+                      "nullable": true,
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "url",
+                            "provider_asset"
+                          ]
+                        },
+                        "locator": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "provider": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "locator",
+                        "provider"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "result_expires_at": {
+                      "type": "string",
+                      "nullable": true,
+                      "format": "date-time"
+                    },
+                    "poll_count": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "transport_retry_count": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "estimated_cost": {
+                      "type": "object",
+                      "properties": {
+                        "currency": {
+                          "type": "string",
+                          "pattern": "^[A-Z]{3}$"
+                        },
+                        "amount_minor": {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        "evidence": {
+                          "type": "string",
+                          "enum": [
+                            "provider_report",
+                            "invoice",
+                            "estimate"
+                          ]
+                        },
+                        "provider_reference": {
+                          "type": "string",
+                          "nullable": true,
+                          "maxLength": 128
+                        }
+                      },
+                      "required": [
+                        "currency",
+                        "amount_minor",
+                        "evidence",
+                        "provider_reference"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "actual_cost": {
+                      "type": "object",
+                      "nullable": true,
+                      "properties": {
+                        "currency": {
+                          "type": "string",
+                          "pattern": "^[A-Z]{3}$"
+                        },
+                        "amount_minor": {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        "evidence": {
+                          "type": "string",
+                          "enum": [
+                            "provider_report",
+                            "invoice",
+                            "estimate"
+                          ]
+                        },
+                        "provider_reference": {
+                          "type": "string",
+                          "nullable": true,
+                          "maxLength": 128
+                        }
+                      },
+                      "required": [
+                        "currency",
+                        "amount_minor",
+                        "evidence",
+                        "provider_reference"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "attempt_id",
+                    "attempt_no",
+                    "provider",
+                    "model_id",
+                    "adapter_version",
+                    "provider_request_key",
+                    "provider_job_id",
+                    "state",
+                    "submitted_at",
+                    "result_ref",
+                    "result_expires_at",
+                    "poll_count",
+                    "transport_retry_count",
+                    "estimated_cost",
+                    "actual_cost"
+                  ],
+                  "additionalProperties": false
+                },
+                "artifact_manifest": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "provider_output",
+                          "result",
+                          "preview"
+                        ]
+                      },
+                      "storage_key": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 1024
+                      },
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^[a-f0-9]{64}$"
+                      },
+                      "mime_type": {
+                        "type": "string",
+                        "enum": [
+                          "image/png",
+                          "image/jpeg",
+                          "image/webp"
+                        ]
+                      },
+                      "bytes": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "exclusiveMinimum": true,
+                        "maximum": 33554432
+                      },
+                      "width": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "exclusiveMinimum": true
+                      },
+                      "height": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "exclusiveMinimum": true
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "storage_key",
+                      "sha256",
+                      "mime_type",
+                      "bytes",
+                      "width",
+                      "height"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "maxItems": 3
+                },
+                "preflight_error": {
+                  "type": "string",
+                  "nullable": true,
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "fresh_submission": {
+                  "type": "boolean"
+                },
+                "checkpoint": {
+                  "type": "object",
+                  "properties": {
+                    "provider_state": {
+                      "type": "string",
+                      "nullable": true,
+                      "enum": [
+                        "pending",
+                        "succeeded",
+                        "failed",
+                        "unknown"
+                      ]
+                    },
+                    "result_ref": {
+                      "type": "object",
+                      "nullable": true,
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "url",
+                            "provider_asset"
+                          ]
+                        },
+                        "locator": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "provider": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "locator",
+                        "provider"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "result_expires_at": {
+                      "type": "string",
+                      "nullable": true,
+                      "format": "date-time"
+                    },
+                    "artifacts": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "provider_output",
+                              "result",
+                              "preview"
+                            ]
+                          },
+                          "storage_key": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 1024
+                          },
+                          "sha256": {
+                            "type": "string",
+                            "pattern": "^[a-f0-9]{64}$"
+                          },
+                          "mime_type": {
+                            "type": "string",
+                            "enum": [
+                              "image/png",
+                              "image/jpeg",
+                              "image/webp"
+                            ]
+                          },
+                          "bytes": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "exclusiveMinimum": true,
+                            "maximum": 33554432
+                          },
+                          "width": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "exclusiveMinimum": true
+                          },
+                          "height": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "exclusiveMinimum": true
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "storage_key",
+                          "sha256",
+                          "mime_type",
+                          "bytes",
+                          "width",
+                          "height"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 3
+                    },
+                    "poll_count": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "transport_retry_count": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "error_class": {
+                      "type": "string",
+                      "nullable": true,
+                      "minLength": 1,
+                      "maxLength": 128
+                    }
+                  },
+                  "required": [
+                    "provider_state",
+                    "result_ref",
+                    "result_expires_at",
+                    "artifacts",
+                    "poll_count",
+                    "transport_retry_count",
+                    "error_class"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "job_id",
+                "owner_id",
+                "status",
+                "stage",
+                "lease_token",
+                "lease_version",
+                "lease_expires_at",
+                "recovery_deadline_at",
+                "snapshot",
+                "input_assets",
+                "attempt",
+                "artifact_manifest",
+                "preflight_error",
+                "fresh_submission",
+                "checkpoint"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 20
+          },
+          "skipped": {
+            "type": "object",
+            "properties": {
+              "not_due": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "leased": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "terminal": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "unsupported": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "backpressure": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "not_due",
+              "leased",
+              "terminal",
+              "unsupported",
+              "backpressure"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "claims",
+          "skipped"
+        ],
+        "additionalProperties": false
+      },
+      "WorkerCleanupClaim": {
+        "type": "object",
+        "properties": {
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "task_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "storage_key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "lease_token": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "lease_expires_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "attempt_count": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "task_id",
+                "storage_key",
+                "reason",
+                "lease_token",
+                "lease_expires_at",
+                "attempt_count"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 100
+          }
+        },
+        "required": [
+          "tasks"
+        ],
+        "additionalProperties": false
+      },
+      "WorkerCompleteAck": {
+        "type": "object",
+        "properties": {
+          "applied": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "completed"
+            ]
+          },
+          "result_image_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "credits_consumed": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "applied",
+          "status",
+          "result_image_id",
+          "credits_consumed"
+        ],
+        "additionalProperties": false
+      },
+      "WorkerCost": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "amount_minor": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "evidence": {
+            "type": "string",
+            "enum": [
+              "provider_report",
+              "invoice",
+              "estimate"
+            ]
+          },
+          "provider_reference": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "currency",
+          "amount_minor",
+          "evidence",
+          "provider_reference"
+        ],
+        "additionalProperties": false
+      },
       "WorkerDrainRequest": {
         "type": "object",
         "properties": {
@@ -1668,6 +3285,181 @@
         },
         "required": [
           "contract_version"
+        ],
+        "additionalProperties": false
+      },
+      "WorkerEvidence": {
+        "type": "object",
+        "properties": {
+          "provider_request_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "submit",
+              "lookup",
+              "fetch"
+            ]
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "observed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "transport_phase": {
+            "type": "string",
+            "enum": [
+              "before_send",
+              "body_sent_or_unknown",
+              "response_received"
+            ]
+          },
+          "http_status": {
+            "type": "integer",
+            "nullable": true,
+            "minimum": 100,
+            "maximum": 599
+          },
+          "reason_code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "provider_request_key",
+          "operation",
+          "started_at",
+          "observed_at",
+          "transport_phase",
+          "http_status",
+          "reason_code"
+        ],
+        "additionalProperties": false
+      },
+      "WorkerFailAck": {
+        "type": "object",
+        "properties": {
+          "applied": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "failed"
+            ]
+          },
+          "credits_released": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "applied",
+          "status",
+          "credits_released"
+        ],
+        "additionalProperties": false
+      },
+      "WorkerInputAsset": {
+        "type": "object",
+        "properties": {
+          "image_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "primary",
+              "subject_reference",
+              "background_reference",
+              "style_reference",
+              "identity_reference"
+            ]
+          },
+          "position": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3
+          },
+          "storage_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "mime_type": {
+            "type": "string",
+            "enum": [
+              "image/png"
+            ]
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 33554432
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
+          }
+        },
+        "required": [
+          "image_id",
+          "role",
+          "position",
+          "storage_key",
+          "sha256",
+          "mime_type",
+          "bytes",
+          "width",
+          "height"
+        ],
+        "additionalProperties": false
+      },
+      "WorkerResultRef": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "url",
+              "provider_asset"
+            ]
+          },
+          "locator": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "provider": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "kind",
+          "locator",
+          "provider"
         ],
         "additionalProperties": false
       },
@@ -1942,6 +3734,59 @@
         ],
         "additionalProperties": false
       },
+      "WorkerStage": {
+        "type": "string",
+        "enum": [
+          "queued",
+          "submitting",
+          "waiting_provider",
+          "storing",
+          "settling",
+          "needs_reconciliation",
+          "done"
+        ]
+      },
+      "WorkerSupportedVersion": {
+        "type": "object",
+        "properties": {
+          "contract_version": {
+            "type": "string",
+            "enum": [
+              "1.0.0"
+            ]
+          },
+          "execution_type": {
+            "type": "string",
+            "enum": [
+              "commercial_edit"
+            ]
+          },
+          "execution_version": {
+            "type": "number",
+            "enum": [
+              1
+            ]
+          },
+          "provider": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "adapter_version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "contract_version",
+          "execution_type",
+          "execution_version",
+          "provider",
+          "adapter_version"
+        ],
+        "additionalProperties": false
+      },
       "WorkerTrigger": {
         "type": "object",
         "properties": {
@@ -1959,6 +3804,75 @@
         "required": [
           "contract_version",
           "job_id"
+        ],
+        "additionalProperties": false
+      },
+      "WorkerUncertainAck": {
+        "type": "object",
+        "properties": {
+          "applied": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "processing"
+            ]
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "needs_reconciliation"
+            ]
+          },
+          "recovery_deadline_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "applied",
+          "status",
+          "stage",
+          "recovery_deadline_at"
+        ],
+        "additionalProperties": false
+      },
+      "WorkerWriteAck": {
+        "type": "object",
+        "properties": {
+          "applied": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "processing"
+            ]
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "submitting",
+              "waiting_provider",
+              "storing",
+              "settling",
+              "needs_reconciliation",
+              "done"
+            ]
+          },
+          "next_attempt_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "applied",
+          "status",
+          "stage",
+          "next_attempt_at"
         ],
         "additionalProperties": false
       },
@@ -7796,17 +9710,17 @@
     },
     "/internal/v1/drain": {
       "post": {
-        "operationId": "workerDrainDesign",
+        "operationId": "workerDrain",
         "tags": [
-          "Worker design only"
+          "Worker (local implementation)"
         ],
         "servers": [
           {
             "url": "https://worker.example.invalid",
-            "description": "DESIGN ONLY placeholder for the future Cloud Run service."
+            "description": "Undeployed placeholder; Worker implementation is maintained in its separate repository."
           }
         ],
-        "summary": "DESIGN ONLY — claim and checkpoint a bounded batch of durable jobs",
+        "summary": "LOCAL IMPLEMENTATION — claim and checkpoint a bounded batch of durable jobs",
         "description": "limit defaults to 5 (1..20). processed counts stages durably advanced in this request, not terminal jobs, and must be <= the requested limit. remaining is an advisory due-work signal, not a consistent queue length. Job and billing truth remains in PG checkpoints.",
         "security": [
           {
@@ -7896,8 +9810,8 @@
           "403": {
             "description": "Cloud Run IAM denied invocation for this identity or audience. Platform response body is not the application ErrorEnvelope."
           },
-          "413": {
-            "description": "INVALID_REQUEST: request stream, uploaded media, or normalized asset exceeds the configured byte limit.",
+          "404": {
+            "description": "NOT_FOUND, including resources owned by another user.",
             "headers": {
               "X-Request-ID": {
                 "description": "Trace UUID.",
@@ -7923,87 +9837,6 @@
                     "no-store"
                   ]
                 }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "415": {
-            "description": "INVALID_REQUEST: a JSON endpoint requires Content-Type application/json.",
-            "headers": {
-              "X-Request-ID": {
-                "description": "Trace UUID.",
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "X-Contract-Version": {
-                "description": "Protocol version.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "1.0.0"
-                  ]
-                }
-              },
-              "Cache-Control": {
-                "description": "Private responses are not cached.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "no-store"
-                  ]
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "RATE_LIMITED. Retry-After indicates the retry delay in seconds.",
-            "headers": {
-              "X-Request-ID": {
-                "description": "Trace UUID.",
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "X-Contract-Version": {
-                "description": "Protocol version.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "1.0.0"
-                  ]
-                }
-              },
-              "Cache-Control": {
-                "description": "Private responses are not cached.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "no-store"
-                  ]
-                }
-              },
-              "Retry-After": {
-                "schema": {
-                  "type": "integer",
-                  "minimum": 1
-                },
-                "description": "Seconds before retry."
               }
             },
             "content": {
@@ -8056,17 +9889,17 @@
     },
     "/internal/v1/process-job": {
       "post": {
-        "operationId": "workerProcessDesign",
+        "operationId": "workerProcess",
         "tags": [
-          "Worker design only"
+          "Worker (local implementation)"
         ],
         "servers": [
           {
             "url": "https://worker.example.invalid",
-            "description": "DESIGN ONLY placeholder for the future Cloud Run service."
+            "description": "Undeployed placeholder; Worker implementation is maintained in its separate repository."
           }
         ],
-        "summary": "DESIGN ONLY — optional authenticated bounded-stage trigger",
+        "summary": "LOCAL IMPLEMENTATION — optional authenticated bounded-stage trigger",
         "description": "Advance at most one durable stage for the specified job; processed must be 0 or 1. remaining signals possible due work, not a guaranteed queue count. Response loss never authorizes blind provider resubmission.",
         "security": [
           {
@@ -8193,117 +10026,6 @@
               }
             }
           },
-          "409": {
-            "description": "IMAGE_NOT_READY, IMAGE_IN_USE, IDEMPOTENCY_CONFLICT, JOB_NOT_CANCELLABLE or UNSUPPORTED_CAPABILITY.",
-            "headers": {
-              "X-Request-ID": {
-                "description": "Trace UUID.",
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "X-Contract-Version": {
-                "description": "Protocol version.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "1.0.0"
-                  ]
-                }
-              },
-              "Cache-Control": {
-                "description": "Private responses are not cached.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "no-store"
-                  ]
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "413": {
-            "description": "INVALID_REQUEST: request stream, uploaded media, or normalized asset exceeds the configured byte limit.",
-            "headers": {
-              "X-Request-ID": {
-                "description": "Trace UUID.",
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "X-Contract-Version": {
-                "description": "Protocol version.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "1.0.0"
-                  ]
-                }
-              },
-              "Cache-Control": {
-                "description": "Private responses are not cached.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "no-store"
-                  ]
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "415": {
-            "description": "INVALID_REQUEST: a JSON endpoint requires Content-Type application/json.",
-            "headers": {
-              "X-Request-ID": {
-                "description": "Trace UUID.",
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "X-Contract-Version": {
-                "description": "Protocol version.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "1.0.0"
-                  ]
-                }
-              },
-              "Cache-Control": {
-                "description": "Private responses are not cached.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "no-store"
-                  ]
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
           "503": {
             "description": "GENERATION_DISABLED or SERVICE_UNAVAILABLE.",
             "headers": {
@@ -8348,13 +10070,13 @@
       "get": {
         "operationId": "internalHealthDesign",
         "tags": [
-          "Worker design only",
+          "Worker (local implementation)",
           "JEV design only"
         ],
         "servers": [
           {
             "url": "https://worker.example.invalid",
-            "description": "DESIGN ONLY placeholder for the future Cloud Run service."
+            "description": "Undeployed placeholder; Worker implementation is maintained in its separate repository."
           },
           {
             "url": "https://jev.example.invalid",
