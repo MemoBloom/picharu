@@ -5,11 +5,19 @@ import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 import sharp from 'sharp';
 import { SeoContent } from '@picjp/contracts';
-import { verifyEvidenceAssets } from '../apps/web/src/server/seo/evidence';
+import { evidenceAsset, verifyEvidenceAssets } from '../apps/web/src/server/seo/evidence';
 import { buildEvidenceManifest } from '../scripts/seo/build-evidence';
 import { baselineContent } from '../apps/web/src/server/seo/content';
 
 describe('evaluated public sample asset integrity', () => {
+  it('preserves non-square dimensions and rejects invalid intrinsic image sizes', () => {
+    const sha256 = 'a'.repeat(64), path = `/seo-examples/fixture-${sha256}.png`;
+    expect(evidenceAsset(path, { [path]: { sha256, width: 300, height: 450 } })).toMatchObject({ width: 300, height: 450 });
+    for (const size of [0, -1, 1.5, Infinity, Number.MAX_SAFE_INTEGER + 1]) {
+      expect(() => evidenceAsset(path, { [path]: { sha256, width: size, height: 450 } })).toThrow('SEO_EVIDENCE_REQUIRED');
+      expect(() => evidenceAsset(path, { [path]: { sha256, width: 300, height: size } })).toThrow('SEO_EVIDENCE_REQUIRED');
+    }
+  });
   it('requires real image bytes matching immutable content hashes, and rejects missing or changed evidence', async () => {
     // Synthetic pixel tests only prove file verification. They are never published as model examples.
     const root = await mkdtemp(join(tmpdir(), 'picmoko-seo-evidence-'));

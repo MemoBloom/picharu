@@ -50,6 +50,6 @@ git push -u origin main
 
 ## SEO 工程
 
-独立 SEO 实施见 [交付与验收](docs/seo/DELIVERY.md) 和 [云端接入指南](docs/seo/CLOUD_SETUP.md)。公开正文服务端输出；工具/教程索引和分析采集默认关闭，等待真实样例、日语审校及云配置验收。`npm run test:seo:production` 检查已构建的本机服务，`npm run test:seo:publishing` 使用隔离 SQL/TLS 替身验证实际发布和 ISR；后者会生成测试构建，普通预览前需重新运行 `npm run build`。
+独立 SEO 实施见 [交付与验收](docs/seo/DELIVERY.md) 和 [云端接入指南](docs/seo/CLOUD_SETUP.md)。公开正文服务端输出；工具/教程索引和分析采集默认关闭，等待真实样例、日语审校及云配置验收。`npm run test:seo:production` 检查已构建的本机服务，`npm run test:seo:publishing` 使用隔离 SQL/TLS 替身验证实际发布和 ISR；后者在临时源码/依赖副本中构建，使用明确标记的合成图，不修改原样例清单或普通预览构建。
 
 首发候选的日文正文/中文对照见 [S1审校包](docs/seo/S1_REVIEW_PACKET.md)，人工记录另存；`npm run seo:review:check`在正文变化时提示重新核对，不能代替人工日语和真实效果评价。
