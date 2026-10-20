@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "public_origin": "https://picharu.vercel.app",
+  "branding": [
+    {
+      "file": "picmoko-mascot.png",
+      "width": 192,
+      "height": 192,
+      "source_webp_sha256": "2d9c970b1e26f812ddde2636c684838158372b703dff0c0b14ee52c6dd7ed1b1",
+      "sha256": "dcba18db1b7a72fd65fcd1a1076b0db38a8368a806e8f52cfb81fbc14c985885",
+      "bytes": 26004
+    },
+    {
+      "file": "picmoko-wordmark-a1.png",
+      "width": 600,
+      "height": 129,
+      "source_webp_sha256": "3cc67a92777052499ebed87a2173db871b28b7e1895390aa5b4263bba1fa7f8e",
+      "sha256": "9f9bad6c7a82b437736f64db077098464a260eed7c0f82388fff69645fcb0178",
+      "bytes": 55433
+    }
+  ],
+  "fonts": [
+    {
+      "family": "Zen Kaku Gothic New",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-5596774d0430.woff2",
+      "source_url": "https://fonts.gstatic.com/l/font?kit=gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4epBJ2-7Kd9XVqOiErBfLaMCCiwbB4w7LVt4ArK7_mzf_m7BdcKp-z2f8FjNP7_DCbPMPg7ZydLJkYm8zNM55gWBOQkcECL4ZZTgxOQXtXnR8BzihytRKAOeCjjdwqUyrPeDLDQ5twiRYvdjKUxI1V8Vp2XFq7ZKKRDmizJQlQdR6BeS3XlTwSQZA5EwUym-24q0mV3QYkiLqsp_jrE78ta0cB1b0TP6wCXquHpgpSWJ6OI1KPVxcLR6z78T96kogtzbZSILVm_TNNF_TJ3H59mg6lWN7rSqzOyCIT19_2Wv1zpUil8zqdGNdksRTQqLDLRZfkLyu0bCMI_8JVDDbjKv0rBD9CLrAzdQw77XfG9heDdc7YWcgr4ffxy9t5Sya5iE2HhHKMgSyufKpAbpdVKgg_1vExD5fmYYMPuoI_oGq9ZLYweMKwND2o2qjP3pj-S-3eUiBqggSb9C4jFYKKOYhfFbuzm9jqlD8J1FrwXVfAaMwEIWMMq3mMvg6H-SyLs3e2C-3-uR1dFz1D_inbjnvgCaU9EA4eULMutqs0PRXAzQY1FyNQXjZ4XDvr5Ee2-s7fyZJ87VA0XkBLkA7Pj21HaFoFYXwq5Hgv4P7kKUrQJrW19sMT2oTTPU3cowQdF36GErSqKDBVY4rair0uCHuIMdhYaM-m6Bf4RuXeqDphcN3tnP8Ehh-wwOHl6rT89ClXsA6iu3-WLrC1Hn5PHmiUL01YIUyNUa2QQgg9Hh4r4n8u5bXWVBzbnZ24t5VhWgrZ2E4SG0XbcFJ5cSR20Rck_-LWa4KELopdz34bZjFJ5U3dqTAiqwuJoPaPgsRgdzkCQ&skey=7b7f935ef05e996a&v=v19",
+      "sha256": "5596774d0430044988a9094bf9c01a984ca7e976f674e6637a586f448c5c59a1",
+      "bytes": 25388
+    },
+    {
+      "family": "Zen Kaku Gothic New",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-d15296fcf908.woff2",
+      "source_url": "https://fonts.gstatic.com/l/font?kit=gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlN4y__T9al07isjhnNc05tegbB4A7LWN4Ara7-lDf_nbBdcqp-w2f8FzNP6PDCbfMPgLZydbJkfW8zNc55gmBOQ0cED74ZZDgxOgXtX3R8CDihy9RKA-eCjzdwrkyrPODLDg5twyRYgtjKUhI1VMVp2HFq6pKKRTmiz5QlQNR6CuS3X1TwSgZA5UwUz2-2460mSHQYkyLqsZ_jrU78sq0cC1b0Tf6wCnquGpgpSGJ5B41KPFxcLh6z6cT95kogtjbZS4LVmvTNM1_TOXH58Gg6mGN7riqzAyCITl9_3mv1zJUimszqc2Ndk8RTQaLDLBZfj7yu1LCMIP8JVTDbg6v0rRD9C7rAyNQx0LXfGNheCtc7YGcgooffxi9t5yya4iE2ARHKMwSyuvKpALpdU6gg_lvExz5fmIYMMeoI_4Gq9pLYwOMKx9D2omqjA3pj-y-3c0iBqQgSbtC4i1YKKeYhflbu0m9jrVD8JFFrzXVfBqQLLIWMOa3mNPg6P-SwBc3e1i-3yOR0RVz1EvihbTnvqier0kA_RULMs9qszfRUKzQZ91yCfXjZ4HDvjZEc5es7XSZTwrVB6nkLL0A8JD23PqFWKoX1opHrjoP7hqU_fJrR4tsMdWoRZvYIbIweS136CErJrqDCUY4rYyr7riHrBsdhd6M8nqBi_xuRQ6Dlp8NyiHPgJBh-4AONtavgzNCjScAlsu36drrCzXn5NnmvUL0wRIUOHka0Twg293h6jIn9iZnjfVBzX3Zy9d5bnWgDfWE_YW0XS8FFz8SR6URKpf-JbK80LbolRD3iVJjKPJU1YKTAvKwoNIPnGgsTr9ztC-KRHA&skey=82994e245a1cc281&v=v19",
+      "sha256": "d15296fcf9086d2851cac75c557995e88eab6fa210b503d5643e9ee20ef1ec2d",
+      "bytes": 25584
+    },
+    {
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "file": "zen-maru-gothic-700-ba13e12dbe26.woff2",
+      "source_url": "https://fonts.gstatic.com/l/font?kit=o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_anPT1epBxxPuGF8I5Y2pDiCLuPYLTMsFRsZj5buCwVq-DAiEx8BCfz3hQ_UcyhAMEtMLlGuwzboJE4bKIoI34XcQYamI9MncYU4FAy20UeI_DV9M6dFFgypR42T9ogdNLAKwBfG3YMZVtoU6q6seSrgrI-hBGFiTPDAX1jUmR3J9a7nCgNe0hH39W3YIKGwW6fykmcpqknTkUAJoWQIeU4zr8OMUoqmccDoPjOWUC_mEx-eH0lJ6bOOvftrfkuYXL3yhiJE0ZemRNsP8kzj6kOqOS0cbaphZ6QEchdu9_8SAaWCaWqVwVzrXet13rX2kS4mzB5KTxU2KNn1YxrLjPJ2HfKeaSMgNqknay_scC69FXCD-dckSBEj697WwSR9ynREumhZBd16bHRvdY3l7-QWLe8QNaMIJ9btrklpKLEQY51nzuE-GNj2E13qW0f5vnPnLtxv7aDD3vz-kEYyA76Aqvpqj4jjcq1QJtSSYh0NnGI3yCaMtIi140ezQ1JVyGH5zM_vuKnf4ryvItZP5zbWwU8galcRGd7YfsCM2DOf2pXVHCVaQjSmUWUA12Bgac1_kkPxfSvJeAe_F5xeQr7SfvLZXjV4cREzW3eh1lS_agA41Rm4NUlI4p1W5gpZGIO9H84Act9jGYv398P-T--e0pI6f3J0bRoakkZSYt_I8Dnmve7w_g0kHb3EAaWyORbAWhAA0cPYe5wJHsR25-3JEb9yBHZHJAQrluHqFDRYbBoOVToJ78skANLm8-odUANUPQww5-aM3d-aEoBKNICZ19vC99sk20AC3HT_XJWVx5dmME_OqX86kGYOO9GbYq8ZfrWb&skey=f1166a4dd546b55c&v=v20",
+      "sha256": "ba13e12dbe26fae17a1c4c96edbd850b3f476834a852a7c44438804296b1d527",
+      "bytes": 32664
+    }
+  ],
+  "font_scope": "Static Japanese copy in the two v1 email templates; regenerate when adding characters.",
+  "google_fonts_css_url": "https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New%3Awght%40400%3B700&text=%0A0123AIcikmop%E3%80%81%E3%80%82%E3%80%8C%E3%80%8D%E3%81%82%E3%81%84%E3%81%86%E3%81%8A%E3%81%8B%E3%81%8C%E3%81%8D%E3%81%8F%E3%81%91%E3%81%93%E3%81%94%E3%81%95%E3%81%96%E3%81%97%E3%81%99%E3%81%9A%E3%81%9B%E3%81%9D%E3%81%9F%E3%81%A0%E3%81%A1%E3%81%A3%E3%81%A4%E3%81%A6%E3%81%A7%E3%81%A8%E3%81%A9%E3%81%AA%E3%81%AB%E3%81%AE%E3%81%AF%E3%81%B3%E3%81%B8%E3%81%BE%E3%81%BF%E3%82%80%E3%82%81%E3%82%82%E3%82%84%E3%82%88%E3%82%89%E3%82%8A%E3%82%8B%E3%82%8C%E3%82%92%E3%82%A2%E3%82%A3%E3%82%A4%E3%82%A6%E3%82%AB%E3%82%AD%E3%82%AF%E3%82%B0%E3%82%B5%E3%82%B8%E3%82%B9%E3%82%BF%E3%83%83%E3%83%84%E3%83%88%E3%83%89%E3%83%8B%E3%83%91%E3%83%93%E3%83%95%E3%83%97%E3%83%9A%E3%83%9C%E3%83%9D%E3%83%A1%E3%83%A3%E3%83%A9%E3%83%AA%E3%83%AB%E3%83%AC%E3%83%AD%E3%83%AF%E3%83%B3%E3%83%BB%E3%83%BC%E4%B8%80%E4%B8%8B%E4%B8%8D%E4%B8%AD%E4%BA%86%E4%BA%88%E4%BA%BA%E4%BB%8B%E4%BB%96%E4%BD%95%E4%BD%BF%E5%82%99%E5%85%A5%E5%85%AC%E5%85%B1%E5%86%99%E5%87%BA%E5%88%86%E5%88%87%E5%88%A5%E5%8A%9B%E5%8A%B9%E5%90%88%E5%91%B3%E5%9B%B2%E5%9C%A8%E5%9E%8B%E5%A0%B4%E5%A5%BD%E5%AE%8C%E5%AE%9A%E5%BA%A6%E5%BD%93%E5%BD%A9%E5%BF%83%E6%80%9D%E6%8E%A2%E6%8E%B2%E6%95%B4%E6%96%B0%E6%96%B9%E6%99%AF%E6%9C%89%E6%9C%9F%E6%9E%9A%E6%A3%84%E6%A5%BD%E6%A9%9F%E6%AC%A1%E6%B0%97%E6%B0%B4%E6%BA%96%E7%89%A9%E7%8F%BE%E7%90%86%E7%94%A8%E7%94%B1%E7%94%BB%E7%99%BB%E7%9C%9F%E7%A0%B4%E7%A2%BA%E7%B4%B9%E7%B6%9A%E7%B7%A8%E8%83%8C%E8%83%BD%E8%87%AA%E8%89%B2%E8%A1%A8%E8%A6%81%E8%A6%A7%E8%AA%8D%E8%AA%BF%E8%BC%89%E8%BE%BC%E9%80%81%E9%8C%B2%E9%96%8B%E9%99%90%E9%9B%86%E9%9B%B0%E9%9D%A2%E9%A0%86%E9%A2%A8%E9%AB%AA&display=swap&family=Zen+Maru+Gothic:wght@700"
+}
