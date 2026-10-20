@@ -33,3 +33,8 @@ HTTP 回归覆盖归属、坏文件与声明不一致、固定上传版本、多
 - 无前端页面、上线监控告警和生产发布流水线。本轮后端通过本地验证，不等于整个产品完成或可开放收费生成。
 
 复查命令与安全限制见 [后端说明](../backend/VERCEL_BACKEND.md)、[数据库说明](../backend/DATABASE_SCHEMA.md)。GENERATION_ENABLED 保持 false。验证结束已停止本轮临时 Next 服务与 PostgreSQL 测试实例。
+
+
+## 2026-10-20 独立认证发布候选
+
+fix/live-auth从线上main 878383f派生，移入Google PKCE/邮箱token_hash回调、账户readiness、服务端Supabase新Secret兼容和hydration初始快照保护。保留UI主工作区，不带Worker协议/迁移；认证SQL测试仅运行基础migration。npm run verify通过116测试、90 SQL断言、类型/契约及生产构建；无真实OAuth、发信或模型调用。生产网站登录页200、Google到达登录页，尚不等同最终注册完成。部署/真实配置检查另记AUTH_SETUP，不假定已上线。
