@@ -1,10 +1,10 @@
 # 本轮实现验证记录
 
-> 2026-10-20 Git/CI 补充：本地仓库与工作流配置已建立；统一 verify、84项测试、90项SQL断言、103项原生PG并发断言及当前网页/API生产构建通过。remote 尚未添加，GitHub runner 和标签推送未实跑，详见 [Git与CI规范](../maintenance/GIT_AND_CI.md)。
+> 2026-10-20 Git/CI 补充：本地仓库与工作流配置已建立；统一 verify、84项测试、90项SQL断言、103项原生PG并发断言及当前网页/API生产构建通过。remote 尚未添加，GitHub runner 和标签推送未实跑，详见 [Git与CI规范](../../../../docs/maintenance/GIT_AND_CI.md)。
 
 日期：2026-10-19。范围：统一协议、Vercel Web 后端、数据库迁移，以及 Worker/JEV 设计的协议一致性。所有效果模板尚未完成真实模型 evaluation；没有云部署或真实付款记录。
 
-2026-10-20追加：按用户授权SSH只读确认Lambda服务器、工作空间与固定d3-mini源码，详见 [环境证据](../research/LAMBDA_ENVIRONMENT_2026-10-20.md)。本次只完善部署/评分/接口设计并做文档与共享Schema一致性检查；未开发或部署推荐服务，未下载权重/运行GPU、未scp；不把SSH调查作为模型联调成功。
+2026-10-20追加：按用户授权SSH只读确认Lambda服务器、工作空间与固定d3-mini源码，详见 [环境证据](../../../../docs/research/LAMBDA_ENVIRONMENT_2026-10-20.md)。本次只完善部署/评分/接口设计并做文档与共享Schema一致性检查；未开发或部署推荐服务，未下载权重/运行GPU、未scp；不把SSH调查作为模型联调成功。
 
 ## 已实际执行
 

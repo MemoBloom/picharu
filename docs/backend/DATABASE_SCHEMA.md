@@ -77,4 +77,4 @@ PGlite 是单实例测试，不能独自证明多连接竞态。另有 `scripts/
 PGHOST=/private/tmp/picjp-pg-review-01a15486/socket PGPORT=55439 PGUSER=kanzhiwu node --import tsx scripts/test-concurrency.ts
 ```
 
-必须先单独启动受控临时 PostgreSQL。脚本只允许 OS 临时目录下 `picjp-.../socket` Unix socket（macOS 可为 `/private/tmp`，Linux 可为 `/tmp`），解析真实路径后校验父目录，拒绝 TCP 或任意数据库；要求显式端口和用户名，不读 `.env` 或复用 `PGDATABASE`。每轮创建随机独立 `picjp_concurrency_...` 数据库，并在 finally 清理，仅保留外部管理的测试 PG 服务。GitHub CI 使用 PostgreSQL 17 临时容器与同一脚本，配置见 [Git 与流水线规范](../maintenance/GIT_AND_CI.md)。此前本机验证最初受沙箱 shmget 限制，主 agent 获得自动审批后启动专用测试集群，才完成了上述实际验证；没有连接真实 Supabase。
+必须先单独启动受控临时 PostgreSQL。脚本只允许 OS 临时目录下 `picjp-.../socket` Unix socket（macOS 可为 `/private/tmp`，Linux 可为 `/tmp`），解析真实路径后校验父目录，拒绝 TCP 或任意数据库；要求显式端口和用户名，不读 `.env` 或复用 `PGDATABASE`。每轮创建随机独立 `picjp_concurrency_...` 数据库，并在 finally 清理，仅保留外部管理的测试 PG 服务。GitHub CI 使用 PostgreSQL 17 临时容器与同一脚本，配置见 [Git 与流水线规范](../../../../docs/maintenance/GIT_AND_CI.md)。此前本机验证最初受沙箱 shmget 限制，主 agent 获得自动审批后启动专用测试集群，才完成了上述实际验证；没有连接真实 Supabase。

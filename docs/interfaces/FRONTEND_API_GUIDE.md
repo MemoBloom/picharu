@@ -4,7 +4,7 @@
 
 权威来源：[统一接口协议](INTERFACE_SPEC_V1.md)、[可导入 OpenAPI](openapi.json)、[可执行 Schema](../../packages/contracts/src/index.ts)、[当前路由](../../apps/web/src/server/router.ts)。业务字段变化应先同步这些来源，再维护本文。
 
-页面数量、入口与跳转提案见 [前端页面与跳转设计](../product/FRONTEND_PAGE_MAP.md)。其中 /ja/... 为拟开发的页面路由，不是本规范承诺已实现的 /api 路由。
+页面数量、入口与跳转提案见 [前端页面与跳转设计](../../../../docs/product/FRONTEND_PAGE_MAP.md)。其中 /ja/... 为拟开发的页面路由，不是本规范承诺已实现的 /api 路由。
 
 ## 1. 当前可用边界
 

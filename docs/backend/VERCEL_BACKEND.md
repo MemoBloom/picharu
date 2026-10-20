@@ -64,7 +64,7 @@ PUT 签名键只写 staging；complete 以解码结果/hash 写服务端规范�
 - Web 只把任务持久化为 queued；尚无 Worker 领取、供应商提交、结果保存、成功扣实、失败释放或自动过期恢复运行代码。queued 取消已实现，processing 取消未承诺。
 - 结果资产需要 Worker 设计中的数据库增量，当前迁移只支持上传资产；不能手动把任务改 completed 充当交付。
 - 20 工具/Prompt 已配置，真实编辑效果和各供应商能力未验证；不保证每个效果可由同一模型完成。
-- 2026-10-20 用户确认先按d3-mini设计。固定revision和Lambda A100资源已只读核查，评分/接口与部署设计见docs/architecture及[Lambda协议](../interfaces/LAMBDA_RECOMMENDATION_PROTOCOL.md)。未开发、部署或运行推荐模型；Web稳定字段保持不变。当前尚缺批准bundle allowlist，现有候选资料也需按20工具规格细化，后续实现时补齐。
+- 2026-10-20 用户确认先按d3-mini设计。固定revision和Lambda A100资源已只读核查，评分/接口与部署设计见docs/architecture及[Lambda协议](../../../../docs/interfaces/LAMBDA_RECOMMENDATION_PROTOCOL.md)。未开发、部署或运行推荐模型；Web稳定字段保持不变。当前尚缺批准bundle allowlist，现有候选资料也需按20工具规格细化，后续实现时补齐。
 - 无前端、邮件流程、真实生产支付、生产清理、监控告警平台或部署流水线；只实现本轮授权的 Web API 后端。所有上线差距列入 Worker 设计和原有路线图。
 
 测试命令、实际结果与外部联调限制见 [验证记录](../verification/VERIFICATION.md)。

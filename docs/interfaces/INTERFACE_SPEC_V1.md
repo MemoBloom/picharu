@@ -10,7 +10,7 @@
 - Vercel Next.js Node Route Handlers：验证身份、输入/工具/能力、固定上传资产、服务端组装快照、创建持久任务与积分预留；状态/历史/下载/删除、JEV 代理和 Stripe。
 - Supabase：Auth；PG 原子事务、RLS、持久任务、资产/输入关系、订单/账本。数据库初始余额为 0；无无限免费或未验证套餐价格。
 - Worker：未来实现；从 PG 获取不可变快照，按阶段调用供应商并交付。此轮只设计，不在 Vercel 实现中伪造生成或假结果。
-- JEV：未来实现；仅对候选评分。2026-10-20 用户确认先按d3-mini设计；固定模型revision及Lambda资源已只读核查，未运行推理。内部System One API由Lambda adapter转换，公开协议不变；完整[Lambda接口协议](LAMBDA_RECOMMENDATION_PROTOCOL.md)与[部署设计](../architecture/JEV_LAMBDA_DESIGN.md)供审阅，审阅后再传输云端。
+- JEV：未来实现；仅对候选评分。2026-10-20 用户确认先按d3-mini设计；固定模型revision及Lambda资源已只读核查，未运行推理。内部System One API由Lambda adapter转换，公开协议不变；完整[Lambda接口协议](../../../../docs/interfaces/LAMBDA_RECOMMENDATION_PROTOCOL.md)与[部署设计](../../../../docs/architecture/JEV_LAMBDA_DESIGN.md)供审阅，审阅后再传输云端。
 - Vercel 只创建 queued 作业；初期 Worker 独立调度扫描 PG，不依赖 Web 发一次不持久请求。Worker 未上线前默认关闭新生成，接口测试可显式配置测试依赖。
 
 ## 2. 通用规范
@@ -90,7 +90,7 @@ Worker未来使用PG受控RPC：worker_claim_jobs、worker_record_submission、w
 
 ## 7. JEV协议
 
-本节保持当前1.0.0可执行字段；字段逐项说明、错误/认证、完整bundle语义、catalog与候选子集hash区别、固定d3实际输入输出及尚未实现的校验见 [Lambda推荐接口协议](LAMBDA_RECOMMENDATION_PROTOCOL.md)。本轮只完善设计，不改Schema或导出器。
+本节保持当前1.0.0可执行字段；字段逐项说明、错误/认证、完整bundle语义、catalog与候选子集hash区别、固定d3实际输入输出及尚未实现的校验见 [Lambda推荐接口协议](../../../../docs/interfaces/LAMBDA_RECOMMENDATION_PROTOCOL.md)。本轮只完善设计，不改Schema或导出器。
 
 初期Browser仅提交owned ready image_id，Vercel从私有JPEG分析图取数据；不接受用户URL，也不向Lambda暴露原图读写凭证。当前先完成上传再推荐，上传前缩图并行推荐属于后续优化，不在v1伪实现。
 
