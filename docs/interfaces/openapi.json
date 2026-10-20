@@ -2492,6 +2492,145 @@
         "maxLength": 180,
         "pattern": "^\\/ja(?:\\/tools(?:\\/[a-z_]+)?|\\/guides(?:\\/[a-z0-9-]+)?|\\/help)?$"
       },
+      "SeoPipelineHealth": {
+        "type": "object",
+        "properties": {
+          "checked_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "is_fixture": {
+            "type": "boolean"
+          },
+          "healthy": {
+            "type": "boolean"
+          },
+          "can_suggest_search_changes": {
+            "type": "boolean"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "gsc",
+                    "ga4"
+                  ]
+                },
+                "property": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "grain": {
+                  "type": "string",
+                  "enum": [
+                    "property",
+                    "page",
+                    "query_page",
+                    "landing_event"
+                  ]
+                },
+                "from": {
+                  "type": "string"
+                },
+                "to": {
+                  "type": "string"
+                },
+                "timezone": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "ready",
+                    "empty",
+                    "not_configured",
+                    "missing",
+                    "failed",
+                    "stalled",
+                    "waiting",
+                    "stale",
+                    "limited"
+                  ]
+                },
+                "expected_days": {
+                  "type": "integer"
+                },
+                "successful_days": {
+                  "type": "integer"
+                },
+                "missing_days": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "alerts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string",
+                        "enum": [
+                          "CONFIGURATION_REQUIRED",
+                          "NO_SUCCESSFUL_IMPORT",
+                          "MISSING_DAYS",
+                          "LATEST_IMPORT_FAILED",
+                          "IMPORT_STALLED",
+                          "IMPORT_PENDING",
+                          "STALE_IMPORT",
+                          "PARTIAL_RESULTS",
+                          "THRESHOLDED",
+                          "OTHER_ROW_LOSS"
+                        ]
+                      },
+                      "severity": {
+                        "type": "string",
+                        "enum": [
+                          "error",
+                          "warning",
+                          "info"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "severity"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "source",
+                "property",
+                "grain",
+                "from",
+                "to",
+                "timezone",
+                "status",
+                "expected_days",
+                "successful_days",
+                "missing_days",
+                "alerts"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "checked_at",
+          "is_fixture",
+          "healthy",
+          "can_suggest_search_changes",
+          "sources"
+        ],
+        "additionalProperties": false
+      },
       "SeoRevalidationRequest": {
         "type": "object",
         "properties": {

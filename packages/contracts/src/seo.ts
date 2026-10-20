@@ -31,3 +31,13 @@ export const SeoConsentRequest = z.object({ consent: z.literal(true), landing_pa
 export const SeoRevalidationRequest = z.object({ nonce: z.string().uuid(), timestamp: z.number().int(), path: SeoPath, revision_id: z.string().uuid() }).strict();
 export const SeoErrorEnvelope = z.object({ error: z.object({ code: z.string().regex(/^SEO_[A-Z_]+$/) }).strict() }).strict();
 export const SeoGa4SessionRequest = z.object({ client_id: z.string().regex(/^\d{1,20}\.\d{1,20}$/), session_id: z.number().int().positive().max(Number.MAX_SAFE_INTEGER) }).strict();
+export const SeoPipelineHealth = z.object({
+  checked_at: z.string().datetime(), is_fixture: z.boolean(), healthy: z.boolean(), can_suggest_search_changes: z.boolean(),
+  sources: z.array(z.object({
+    source: z.enum(['gsc','ga4']), property: z.string().nullable(), grain: z.enum(['property','page','query_page','landing_event']),
+    from: z.string(), to: z.string(), timezone: z.string(),
+    status: z.enum(['ready','empty','not_configured','missing','failed','stalled','waiting','stale','limited']),
+    expected_days: z.number().int(), successful_days: z.number().int(), missing_days: z.array(z.string()),
+    alerts: z.array(z.object({code:z.enum(['CONFIGURATION_REQUIRED','NO_SUCCESSFUL_IMPORT','MISSING_DAYS','LATEST_IMPORT_FAILED','IMPORT_STALLED','IMPORT_PENDING','STALE_IMPORT','PARTIAL_RESULTS','THRESHOLDED','OTHER_ROW_LOSS']),severity:z.enum(['error','warning','info'])}).strict()),
+  }).strict()),
+}).strict();

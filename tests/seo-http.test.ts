@@ -19,12 +19,21 @@ const request = (route: string, body?: unknown, actor: string = author) => new R
 beforeAll(async () => {
   db = new PGlite(); await db.exec('create schema auth;create table auth.users(id uuid primary key);create role anon;create role authenticated;create role service_role bypassrls;grant usage on schema public to anon,authenticated,service_role;');
   await db.exec(await readFile('supabase/migrations/20261020153000_seo.sql', 'utf8'));
+  await db.exec(await readFile('supabase/migrations/20261020163245_seo_health.sql', 'utf8'));
   await db.query('insert into auth.users values($1),($2),($3)', [author, reviewer, outsider]);
   await db.query("insert into seo_members values($1,'editor'),($2,'reviewer')", [author, reviewer]);
 });
 afterAll(() => db.close());
 beforeEach(async () => { invalidate.mockClear(); await db.exec('truncate seo_changes,seo_revisions,seo_pages,seo_webhook_nonces cascade'); });
 describe('SEO HTTP integrates the real migration, authorization and publish boundaries', () => {
+  it('reports missing collection through the authorized overview without suggesting changes',async()=>{
+    const handle=createSeoHandler(deps);
+    const response=await handle(request('admin/overview?fixture=true'));expect(response.status).toBe(200);
+    expect(response.headers.get('cache-control')).toBe('no-store');
+    const body=await response.json();expect(body.health).toMatchObject({is_fixture:true,healthy:false,can_suggest_search_changes:false});expect(body.opportunities).toEqual([]);
+    expect(body.health.sources[0].missing_days).toHaveLength(7);
+    expect((await handle(request('admin/overview?fixture=true',undefined,outsider))).status).toBe(403);
+  });
   it('rejects unverified and non-member callers, invalid input and unexpected routes', async () => {
     const handle = createSeoHandler(deps);
     expect((await handle(request('admin/baseline?path=/ja/tools/remove_person', undefined, 'invalid'))).status).toBe(401);

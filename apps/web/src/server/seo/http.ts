@@ -6,6 +6,7 @@ import { authenticateSeoActor,createSeoRpc,SeoError,type SeoRpc } from './reposi
 import { baselineContent } from './content';
 import { opportunities } from './metrics';
 import { verifyEvidenceAssets } from './evidence';
+import { readPipelineHealth } from './health';
 
 type Deps={rpc:SeoRpc;authenticate:(request:Request)=>Promise<string>;invalidate:(path:string)=>Promise<void>;now:()=>number;secret:()=>string|undefined;databaseContentEnabled?:()=>boolean;verifyEvidence?:(content:SeoContent)=>Promise<void>};
 async function body(request:Request,max=65536){if(!request.headers.get('content-type')?.startsWith('application/json'))throw new SeoError('SEO_INVALID_CONTENT_TYPE',415);return await boundedBytes(request,max);}
@@ -35,7 +36,8 @@ export function createSeoHandler(deps:Deps){return async(request:Request)=>{
    const dashboard=await deps.rpc<any>('seo_dashboard',{p_actor:actor,p_fixture:url.searchParams.get('fixture')==='true',p_gsc_property:process.env.SEO_GSC_PROPERTY||'sc-domain:picmoko.com'});
    const pageRows=dashboard.gsc_page_summary||[];
    const funnel=dashboard.is_fixture?null:await deps.rpc('seo_funnel_report',{p_actor:actor});
-   return respond({...dashboard,actor_id:actor,funnel,opportunities:opportunities(pageRows),limits:{revisions:100,changes:100,ingestions:100,metrics:5000},ga4_property_configured:/^\d+$/.test(process.env.SEO_GA4_PROPERTY_ID||''),database_content_enabled:deps.databaseContentEnabled?.()===true});
+   const health=await readPipelineHealth(deps.rpc,dashboard.is_fixture,deps.now());
+   return respond({...dashboard,actor_id:actor,funnel,health,opportunities:health.can_suggest_search_changes?opportunities(pageRows):[],limits:{revisions:100,changes:100,ingestions:100,metrics:5000},ga4_property_configured:/^\d+$/.test(process.env.SEO_GA4_PROPERTY_ID||''),database_content_enabled:deps.databaseContentEnabled?.()===true});
   }
   await deps.rpc('seo_require_role',{p_actor:actor,p_roles:['editor','reviewer','admin']});
   if(path==='/api/seo/admin/baseline'&&request.method==='GET'){

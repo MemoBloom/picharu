@@ -194,6 +194,7 @@ async function main(){
   // SEO migrations are applied to this same isolated database, never to a configured cloud project.
   await db.query(await readFile('supabase/migrations/20261020153000_seo.sql','utf8'));
   await db.query(await readFile('supabase/migrations/20261020160000_seo_analytics.sql','utf8'));
+  await db.query(await readFile('supabase/migrations/20261020163245_seo_health.sql','utf8'));
   const reviewer=randomUUID();await db.query('insert into auth.users values($1)',[reviewer]);
   await db.query("insert into seo_members values($1,'editor'),($2,'reviewer')",[owner,reviewer]);
   const seoClients=await clients(10),content=baselineContent('/ja/tools/remove_person')!.content;

@@ -15,7 +15,7 @@ async function main() {
   const db = new PGlite(), author = randomUUID(), reviewer = randomUUID();
   const rpc = async (name: string, args: Record<string, unknown>): Promise<any> => {
     assert(/^seo_[a-z_]+$/.test(name));
-    const entries = Object.entries(args); assert(entries.every(([key]) => /^p_[a-z_]+$/.test(key)));
+    const entries = Object.entries(args); assert(entries.every(([key]) => /^p_[a-z][a-z0-9_]*$/.test(key)));
     return (await db.query<{ v: any }>(`select ${name}(${entries.map(([key], i) => `${key}=>$${i + 1}`).join(',')}) v`, entries.map(([key, value]) => key === 'p_roles' ? '{' + (value as string[]).join(',') + '}' : value && typeof value === 'object' ? JSON.stringify(value) : value))).rows[0].v;
   };
   let app: ChildProcess | undefined, fixture: ReturnType<typeof createServer> | undefined;
@@ -23,7 +23,7 @@ async function main() {
   const check = (actual: unknown, expected: unknown, label: string) => { assert.deepEqual(actual, expected, label); assertions++; };
   try {
     await db.exec('create schema auth;create table auth.users(id uuid primary key);create role anon;create role authenticated;create role service_role bypassrls;grant usage on schema public,auth to anon,authenticated,service_role;create function auth.uid() returns uuid language sql stable as $$ select null::uuid $$;');
-    for (const file of ['202610190001_web_backend.sql','20261020153000_seo.sql','20261020160000_seo_analytics.sql']) await db.exec(await readFile('supabase/migrations/' + file, 'utf8'));
+    for (const file of ['202610190001_web_backend.sql','20261020153000_seo.sql','20261020160000_seo_analytics.sql','20261020163245_seo_health.sql']) await db.exec(await readFile('supabase/migrations/' + file, 'utf8'));
     await db.query('insert into auth.users values($1),($2)', [author, reviewer]); await db.query("insert into seo_members values($1,'editor'),($2,'reviewer')", [author, reviewer]);
     execFileSync('openssl', ['req','-x509','-newkey','rsa:2048','-nodes','-keyout',join(directory,'key.pem'),'-out',join(directory,'cert.pem'),'-days','1','-subj','/CN=localhost','-addext','subjectAltName=DNS:localhost,IP:127.0.0.1'], { stdio: 'ignore' });
     fixture = createServer({ key: await readFile(join(directory,'key.pem')), cert: await readFile(join(directory,'cert.pem')) }, async (req, res) => {
@@ -72,6 +72,7 @@ async function main() {
     check((await fetch(base+'/ja/guides/unknown-isolated-guide')).status,404,'unpublished guide true 404 in DB mode');
     const overview=await fetch(base+'/api/seo/admin/overview',{headers:{Authorization:'Bearer fixture-reviewer-token'}});check(overview.status,200,'real HTTP member report including SQL funnel');
     const report=await overview.json();check(report.pages.length,2,'report uses the same published page pointers');check(report.funnel.events,[],'no fabricated business conversions');
+    check(report.health.healthy,false,'missing Google collection remains unhealthy');check(report.health.sources.length,4,'source and grain calendars checked separately');check(report.opportunities,[],'missing collection cannot generate optimization suggestions');
     console.log(JSON.stringify({result:'PASS',checks:assertions,transport:'local TLS Auth/PostgREST fixture + real SQL + production Next',cloud:false}));
   } finally {
     if(app&&app.exitCode===null){const ended=new Promise(resolve=>app!.once('exit',resolve));app.kill('SIGTERM');await Promise.race([ended,delay(3000)]);if(app.exitCode===null)app.kill('SIGKILL');}

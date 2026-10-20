@@ -3,6 +3,9 @@ import { PGlite } from '@electric-sql/pglite';
 import { readFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import { baselineContent } from '../apps/web/src/server/seo/content';
+import { researchWindows } from '../scripts/seo/research';
+import { importWindow } from '../scripts/seo/import';
+import type { SeoRpc } from '../apps/web/src/server/seo/repository';
 const author='00000000-0000-4000-8000-000000000001',reviewer='00000000-0000-4000-8000-000000000002',outsider='00000000-0000-4000-8000-000000000003';
 let db:PGlite;
 const content=()=>baselineContent('/ja/tools/remove_person')!.content;
@@ -15,6 +18,7 @@ const rows=(clicks=2)=>JSON.stringify([{dimensions:{page:'/ja/tools/remove_perso
 beforeAll(async()=>{
  db=new PGlite();await db.exec('create schema auth; create table auth.users(id uuid primary key); create role anon; create role authenticated; create role service_role bypassrls; grant usage on schema public to anon,authenticated,service_role;');
  await db.exec(await readFile('supabase/migrations/20261020153000_seo.sql','utf8'));
+ await db.exec(await readFile('supabase/migrations/20261020163245_seo_health.sql','utf8'));
  await db.query('insert into auth.users(id) values($1),($2),($3)',[author,reviewer,outsider]);
  await db.query("insert into seo_members values($1,'editor'),($2,'reviewer')",[author,reviewer]);
 });
@@ -66,5 +70,32 @@ describe('SEO persisted approval, publish, rollback and import transactions',()=
   await begin(b,false);expect(await rpc('seo_ingest_finish',[b,0,null])).toMatchObject({status:'empty'});
   expect((await rpc('seo_dashboard',[reviewer,false])).metrics).toEqual([]);
   expect((await rpc('seo_dashboard',[reviewer,true])).metrics).toHaveLength(1);
+ });
+ it('reports every expected day and separates latest failure from last successful import',async()=>{
+  const args=[false,'sc-domain:picmoko.com','559730643','2026-10-13','2026-10-19','2026-10-14','2026-10-20'];
+  let health=await rpc('seo_ingestion_health',args);expect(health).toHaveLength(28);expect(health.every((r:any)=>r.status===null)).toBe(true);
+  const first=randomUUID();await begin(first,false);await rpc('seo_ingest_finish',[first,0,null]);
+  const failure=randomUUID();await begin(failure,false);await rpc('seo_ingest_finish',[failure,0,'UPSTREAM_UNAVAILABLE']);
+  await db.query("update seo_ingestions set created_at=created_at-interval '1 minute' where id=$1",[first]);
+  const fixture=randomUUID();await begin(fixture,true);await rpc('seo_ingest_finish',[fixture,0,null]);
+  health=await rpc('seo_ingestion_health',args);expect(health.find((r:any)=>r.source==='gsc'&&r.grain==='page'&&r.day==='2026-10-19')).toMatchObject({status:'failed',successful_status:'empty'});
+  const isolated=await rpc('seo_ingestion_health',[true,...args.slice(1)]);expect(isolated.filter((r:any)=>r.status!==null)).toHaveLength(1);
+  await expect(rpc('seo_ingestion_health',[...args.slice(0,3),'2026-01-01','2026-10-19',...args.slice(5)])).rejects.toThrow('SEO_INVALID_REQUEST');
+  for(const role of ['anon','authenticated']){await db.exec('set role '+role);try{await expect(rpc('seo_ingestion_health',args)).rejects.toThrow('permission denied');}finally{await db.exec('reset role');}}
+ });
+ it('imports CSV windows through real SQL idempotently and keeps research apart from GSC and live data',async()=>{
+  const [window]=researchWindows(Buffer.from('Keyword,Volume\n写真 AI,100-1K\n背景 消す,—'),{source:'keyword_planner',export_id:'offline-test',exported_at:'2026-10-20T10:00:00Z',as_of:'2026-10-20',period_start:'2026-09-01',period_end:'2026-09-30',country:'JP',locale:'ja',search_type:'web',delimiter:'comma',keyword_column:'Keyword',value_column:'Volume',is_fixture:true});
+  const adapter:SeoRpc=async<T>(name:string,args:Record<string,unknown>)=>{const entries=Object.entries(args);return (await db.query<{v:T}>(`select ${name}(${entries.map(([key],i)=>`${key}=>$${i+1}`).join(',')}) v`,entries.map(([,value])=>value&&typeof value==='object'?JSON.stringify(value):value))).rows[0].v;};
+  const id=randomUUID();await importWindow(adapter,window,id);await importWindow(adapter,window,id);await importWindow(adapter,window);
+  expect((await db.query('select * from seo_metrics')).rows).toHaveLength(2);
+  const dashboard=await rpc('seo_dashboard',[reviewer,true]);expect(dashboard.metrics).toHaveLength(2);expect(dashboard.gsc_page_summary).toEqual([]);
+  expect(dashboard.metrics.find((r:any)=>r.dimensions.query==='写真 AI').measures).toEqual({volume:null,volume_lower:100,volume_upper:1000});
+  expect((await rpc('seo_dashboard',[reviewer,false])).metrics).toEqual([]);
+ });
+ it('keeps database page position unknown when any positive-impression row has no position',async()=>{
+  const id=randomUUID(),today=new Date().toISOString().slice(0,10);
+  await rpc('seo_ingest_begin',[id,'gsc','sc-domain:picmoko.com',today,'page',true,'{}']);
+  await rpc('seo_ingest_stage',[id,0,JSON.stringify([{dimensions:{page:'/ja',country:'JP',device:'mobile'},measures:{clicks:1,impressions:100,position:10}},{dimensions:{page:'/ja',country:'JP',device:'desktop'},measures:{clicks:1,impressions:100,position:null}}])]);await rpc('seo_ingest_finish',[id,1,null]);
+  expect((await rpc('seo_dashboard',[reviewer,true])).gsc_page_summary[0].measures).toMatchObject({impressions:200,position:null});
  });
 });

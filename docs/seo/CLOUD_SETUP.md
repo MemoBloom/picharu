@@ -65,7 +65,7 @@ NEXT_PUBLIC_ANALYTICS_ENABLED=false
 
 `NEXT_PUBLIC_` 变量在构建时固定。Preview 环境强制 noindex。开启采集前，服务端还需独立生成至少 32 字符的 `SEO_EVENT_SECRET`；发布回调另用独立的 `SEO_REVALIDATE_SECRET`。密钥仅在部署后台保存。
 
-数据库顺序：现有 Web 基础迁移 → 现有 Worker 迁移（若已使用）→ `20261020153000_seo.sql` → `20261020160000_seo_analytics.sql`。不要重复运行已应用迁移；先检查迁移历史，在测试环境演练。SEO 表和 RPC 不直接授权给普通用户，BFF 验证 Supabase JWT 后再执行角色检查。
+数据库顺序：现有 Web 基础迁移 → 现有 Worker 迁移（若已使用）→ `20261020153000_seo.sql` → `20261020160000_seo_analytics.sql` → `20261020163245_seo_health.sql`。不要重复运行已应用迁移；先检查迁移历史，在测试环境演练。SEO 表和 RPC 不直接授权给普通用户，BFF 验证 Supabase JWT 后再执行角色检查。
 
 负责人需要给至少两个独立身份分配 SEO 角色（例如自动化编辑身份和你的审核账号，或先用两个测试账号演练），在 Supabase SQL Editor 执行以下结构，替换成已核实的 Auth 用户 UUID：
 
@@ -117,10 +117,12 @@ npm run seo:collect -- rank /secure/path/reviewed-targets.json 2026-10-20 --allo
 
 ## 7. 上线验收与仍待完成
 
-- 代码：S0–S4 工程与本地测试已覆盖，真实验收仍有下列门槛；合并/部署状态以交付与 PR 记录为准。
+- 代码：S0–S4 工程基线已有本地测试；S3结构化假设/观察报告仍需完善，真实验收也有下列门槛；合并/部署状态以交付与 PR 记录为准。
 - Google：GSC 待所有权验证；两个资源的服务账号读取权限待配置；尚无真实采集样本。
 - GA4：编号已确认；标签/业务传输已实现，同意机制真实浏览器和后台接收待验收。
 - 内容：20 工具和 3 篇教程有正文基线；真实授权样例、模型版本/效果证据和日语审校待完成，保持 noindex。
 - 发布：先测试库演练独立审核、并发冲突、缓存失效、回滚，再批准正式环境索引。
 
 验收不以「后台创建成功」替代事件/报表实际接收，也不以测试 fixture 替代真实流量和效果。
+
+CSV导出导入、健康检查和监控出口见 [RESEARCH_IMPORT.md](RESEARCH_IMPORT.md)。先运行 `npm run seo:collect -- health` 核对缺日与失败；非零退出表示尚不能当作完整数据。云监控规则需另外配置验收。

@@ -1,15 +1,18 @@
-import { readFile } from 'node:fs/promises';
+import { readFile,stat } from 'node:fs/promises';
 import { createSeoRpc } from '../../apps/web/src/server/seo/repository';
 import { googleReports,collectGscDay,collectGa4Day } from './google';
+import { researchWindows } from './research';
 import { importWindow } from './import';
 import { deliverBusinessEvents } from './delivery';
 import { backfill } from './backfill';
 import { matureWindow } from './schedule';
+import { readPipelineHealth } from '../../apps/web/src/server/seo/health';
 import { collectRank,RankTarget } from './ranking';
 async function main(){
  const [source,arg,end]=process.argv.slice(2);
- if(source==='--help'){console.log('SEO collector: gsc|ga4 FROM [TO]; daily; reconcile; deliver; import FILE; rank FILE DAY --allow-paid-requests. Environment and ADC are required; no secrets are printed.');return;}
+ if(source==='--help'){console.log('SEO collector: gsc|ga4 FROM [TO]; daily; health [--fixture]; reconcile; deliver; import FILE; research CSV CONFIG_JSON; rank FILE DAY --allow-paid-requests. Environment and ADC are required; no secrets are printed.');return;}
  const rpc=createSeoRpc();
+ if(source==='health'){const health=await readPipelineHealth(rpc,process.argv.includes('--fixture'));console.log(JSON.stringify(health));if(!health.healthy)process.exitCode=1;return;}
  if(source==='daily'){
   if(process.env.SEO_COLLECTION_ENABLED!=='true')throw new Error('COLLECTION_DISABLED');
   const client=googleReports();
@@ -21,6 +24,11 @@ async function main(){
  }
  if(source==='reconcile'){console.log(JSON.stringify(await rpc('seo_reconcile_business',{p_limit:100})));return;}
  if(source==='deliver'){console.log(JSON.stringify(await deliverBusinessEvents(rpc,process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID||'',process.env.SEO_GA4_MEASUREMENT_API_SECRET||'')));return;}
+ if(source==='research'){
+  if(!arg||!end||(await stat(arg)).size>5242880||(await stat(end)).size>65536)throw new Error('RESEARCH_INPUT_REQUIRED');
+  const windows=researchWindows(await readFile(arg),JSON.parse(await readFile(end,'utf8')));
+  for(const window of windows)console.log(JSON.stringify({source:window.source,day:window.day,result:await importWindow(rpc,window)}));return;
+ }
  if(source==='import'){
   if(!arg)throw new Error('INPUT_FILE_REQUIRED');const input=JSON.parse(await readFile(arg,'utf8'));const rows=Array.isArray(input)?input:[input];
   for(const window of rows)console.log(JSON.stringify({source:window.source,result:await importWindow(rpc,window)}));return;

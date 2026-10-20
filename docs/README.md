@@ -15,3 +15,5 @@
 - [已确认的注册/登录邮件](../supabase/templates/README.md)：HTML权威源码、Subject及Supabase手动保存步骤。
 
 - [SEO S0–S4 实施与验收](seo/DELIVERY.md)、[Google与云端配置指南](seo/CLOUD_SETUP.md)
+
+- [SEO CSV研究与健康检查](seo/RESEARCH_IMPORT.md)、[S0–S4要求复核](seo/REQUIREMENTS_AUDIT.md)
