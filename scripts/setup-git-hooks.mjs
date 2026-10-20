@@ -1,0 +1,10 @@
+import { execFileSync, spawnSync } from 'node:child_process';
+import { chmodSync } from 'node:fs';
+execFileSync('git', ['rev-parse', '--show-toplevel'], { stdio: 'pipe' });
+const result = spawnSync('git', ['config', '--local', '--get', 'core.hooksPath'], { encoding: 'utf8' });
+if (result.status !== 0 && result.status !== 1) throw new Error('Unable to read the local Git hook configuration.');
+const existing = result.stdout.trim();
+if (existing && existing !== '.githooks') throw new Error('Existing hooksPath differs; preserve it and integrate the pre-push check explicitly.');
+chmodSync('.githooks/pre-push', 0o755);
+execFileSync('git', ['config', '--local', 'core.hooksPath', '.githooks'], { stdio: 'inherit' });
+console.log('Local pre-push checks enabled.');

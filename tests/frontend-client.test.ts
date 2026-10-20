@@ -1,0 +1,39 @@
+import { beforeEach,afterEach,describe,it,expect,vi } from 'vitest';
+const mocks=vi.hoisted(()=>({getBrowserAuth:vi.fn(),getSession:vi.fn(),refreshSession:vi.fn()}));
+vi.mock('../apps/web/src/lib/auth',()=>({getBrowserAuth:mocks.getBrowserAuth}));
+import { api,ApiError,UserFacingError,errorMessage } from '../apps/web/src/lib/api';
+import { safeNext } from '../apps/web/src/lib/navigation';
+import { loadDraft,saveDraft,clearUserState } from '../apps/web/src/lib/drafts';
+const A='00000000-0000-4000-8000-000000000001',B='00000000-0000-4000-8000-000000000002';
+const session=(id=A,token='token-A')=>({user:{id},access_token:token});
+let current:ReturnType<typeof session>|null;let fetchMock:ReturnType<typeof vi.fn>;
+const order={order_id:'00000000-0000-4000-8000-000000000401',checkout_url:'https://checkout.stripe.com/fixture'};
+const rejected=()=>Response.json({error:{code:'UNAUTHORIZED',message:'UNAUTHORIZED',request_id:A,retryable:false}},{status:401});
+beforeEach(()=>{vi.clearAllMocks();current=session();mocks.getSession.mockImplementation(async()=>({data:{session:current},error:null}));mocks.refreshSession.mockImplementation(async()=>({data:{session:current},error:null}));mocks.getBrowserAuth.mockReturnValue({auth:{getSession:mocks.getSession,refreshSession:mocks.refreshSession}});fetchMock=vi.fn();vi.stubGlobal('fetch',fetchMock);vi.stubGlobal('window',new EventTarget());});
+afterEach(()=>vi.unstubAllGlobals());
+describe('browser API ownership and retry boundary',()=>{
+ it('never attaches an auth token to public requests',async()=>{fetchMock.mockResolvedValue(Response.json({tools:[]}));await api('/api/tools',{authenticated:false});expect(mocks.getSession).not.toHaveBeenCalled();expect(fetchMock.mock.calls[0][1].headers.Authorization).toBeUndefined();});
+ it('does not send a private request without a session',async()=>{current=null;await expect(api('/api/credits')).rejects.toMatchObject({status:401});expect(fetchMock).not.toHaveBeenCalled();});
+ it('refreshes once for the same owner and preserves the original body and idempotency key',async()=>{fetchMock.mockResolvedValueOnce(rejected()).mockResolvedValueOnce(Response.json(order));mocks.refreshSession.mockImplementation(async()=>{current=session(A,'token-refreshed');return {data:{session:current},error:null};});await api('/api/checkout',{method:'POST',body:{package_id:A,idempotency_key:'fixture_checkout_key1'}});expect(fetchMock).toHaveBeenCalledTimes(2);expect(fetchMock.mock.calls[1][1].body).toBe(fetchMock.mock.calls[0][1].body);expect(fetchMock.mock.calls[1][1].headers.Authorization).toBe('Bearer token-refreshed');});
+ it('does not refresh or resend an old request after the account changes before 401 handling',async()=>{fetchMock.mockImplementation(async()=>{current=session(B,'token-B');return rejected();});await expect(api('/api/checkout',{method:'POST',body:{package_id:A,idempotency_key:'fixture_checkout_key1'}})).rejects.toMatchObject({code:'UNAUTHORIZED'});expect(fetchMock).toHaveBeenCalledTimes(1);expect(mocks.refreshSession).not.toHaveBeenCalled();});
+ it('does not resend an old request if account changes during refresh',async()=>{fetchMock.mockResolvedValueOnce(rejected());mocks.refreshSession.mockImplementation(async()=>{current=session(B,'token-B');return {data:{session:current},error:null};});await expect(api('/api/checkout',{method:'POST',body:{package_id:A,idempotency_key:'fixture_checkout_key1'}})).rejects.toMatchObject({code:'UNAUTHORIZED'});expect(fetchMock).toHaveBeenCalledTimes(1);});
+ it('does not deliver old account data after account change',async()=>{fetchMock.mockImplementation(async()=>{current=session(B);return Response.json({available:50,reserved:0,status:'active'});});await expect(api('/api/credits')).rejects.toMatchObject({status:401});});
+ it('rejects stale data when ownership changes during response decoding',async()=>{fetchMock.mockResolvedValue({ok:true,status:200,headers:new Headers(),json:async()=>{current=session(B);return {available:50,reserved:0,status:'active'};}});await expect(api('/api/credits')).rejects.toMatchObject({status:401});});
+ it('asks the auth UI to reauthenticate after one final same-owner 401',async()=>{const listener=vi.fn();window.addEventListener('picjp:auth-required',listener);fetchMock.mockImplementation(async()=>rejected());await expect(api('/api/credits')).rejects.toMatchObject({status:401});expect(fetchMock).toHaveBeenCalledTimes(2);expect(listener).toHaveBeenCalledTimes(1);expect(listener.mock.calls[0][0].detail.ownerId).toBe(A);});
+ it('does not repeat a POST on a network failure',async()=>{fetchMock.mockRejectedValue(new TypeError('network'));await expect(api('/api/edit',{method:'POST',body:{idempotency_key:'same_key_fixture'}})).rejects.toMatchObject({retryable:true});expect(fetchMock).toHaveBeenCalledTimes(1);});
+ it('rejects malformed success payloads rather than fabricating a balance',async()=>{fetchMock.mockResolvedValue(Response.json({available:'unlimited'}));await expect(api('/api/credits')).rejects.toMatchObject({code:'INVALID_RESPONSE'});});
+ it('retains the retry delay and stable error code',async()=>{fetchMock.mockResolvedValue(Response.json({error:{code:'RATE_LIMITED',message:'RATE_LIMITED',request_id:A,retryable:true}},{status:429,headers:{'Retry-After':'60'}}));await expect(api('/api/credits')).rejects.toMatchObject({status:429,retryAfter:60,requestId:A});});
+ it('does not fetch arbitrary external API URLs',async()=>{await expect(api('https://evil.example/api/credits')).rejects.toMatchObject({status:400});expect(fetchMock).not.toHaveBeenCalled();});
+ it('does not expose arbitrary exception messages or backend implementation details',()=>{expect(errorMessage(new Error('SECRET_TEST_VALUE'))).not.toContain('SECRET');expect(errorMessage(new UserFacingError('写真を選んでください。'))).toBe('写真を選んでください。');expect(errorMessage(new ApiError(402,'INSUFFICIENT_CREDITS'))).toContain('クレジット');});
+});
+describe('login return paths',()=>{
+ it('preserves a supported tool and parent intent',()=>{expect(safeNext(`/ja/edit?tool=hair_color&parent_job_id=${A}`)).toBe(`/ja/edit?tool=hair_color&parent_job_id=${A}`);});
+ it.each(['https://evil.example','//evil.example','/\\evil.example','/ja/login?next=/ja/login','/auth/callback','/api/checkout','/ja/edit\n'])('rejects unsafe or looping target %s',value=>{expect(safeNext(value)).toBe('/ja/edit');});
+});
+describe('per-account temporary drafts',()=>{
+ const draft={toolId:'illustration_photo',inputs:[{image_id:A,role:'primary' as const}],parameters:{style:'watercolor'},instruction:'写真の色を残す',quality:'standard' as const,aspectRatio:'preserve'};
+ function storage(){const map=new Map<string,string>();return {map,get length(){return map.size;},getItem:(k:string)=>map.get(k)??null,setItem:(k:string,v:string)=>map.set(k,v),removeItem:(k:string)=>{map.delete(k);},key:(i:number)=>[...map.keys()][i]??null};}
+ it('keeps account drafts isolated and clears only the requested account state',()=>{const s=storage();vi.stubGlobal('sessionStorage',s);saveDraft(A,draft);saveDraft(B,{...draft,instruction:'other'});s.setItem(`picjp:checkout:${A}`,'order');clearUserState(A);expect(loadDraft(A)).toBeNull();expect(loadDraft(B)?.instruction).toBe('other');expect(s.getItem(`picjp:checkout:${A}`)).toBeNull();});
+ it('rejects broken or unvalidated persisted draft data',()=>{const s=storage();vi.stubGlobal('sessionStorage',s);s.setItem(`picjp:draft:${A}`,'{"toolId":"unknown"}');expect(loadDraft(A)).toBeNull();});
+ it('degrades safely when browser storage is unavailable',()=>{vi.stubGlobal('sessionStorage',{getItem(){throw new Error('disabled');},setItem(){throw new Error('disabled');}});expect(loadDraft(A)).toBeNull();expect(saveDraft(A,draft)).toBe(false);expect(()=>clearUserState(A)).not.toThrow();});
+});

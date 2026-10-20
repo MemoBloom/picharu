@@ -1,0 +1,13 @@
+import type { z } from 'zod';
+import type { ToolView,ImageView,JobView,CreditView,PublicRecommendation,OrderView,CreditPackage as PackageSchema,CheckoutResponse,EditAccepted,UploadResponse } from '@picjp/contracts';
+export type Tool=z.infer<typeof ToolView>;
+export type ImageAsset=z.infer<typeof ImageView>;
+export type Job=z.infer<typeof JobView>;
+export type Credits=z.infer<typeof CreditView>;
+export type Recommendation=z.infer<typeof PublicRecommendation>;
+export type Order=z.infer<typeof OrderView>;
+export type CreditPackage=z.infer<typeof PackageSchema>;
+export type Checkout=z.infer<typeof CheckoutResponse>;
+export type Accepted=z.infer<typeof EditAccepted>;
+export type Upload=z.infer<typeof UploadResponse>;
+export type Page<T>={items:T[];next_cursor:string|null};

@@ -1,0 +1,57 @@
+name: Version tag
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Repository release version, e.g. 0.1.0 (no v prefix)'
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-version-tag
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Validate main and version
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: |
+          test "$GITHUB_REF" = refs/heads/main
+          node -e 'if(!/^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/.test(process.env.RELEASE_VERSION)) process.exit(1)'
+
+  checks:
+    needs: validate
+    uses: ./.github/workflows/ci.yml
+
+  tag:
+    name: Tag tested commit
+    needs: checks
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+      - name: Create immutable annotated tag
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="v$RELEASE_VERSION"
+          if git show-ref --verify --quiet "refs/tags/$tag"; then
+            echo 'This version tag already exists; refusing to overwrite.'
+            exit 1
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git tag --annotate "$tag" "$GITHUB_SHA" --message "Repository version $tag; CI verified"
+          git push origin "refs/tags/$tag"

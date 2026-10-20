@@ -1,0 +1,16 @@
+node_modules/
+.next/
+.env
+.env.*
+!.env.example
+coverage/
+*.tsbuildinfo
+.DS_Store
+.vercel/
+playwright-report/
+test-results/
+*.log
+*.pem
+*.key
+credentials*.json
+service-account*.json

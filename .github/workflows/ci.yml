@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: 'true'
+  NEXT_TELEMETRY_DISABLED: '1'
+  GENERATION_ENABLED: 'false'
+  MODEL_PROFILES_JSON: '[]'
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - run: npm run verify
+
+  postgres-concurrency:
+    name: PostgreSQL concurrency
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - name: Start isolated PostgreSQL 17
+        shell: bash
+        run: |
+          set -euo pipefail
+          cluster_dir=$(mktemp -d /tmp/picjp-ci-XXXXXX)
+          mkdir "$cluster_dir/socket"
+          container="picjp-ci-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          echo "PGHOST=$cluster_dir/socket" >> "$GITHUB_ENV"
+          echo 'PGPORT=5432' >> "$GITHUB_ENV"
+          echo 'PGUSER=picjp_ci' >> "$GITHUB_ENV"
+          echo "PICJP_PG_CONTAINER=$container" >> "$GITHUB_ENV"
+          docker run --detach --name "$container" \
+            --mount "type=bind,source=$cluster_dir/socket,target=/var/run/postgresql" \
+            --env POSTGRES_USER=picjp_ci --env POSTGRES_HOST_AUTH_METHOD=trust \
+            postgres:17 -c listen_addresses='' -c unix_socket_permissions=0777
+          for attempt in $(seq 1 60); do
+            if docker exec "$container" sh -c 'test "$(cat /proc/1/comm)" = postgres && pg_isready -U picjp_ci -d postgres'; then
+              exit 0
+            fi
+            sleep 1
+          done
+          docker logs "$container"
+          exit 1
+      - run: npm run test:concurrency
+      - name: Remove test database container
+        if: always()
+        shell: bash
+        run: |
+          if [ -n "${PICJP_PG_CONTAINER:-}" ]; then
+            docker logs "$PICJP_PG_CONTAINER" || true
+            docker rm --force "$PICJP_PG_CONTAINER" || true
+          fi

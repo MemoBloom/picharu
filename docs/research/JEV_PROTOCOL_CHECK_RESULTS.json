@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-20",
+  "scope": "upstream pure protocol transforms only; no inference, HTTP/model calls, GPU, credentials or user images; image encoder uses synthetic fixture",
+  "source": "https://github.com/apolinario/decision-index/blob/f5a6e4fd85fed05e77878dfc4966d0568bfb45ec/decision_index/vision/engines.py",
+  "source_sha256": "a2b48aad22908cd6cc988fc1d585773b48d4671f2a4384e3a252f4571676b1ce",
+  "assertions": 10,
+  "checks": [
+    {
+      "name": "decisions preserves typed questions and data URL image",
+      "passed": true
+    },
+    {
+      "name": "decisions explicitly disables thinking without decide-only field",
+      "passed": true
+    },
+    {
+      "name": "decide uses kind, image-state, question, positional options",
+      "passed": true
+    },
+    {
+      "name": "rejects multiple vision questions",
+      "passed": true
+    },
+    {
+      "name": "rejects noul in benchmark vision adapter",
+      "passed": true
+    },
+    {
+      "name": "rejects non-letter option keys",
+      "passed": true
+    },
+    {
+      "name": "decisions response preserves supplied probability distribution",
+      "passed": true
+    },
+    {
+      "name": "decide positional response maps index to B",
+      "passed": true
+    },
+    {
+      "name": "observed benchmark fallback fabricates one-hot when probabilities absent",
+      "passed": true
+    },
+    {
+      "name": "observed parser does not reject invalid probability as strict production adapter must",
+      "passed": true
+    }
+  ]
+}

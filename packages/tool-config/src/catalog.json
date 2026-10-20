@@ -1,0 +1,202 @@
+[
+  {
+    "category": "日常修图",
+    "tool_id": "remove_person",
+    "name_zh": "去除路人",
+    "name_ja": "写真から人を消す",
+    "estimated_controllability": "高",
+    "main_risk": "遮挡路人、被误删主体",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "日常修图",
+    "tool_id": "remove_object",
+    "name_zh": "去除杂物",
+    "name_ja": "写真の不要なものを消す",
+    "estimated_controllability": "高",
+    "main_risk": "复杂背景重建",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "日常修图",
+    "tool_id": "change_background",
+    "name_zh": "更换背景",
+    "name_ja": "写真の背景を変更",
+    "estimated_controllability": "高",
+    "main_risk": "主体漂移",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "日常修图",
+    "tool_id": "photo_color_grade",
+    "name_zh": "照片调色",
+    "name_ja": "写真の色味を変える",
+    "estimated_controllability": "中高",
+    "main_risk": "整图重绘改变细节",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "日常修图",
+    "tool_id": "weather_season",
+    "name_zh": "天气/季节转换",
+    "name_ja": "写真の天気・季節を変える",
+    "estimated_controllability": "中",
+    "main_risk": "大范围结构变化",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "日常修图",
+    "tool_id": "light_time",
+    "name_zh": "光线/时间转换",
+    "name_ja": "写真の雰囲気を変える",
+    "estimated_controllability": "中",
+    "main_risk": "人物和场景不一致",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "人像社交",
+    "tool_id": "ai_avatar",
+    "name_zh": "AI 社交头像",
+    "name_ja": "AIアイコン作成",
+    "estimated_controllability": "高",
+    "main_risk": "身份变化",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "人像社交",
+    "tool_id": "natural_beauty",
+    "name_zh": "自然人像美化",
+    "name_ja": "AI美肌加工",
+    "estimated_controllability": "中",
+    "main_risk": "过度修图",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "人像社交",
+    "tool_id": "hair_color",
+    "name_zh": "发色更换",
+    "name_ja": "髪色変更AI",
+    "estimated_controllability": "中高",
+    "main_risk": "发丝选区溢出",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "人像社交",
+    "tool_id": "hairstyle",
+    "name_zh": "发型尝试",
+    "name_ja": "髪型変更AI",
+    "estimated_controllability": "中",
+    "main_risk": "人脸轮廓漂移",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "人像社交",
+    "tool_id": "professional_headshot",
+    "name_zh": "职业头像",
+    "name_ja": "AIプロフィール写真",
+    "estimated_controllability": "中",
+    "main_risk": "身份保持",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "插画趣味",
+    "tool_id": "anime_photo",
+    "name_zh": "照片动漫化",
+    "name_ja": "写真をアニメ化",
+    "estimated_controllability": "高",
+    "main_risk": "人物数量变化",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "插画趣味",
+    "tool_id": "illustration_photo",
+    "name_zh": "照片插画化",
+    "name_ja": "写真をイラスト化",
+    "estimated_controllability": "高",
+    "main_risk": "身份与配饰",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "插画趣味",
+    "tool_id": "chibi_person",
+    "name_zh": "Q版人物",
+    "name_ja": "ちびキャラ化",
+    "estimated_controllability": "高",
+    "main_risk": "标志性特征丢失",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "插画趣味",
+    "tool_id": "pet_illustration",
+    "name_zh": "宠物插画",
+    "name_ja": "ペットをイラスト化",
+    "estimated_controllability": "高",
+    "main_risk": "毛色与花纹漂移",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "插画趣味",
+    "tool_id": "pet_humanization",
+    "name_zh": "宠物拟人",
+    "name_ja": "ペットを擬人化",
+    "estimated_controllability": "中",
+    "main_risk": "拟人化可控性",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "生活创意",
+    "tool_id": "multi_photo_composite",
+    "name_zh": "多照片合成",
+    "name_ja": "写真合成AI",
+    "estimated_controllability": "中",
+    "main_risk": "多参考图与人物保持",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "生活创意",
+    "tool_id": "product_background",
+    "name_zh": "商品背景美化",
+    "name_ja": "商品写真背景変更",
+    "estimated_controllability": "高",
+    "main_risk": "商品真实性",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "生活创意",
+    "tool_id": "room_redesign",
+    "name_zh": "房间风格改造",
+    "name_ja": "部屋模様替えAI",
+    "estimated_controllability": "中",
+    "main_risk": "空间几何不准确",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  },
+  {
+    "category": "生活创意",
+    "tool_id": "clothing_recolor",
+    "name_zh": "衣服颜色更换",
+    "name_ja": "服の色を変えるAI",
+    "estimated_controllability": "中高",
+    "main_risk": "衣料纹理变化",
+    "design_scope": "首期20工具架构基线",
+    "scope_decision_date": "2026-10-19"
+  }
+]

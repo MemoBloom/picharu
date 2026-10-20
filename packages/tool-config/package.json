@@ -1,0 +1,1 @@
+{"name":"@picjp/tool-config","version":"1.0.0","private":true,"exports":"./src/index.ts","dependencies":{"@picjp/contracts":"*","zod":"^3.25.0"}}

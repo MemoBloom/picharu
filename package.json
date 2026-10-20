@@ -1,0 +1,36 @@
+{
+  "name": "picjp-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/web",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "npm run dev -w @picjp/web",
+    "build": "npm run build -w @picjp/web",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:db": "node --import tsx scripts/test-db.ts",
+    "contracts:export": "node --import tsx scripts/export-openapi.ts",
+    "test:concurrency": "node --import tsx scripts/test-concurrency.ts",
+    "contracts:check": "node --import tsx scripts/export-openapi.ts --check",
+    "hooks:install": "node scripts/setup-git-hooks.mjs",
+    "verify": "npm run contracts:check && npm run typecheck && npm test && npm run test:db && npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0",
+    "tsx": "^4.20.0",
+    "pg": "^8.16.0",
+    "@types/pg": "^8.15.0",
+    "@electric-sql/pglite": "^0.3.14",
+    "@asteasolutions/zod-to-openapi": "^7.3.0"
+  }
+}
