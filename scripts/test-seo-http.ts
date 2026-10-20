@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { writeFile, mkdir } from 'node:fs/promises';
 import { publicToolContent } from '../apps/web/src/lib/tool-content';
 import { guides } from '../apps/web/src/content/seo/guides';
+import { launchCandidates } from '../apps/web/src/content/seo/launch-candidates';
 const base=process.env.SEO_TEST_BASE||'http://127.0.0.1:3160';
 assert(/^http:\/\/127\.0\.0\.1:\d+$/.test(base),'Tests only target isolated localhost');
 const enabled=process.env.SEO_TEST_INDEXING==='true';
@@ -24,7 +25,11 @@ async function main(){
 const home=await page('/ja',true);assert(home.includes('WebSite'));assert(home.includes('href="/ja/tools"'));
 const directory=await page('/ja/tools',true);for(const t of publicToolContent)assert(directory.includes(`href="/ja/tools/${t.tool_id}"`),'missing crawlable tool link '+t.tool_id);
 await page('/ja/help',true);
-for(const t of publicToolContent)await page('/ja/tools/'+t.tool_id,false,true);
+for(const t of publicToolContent){const html=await page('/ja/tools/'+t.tool_id,false,true);
+ assert(html.includes(`href="/ja/edit?tool=${t.tool_id}"`),t.tool_id+': editor entry loses the selected tool');
+ const editorial=launchCandidates[t.tool_id];if(editorial){for(const section of editorial.sections)assert(html.includes(section.heading),t.tool_id+': candidate content missing from server HTML');}
+ for(const guide of guides.filter(g=>g.related_tools.includes(t.tool_id)))assert(html.includes(`href="${guide.path}"`),t.tool_id+': related guide missing from server HTML');
+}
 for(const g of guides)await page(g.path,false,true);
 for(const path of ['/ja/login','/ja/account','/ja/history','/ja/billing/success','/auth/callback']){
  const r=await fetch(base+path);const html=visibleHtml(await r.text());assert(r.headers.get('x-robots-tag')?.includes('noindex'),path);assert(/name="robots" content="[^"]*noindex/.test(html),path);results.push({path,noindex:true});

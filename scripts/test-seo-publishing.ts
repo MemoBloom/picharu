@@ -58,27 +58,31 @@ async function main() {
       for(const [action,actor] of [['submit','author'],['approve','reviewer'],['publish','reviewer']])await call('transitions',{revision_id:saved.id,action,expected_revision:expected,operation_id:randomUUID()},actor);
       return saved.id as string;
     }
-    async function rendered(path:string,revision:string,title:string){
+    async function rendered(path:string,revision:string,expected:{title:string;h1:string;lead:string}){
       const response=await fetch(base+path);const html=await response.text();check(response.status,200,'published page HTTP200');
       check(/name="seo-revision" content="([^"]+)"/.exec(html)?.[1],revision,'metadata uses published revision');
       check(/data-seo-revision="([^"]+)"/.exec(html)?.[1],revision,'server body uses same published revision');
-      check(html.includes(title),true,'actual published copy visible');
+      check(html.includes(expected.title),true,'actual published metadata title visible');
+      const visible=html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,'');
+      check(/<h1\b[^>]*>([\s\S]*?)<\/h1>/.exec(visible)?.[1],expected.h1,'actual server body heading matches the revision');
+      check(visible.includes(expected.lead),true,'actual server body lead matches the revision');
     }
     const initial=baselineContent('/ja/tools/remove_person')!.content;
-    const first={...initial,title:'Isolated publication A｜評価用ページ'};const a=await publish(first,null);await rendered(initial.path,a,first.title);
+    const first={...initial,title:'Isolated publication A｜評価用ページ',h1:'Visible body A｜公開本文の確認',lead:'Visible lead A: isolated fixture content for checking actual server-rendered copy.'};const a=await publish(first,null);await rendered(initial.path,a,first);
     const today=(await db.query<{v:string}>("select ((now() at time zone 'America/Los_Angeles')::date)::text v")).rows[0].v;
     const day=(n:number)=>new Date(Date.parse(today+'T00:00:00Z')+n*86400000).toISOString().slice(0,10);
     for(let n=-38;n<=-10;n++){if(n===-24)continue;const id=randomUUID();await rpc('seo_ingest_begin',{p_id:id,p_source:'gsc',p_property:'sc-domain:picmoko.com',p_day:day(n),p_grain:'page',p_fixture:true,p_quality:{}});await rpc('seo_ingest_stage',{p_id:id,p_batch:0,p_rows:[{dimensions:{page:initial.path,country:'JP'},measures:{clicks:n<-24?2:5,impressions:100,position:10}}]});await rpc('seo_ingest_finish',{p_id:id,p_batches:1,p_error:null});}
     const plan={hypothesis:'手順と見出しを合わせて検索意図との一致を検証する。',change_summary:'タイトルと本文を同じ利用目的に合わせて変更する。',target_queries:['写真から人を消す'],risk_notes:'季節性と検索結果の変化を分離できない。',rollback_conditions:'機能の説明に誤りや技術的な問題があれば戻す。',source_property:'sc-domain:picmoko.com',baseline_from:day(-38),baseline_to:day(-25),observation_days:14,minimum_impressions:300,is_fixture:true};
-    const second={...initial,title:'Isolated publication B｜更新評価ページ'};const b=await publish(second,a,plan);await rendered(initial.path,b,second.title);
+    const second={...initial,title:'Isolated publication B｜更新評価ページ',h1:'Visible body B｜更新本文の確認',lead:'Visible lead B: changed fixture content that must replace the prior visible server copy.'};const b=await publish(second,a,plan);await rendered(initial.path,b,second);
     const operation=(await db.query<{operation_id:string}>("select operation_id from seo_changes where revision_id=$1 and action='publish'",[b])).rows[0].operation_id;
     await db.query("update seo_changes set created_at=($2::date::timestamp+interval '12 hours') at time zone 'America/Los_Angeles' where operation_id=$1",[operation,day(-24)]);
     const observation=await call('observations',{revision_id:b,publish_operation_id:operation,operation_id:randomUUID(),observation_to:day(-10),decision:'keep',notes:'Explicit historical fixture. Observational comparison only, never a causal claim.'},'reviewer');
     check(observation.report.comparison_ready,true,'complete fixture evidence window');check(observation.report.delta.clicks,42,'correct before/after comparison');check(observation.report.limitations.includes('observational_not_causal'),true,'observation limits persisted');
-    await call('transitions',{revision_id:a,action:'rollback',expected_revision:b,operation_id:randomUUID()},'reviewer');await rendered(initial.path,a,first.title);
+    await call('transitions',{revision_id:a,action:'rollback',expected_revision:b,operation_id:randomUUID()},'reviewer');await rendered(initial.path,a,first);
     const guide={...baselineContent('/ja/guides/remove-unwanted-people')!.content,path:'/ja/guides/isolated-published-guide',title:'Isolated new guide｜公開評価ページ'};
-    const g=await publish(guide,null);await rendered(guide.path,g,guide.title);
+    const g=await publish(guide,null);await rendered(guide.path,g,guide);
     const index=await(await fetch(base+'/ja/guides')).text();check(index.includes('href="'+guide.path+'"'),true,'guide directory cache updated after publication');
+    const linkedTool=await(await fetch(base+initial.path)).text();check(linkedTool.includes('href="'+guide.path+'"'),true,'published guide becomes a crawlable related tool link after tag invalidation');
     check((await fetch(base+'/ja/guides/unknown-isolated-guide')).status,404,'unpublished guide true 404 in DB mode');
     const overview=await fetch(base+'/api/seo/admin/overview',{headers:{Authorization:'Bearer fixture-reviewer-token'}});check(overview.status,200,'real HTTP member report including SQL funnel');
     const report=await overview.json();check(report.pages.length,2,'report uses the same published page pointers');check(report.funnel.events,[],'no fabricated business conversions');

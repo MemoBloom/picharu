@@ -4,6 +4,7 @@ import { unstable_cache } from 'next/cache';
 import { SeoContent } from '@picjp/contracts';
 import { publicToolContent } from '../../lib/tool-content';
 import { guides } from '../../content/seo/guides';
+import { launchCandidates } from '../../content/seo/launch-candidates';
 import { seoIntents } from '../../content/seo/intent-map';
 import { seoRpc } from './repository';
 
@@ -14,12 +15,13 @@ export function baselineContent(path: string): PublishedContent | null {
   if (guide) {const content=SeoContent.parse(guide);return {revision:contentRevision(content),content,source:'git'};}
   const tool = publicToolContent.find(item => `/ja/tools/${item.tool_id}` === path);
   if (!tool) return null;
+  const editorial=launchCandidates[tool.tool_id];
   const content = SeoContent.parse({
     path, kind: 'tool', title: `${tool.name_ja}AI｜写真編集ツール`, description: `${tool.description} 写真の選び方、指定方法、注意点をご案内します。生成機能の公開状況はページ内でご確認ください。`,
     h1: tool.name_ja, lead: tool.description,
     sections: [{ heading: '写真と希望を準備する', text: tool.input_tip }, { heading: 'こんなふうに伝えてみる', text: `「${tool.request_example}」` }, { heading: '仕上がりの確認と制限', text: tool.limitation }, { heading: '使い方と料金の確認', text: 'ログイン後に写真と仕上がりを選び、公開状況と必要なクレジットを確認してください。準備中の機能は生成できません。AIの編集では指定していない細部も変わるため、元の写真を残して比較してください。' }],
     faq: [tool.faq], keywords: [seoIntents.find(intent=>intent.tool_id===tool.tool_id)?.primary_keyword_ja||tool.name_ja], related_tools: publicToolContent.filter(other => other.category_ja === tool.category_ja && other.tool_id !== tool.tool_id).slice(0, 4).map(other => other.tool_id),
-    indexable: false, examples: [], updated_at: '2026-10-20T00:00:00Z',
+    ...editorial, indexable: false, examples: [], updated_at: editorial?'2026-10-21T00:00:00Z':'2026-10-20T00:00:00Z',
   });
   return { revision: contentRevision(content), content, source: 'git' };
 }

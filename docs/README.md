@@ -19,3 +19,5 @@
 - [SEO CSV研究与健康检查](seo/RESEARCH_IMPORT.md)、[S0–S4要求复核](seo/REQUIREMENTS_AUDIT.md)
 
 - [SEO内容优化计划与观察复盘](seo/OBSERVATION_REVIEW.md)
+
+- [S1首发候选中日对照稿](seo/S1_REVIEW_PACKET.md)、[人工审校记录](seo/S1_OWNER_REVIEW.md)：五项候选，真实样例/日语结论待确认；译稿绑定页面内容指纹。

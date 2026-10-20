@@ -25,3 +25,13 @@ it('maps every current tool to one initial intent and keeps priorities separate 
  expect(new Set(seoIntents.map(r=>r.tool_id)).size).toBe(20);
  for(const row of seoIntents){expect(row.path).toBe('/ja/tools/'+row.tool_id);expect(baselineContent(row.path)?.content.keywords).toContain(row.primary_keyword_ja);expect(row.metrics_status).toBe('unverified');}
 });
+
+it('adds current published guide relationships without duplicating links or changing model protocols',async()=>{
+ const {relatedGuideLinks}=await import('../apps/web/src/lib/seo-content-links');
+ const guide=baselineContent('/ja/guides/remove-unwanted-people')!.content;
+ const added={...guide,path:'/ja/guides/new-preparation',h1:'新しい準備ガイド'};
+ expect(relatedGuideLinks('remove_person',[guide,added])).toContainEqual({path:added.path,title:added.h1});
+ expect(relatedGuideLinks('hair_color',[guide,added])).toEqual([]);
+ expect(relatedGuideLinks('remove_person',[guide,guide])).toHaveLength(1);
+ expect(relatedGuideLinks('remove_person',[{...guide,path:'/ja/account'}])).toEqual([]);
+});
