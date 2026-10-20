@@ -9,7 +9,7 @@ const session = async () => { const id = randomUUID(); await rpc('seo_start_sess
 beforeAll(async () => {
   db = new PGlite();
   await db.exec("create schema auth; create table auth.users(id uuid primary key); create role anon; create role authenticated; create role service_role bypassrls; grant usage on schema public,auth to anon,authenticated,service_role; create function auth.uid() returns uuid language sql stable as $$ select null::uuid $$;");
-  for (const file of ['202610190001_web_backend.sql', '20261020153000_seo.sql', '20261020160000_seo_analytics.sql','20261020163245_seo_health.sql']) await db.exec(await readFile('supabase/migrations/' + file, 'utf8'));
+  for (const file of ['202610190001_web_backend.sql', '20261020153000_seo.sql', '20261020160000_seo_analytics.sql','20261020163245_seo_health.sql','20261020164700_seo_observation.sql']) await db.exec(await readFile('supabase/migrations/' + file, 'utf8'));
   await db.query('insert into auth.users values($1),($2)', [owner, other]);
   await db.query("insert into seo_members values($1,'reviewer')", [owner]);
 });

@@ -195,6 +195,7 @@ async function main(){
   await db.query(await readFile('supabase/migrations/20261020153000_seo.sql','utf8'));
   await db.query(await readFile('supabase/migrations/20261020160000_seo_analytics.sql','utf8'));
   await db.query(await readFile('supabase/migrations/20261020163245_seo_health.sql','utf8'));
+  await db.query(await readFile('supabase/migrations/20261020164700_seo_observation.sql','utf8'));
   const reviewer=randomUUID();await db.query('insert into auth.users values($1)',[reviewer]);
   await db.query("insert into seo_members values($1,'editor'),($2,'reviewer')",[owner,reviewer]);
   const seoClients=await clients(10),content=baselineContent('/ja/tools/remove_person')!.content;
@@ -217,6 +218,24 @@ async function main(){
   const replays=await Promise.all(seoClients.map(c=>rpc(c,'seo_transition',[reviewer,drafts[winner],'publish',null,operations[winner]])));
   check(new Set(replays.map(r=>r.revision_id)).size,1,'concurrent identical publication operation replays one result');
   check(Number((await db.query("select count(*) n from seo_changes where action='publish'")).rows[0].n),1,'publication audit is exactly once');
+  const ptToday=(await db.query("select ((now() at time zone 'America/Los_Angeles')::date)::text v")).rows[0].v as string;
+  const seoDay=(n:number)=>new Date(Date.parse(ptToday+'T00:00:00Z')+n*86400000).toISOString().slice(0,10);
+  const plan={hypothesis:'Explicit concurrency fixture for observational evidence.',change_summary:'Keep title and public body on the same immutable revision.',target_queries:['写真から人を消す'],risk_notes:'The fixture contains no real Google data or growth evidence.',rollback_conditions:'Roll back incorrect claims or technical rendering regressions.',source_property:'sc-domain:picmoko.com',baseline_from:seoDay(-38),baseline_to:seoDay(-25),observation_days:14,minimum_impressions:300,is_fixture:true};
+  const planned=(await rpc(db,'seo_save_planned_draft',[owner,JSON.stringify(content),drafts[winner],JSON.stringify(plan)])).id;
+  const publishOperation=randomUUID();
+  for(const [action,actor] of [['submit',owner],['approve',reviewer],['publish',reviewer]])await rpc(db,'seo_transition',[actor,planned,action,drafts[winner],action==='publish'?publishOperation:randomUUID()]);
+  await db.query("update seo_changes set created_at=($2::date::timestamp+interval '12 hours') at time zone 'America/Los_Angeles' where operation_id=$1",[publishOperation,seoDay(-24)]);
+  const observationId=randomUUID(),observationArgs=[reviewer,planned,publishOperation,observationId,seoDay(-10),'insufficient','Historical concurrency fixture only; no fabricated data or causal conclusion.'];
+  await db.query('begin');await db.query('select pg_advisory_xact_lock(hashtextextended($1::text,0))',[observationId]);
+  const observations=Promise.all(seoClients.map(c=>rpc(c,'seo_capture_observation',observationArgs)));
+  const observeWaitUntil=Date.now()+5000;let observerBlocked=0;
+  while(Date.now()<observeWaitUntil){observerBlocked=Number((await db.query("select count(*) n from pg_stat_activity where datname=$1 and application_name='picjp-concurrency-test' and wait_event_type='Lock'",[database])).rows[0].n);if(observerBlocked===10)break;await new Promise(resolve=>setTimeout(resolve,20));}
+  check(observerBlocked,10,'ten observation retries genuinely overlap on the same operation lock');await db.query('commit');
+  const observed=await observations;check(new Set(observed.map(r=>r.id)).size,1,'concurrent observation retries replay the same snapshot');
+  check(Number((await db.query('select count(*) n from seo_observations where id=$1',[observationId])).rows[0].n),1,'observation evidence is recorded exactly once');
+  check(observed[0].report.comparison_ready,false,'concurrent no-data observations remain explicitly incomplete');
+  const changed=await Promise.allSettled([rpc(db,'seo_capture_observation',[...observationArgs.slice(0,6),'Different review note must never overwrite immutable evidence.'])]);
+  check(changed.filter(r=>r.status==='rejected'&&/SEO_IDEMPOTENCY_CONFLICT/.test(String(r.reason))).length,1,'same operation with changed observation input conflicts');
   const consent=randomUUID();await rpc(db,'seo_start_session',[consent,'/ja','direct','a'.repeat(64)]);
   await rpc(db,'seo_set_ga4_session',[consent,'123.456',Math.floor(Date.now()/1000)]);
   await db.query("insert into seo_events(id,session_id,name,path,entity_kind,entity_id) select gen_random_uuid(),$1,'generate_success','/ja','job',gen_random_uuid() from generate_series(1,20)",[consent]);

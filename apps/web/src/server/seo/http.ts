@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import { z } from 'zod';
-import { SeoDraftRequest,SeoTransitionRequest,SeoPath,ToolId,SeoRevalidationRequest,SeoContent } from '@picjp/contracts';
+import { SeoDraftRequest,SeoTransitionRequest,SeoPath,ToolId,SeoRevalidationRequest,SeoContent,SeoObservationRequest } from '@picjp/contracts';
 import { boundedBytes } from '../errors';
 import { authenticateSeoActor,createSeoRpc,SeoError,type SeoRpc } from './repository';
 import { baselineContent } from './content';
@@ -35,9 +35,12 @@ export function createSeoHandler(deps:Deps){return async(request:Request)=>{
   if(path==='/api/seo/admin/overview'&&request.method==='GET'){
    const dashboard=await deps.rpc<any>('seo_dashboard',{p_actor:actor,p_fixture:url.searchParams.get('fixture')==='true',p_gsc_property:process.env.SEO_GSC_PROPERTY||'sc-domain:picmoko.com'});
    const pageRows=dashboard.gsc_page_summary||[];
-   const funnel=dashboard.is_fixture?null:await deps.rpc('seo_funnel_report',{p_actor:actor});
-   const health=await readPipelineHealth(deps.rpc,dashboard.is_fixture,deps.now());
-   return respond({...dashboard,actor_id:actor,funnel,health,opportunities:health.can_suggest_search_changes?opportunities(pageRows):[],limits:{revisions:100,changes:100,ingestions:100,metrics:5000},ga4_property_configured:/^\d+$/.test(process.env.SEO_GA4_PROPERTY_ID||''),database_content_enabled:deps.databaseContentEnabled?.()===true});
+   const [funnel,health,observation]=await Promise.all([
+    dashboard.is_fixture?Promise.resolve(null):deps.rpc('seo_funnel_report',{p_actor:actor}),
+    readPipelineHealth(deps.rpc,dashboard.is_fixture,deps.now()),
+    deps.rpc<any>('seo_observation_overview',{p_actor:actor,p_fixture:dashboard.is_fixture}),
+   ]);
+   return respond({...dashboard,...observation,actor_id:actor,funnel,health,opportunities:health.can_suggest_search_changes?opportunities(pageRows):[],limits:{revisions:100,changes:100,ingestions:100,metrics:5000,plans:100,observations:100},ga4_property_configured:/^\d+$/.test(process.env.SEO_GA4_PROPERTY_ID||''),database_content_enabled:deps.databaseContentEnabled?.()===true});
   }
   await deps.rpc('seo_require_role',{p_actor:actor,p_roles:['editor','reviewer','admin']});
   if(path==='/api/seo/admin/baseline'&&request.method==='GET'){
@@ -51,7 +54,11 @@ export function createSeoHandler(deps:Deps){return async(request:Request)=>{
    if(data.content.kind==='tool'&&!ToolId.safeParse(data.content.path.split('/').at(-1)).success)throw new SeoError('SEO_NOT_FOUND',404);
    if(data.content.related_tools.some(id=>!ToolId.safeParse(id).success))throw new SeoError('SEO_INVALID_REQUEST',400);
    await deps.verifyEvidence?.(data.content);
-   return respond(await deps.rpc('seo_save_draft',{p_actor:actor,p_content:data.content,p_expected_revision:data.expected_revision}),201);
+   return respond(await deps.rpc(data.plan?'seo_save_planned_draft':'seo_save_draft',{p_actor:actor,p_content:data.content,p_expected_revision:data.expected_revision,...(data.plan?{p_plan:data.plan}:{})}),201);
+  }
+  if(path==='/api/seo/admin/observations'&&request.method==='POST'){
+   const data=SeoObservationRequest.parse(JSON.parse((await body(request)).toString()));
+   return respond(await deps.rpc('seo_capture_observation',{p_actor:actor,p_revision:data.revision_id,p_publish_operation:data.publish_operation_id,p_id:data.operation_id,p_to:data.observation_to,p_decision:data.decision,p_notes:data.notes}),201);
   }
   if(path==='/api/seo/admin/transitions'&&request.method==='POST'){
    const data=SeoTransitionRequest.parse(JSON.parse((await body(request)).toString()));

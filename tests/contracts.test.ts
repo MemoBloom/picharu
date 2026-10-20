@@ -187,7 +187,7 @@ describe('generated OpenAPI document', () => {
       '/api/credit-packages': ['get'], '/api/checkout': ['post'], '/api/orders': ['get'],
       '/api/stripe/webhook': ['post'],
       '/api/seo/consent':['post','delete'], '/api/seo/events':['post'], '/api/seo/ga4-session':['post'],
-      '/api/seo/admin/revision':['get'], '/api/seo/admin/overview':['get'], '/api/seo/admin/baseline':['get'], '/api/seo/admin/drafts':['post'], '/api/seo/admin/transitions':['post'], '/api/seo/revalidate':['post'],
+      '/api/seo/admin/observations':['post'], '/api/seo/admin/revision':['get'], '/api/seo/admin/overview':['get'], '/api/seo/admin/baseline':['get'], '/api/seo/admin/drafts':['post'], '/api/seo/admin/transitions':['post'], '/api/seo/revalidate':['post'],
     };
     for (const [path, methods] of Object.entries(expected)) {
       for (const method of methods) expect(generated.paths?.[path]).toHaveProperty(method);
@@ -223,7 +223,7 @@ describe('generated OpenAPI document', () => {
     }
     visit(generated);
     expect(new Set(operationIds).size).toBe(operationIds.length);
-    expect(operationIds).toHaveLength(33);
+    expect(operationIds).toHaveLength(34);
   });
 
   it('documents real body-limit, media-type and unavailable responses plus versioned health', () => {

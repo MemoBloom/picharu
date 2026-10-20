@@ -19,6 +19,7 @@ beforeAll(async()=>{
  db=new PGlite();await db.exec('create schema auth; create table auth.users(id uuid primary key); create role anon; create role authenticated; create role service_role bypassrls; grant usage on schema public to anon,authenticated,service_role;');
  await db.exec(await readFile('supabase/migrations/20261020153000_seo.sql','utf8'));
  await db.exec(await readFile('supabase/migrations/20261020163245_seo_health.sql','utf8'));
+ await db.exec(await readFile('supabase/migrations/20261020164700_seo_observation.sql','utf8'));
  await db.query('insert into auth.users(id) values($1),($2),($3)',[author,reviewer,outsider]);
  await db.query("insert into seo_members values($1,'editor'),($2,'reviewer')",[author,reviewer]);
 });

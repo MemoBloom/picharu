@@ -77,4 +77,4 @@ npm run seo:collect -- health --fixture
 
 输出 JSON；全部可用才退出 0，否则退出 1，适合由 Cloud Run Job 日志和现有监控按退出码/alerts 建告警。本次没有创建调度、监控规则或发送外部通知。普通 Auth 用户不能执行此 RPC。API 管理员 overview 在角色校验后返回 health；GSC property/page 最近成熟窗口不可用时不生成规则候选。该门槛不证明28天历史完整，也不证明因果关系或排名改善；检查 observed_days 和原始口径后再审核。
 
-当前管理页仍显示既有采集记录；完整健康详情通过 CLI 或授权 overview JSON 检查。测试数据永远与真实视图分开。未配置 GA4 数字 Property ID 会报告 not_configured；“配置了编号”不等于云端授权完成。
+管理页已有健康摘要、告警及缺失日期详情；完整机器可读报告仍可通过 CLI 或授权 overview JSON 检查。测试数据永远与真实视图分开。未配置 GA4 数字 Property ID 会报告 not_configured；“配置了编号”不等于云端授权完成。

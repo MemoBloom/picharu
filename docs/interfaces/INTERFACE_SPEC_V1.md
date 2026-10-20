@@ -132,3 +132,7 @@ charge.refunded（累计退款金额）与dispute事件独立处理：按累计�
 新增可选能力次版本升级，删除/改语义主版本升级；消费者忽略新增可选响应字段，严格校验用户请求。任务snapshot固定contract_version；旧适配版本未部署时拒绝/恢复，不自动换模型计费。Web、Worker与JEV各自兼容矩阵需记录。
 
 本轮验证以契约、HTTP路由行为、数据库事务、R2媒体处理/签名和Stripe/JEV适配的可重复测试为证据；真Supabase/R2/Stripe/Lambda环境联调需要真实凭据和部署。未完成的真实集成必须明确标记，不宣称已实现商用生成。
+
+## SEO运营扩展
+
+SEO管理员鉴权、草稿可选观察计划、固定基线与不可变复盘见 [观察复盘协议](../seo/OBSERVATION_REVIEW.md)；准确Schema以packages/contracts及生成OpenAPI为准。该扩展不改变原任务、支付或用户照片协议。

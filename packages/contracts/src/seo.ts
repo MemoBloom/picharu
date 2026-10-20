@@ -24,7 +24,19 @@ export const SeoContent = z.object({
 });
 export type SeoContent = z.infer<typeof SeoContent>;
 export const SeoRevisionView = z.object({ id: z.string().uuid(), path: SeoPath, base_revision: z.string().uuid().nullable(), content: SeoContent, state: z.enum(['draft', 'submitted', 'approved', 'published']), author_id: z.string(), reviewer_id: z.string().nullable(), created_at: z.string() });
-export const SeoDraftRequest = z.object({ content: SeoContent, expected_revision: z.string().uuid().nullable() }).strict();
+const SeoCalendarDate=z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(v=>Number.isFinite(Date.parse(v+'T00:00:00Z'))&&new Date(v+'T00:00:00Z').toISOString().slice(0,10)===v);
+export const SeoOptimizationPlan=z.object({
+  hypothesis:z.string().trim().min(10).max(1000), change_summary:z.string().trim().min(10).max(1000),
+  target_queries:z.array(z.string().trim().min(1).max(100).refine(v=>!/@|https?:\/\/|token/i.test(v))).min(1).max(10),
+  risk_notes:z.string().trim().min(10).max(1000), rollback_conditions:z.string().trim().min(10).max(1000),
+  source_property:z.string().min(1).max(500), baseline_from:SeoCalendarDate,baseline_to:SeoCalendarDate,
+  observation_days:z.number().int().min(14).max(56), minimum_impressions:z.number().int().min(300).max(1000000),is_fixture:z.boolean(),
+}).strict().superRefine((v,c)=>{if((Date.parse(v.baseline_to)-Date.parse(v.baseline_from))/86400000+1!==v.observation_days)c.addIssue({code:'custom',message:'Use equal baseline and observation lengths'});});
+export type SeoOptimizationPlan=z.infer<typeof SeoOptimizationPlan>;
+export const SeoDraftRequest = z.object({ content: SeoContent, expected_revision: z.string().uuid().nullable(), plan:SeoOptimizationPlan.optional() }).strict();
+export const SeoObservationRequest=z.object({revision_id:z.string().uuid(),publish_operation_id:z.string().uuid(),operation_id:z.string().uuid(),observation_to:SeoCalendarDate,decision:z.enum(['keep','extend','rollback','insufficient']),notes:z.string().trim().min(10).max(2000)}).strict();
+export const SeoObservationView=z.object({id:z.string().uuid(),revision_id:z.string().uuid(),publish_operation_id:z.string().uuid(),actor_id:z.string().uuid(),created_at:z.string(),report:z.record(z.unknown())});
+
 export const SeoTransitionRequest = z.object({ revision_id: z.string().uuid(), action: z.enum(['submit', 'approve', 'publish', 'rollback']), expected_revision: z.string().uuid().nullable(), operation_id: z.string().uuid() }).strict();
 export const SeoEventRequest = z.object({ event_id: z.string().uuid(), event: z.enum(['page_view', 'tool_view', 'editor_open', 'upload_start', 'login_start', 'login_complete', 'result_download']), path: SeoPath, tool_id: z.string().regex(/^[a-z_]+$/).optional() }).strict();
 export const SeoConsentRequest = z.object({ consent: z.literal(true), landing_path: SeoPath, source: z.enum(['organic_search','paid_search','x','tiktok','creator_referral','direct','other']) }).strict();

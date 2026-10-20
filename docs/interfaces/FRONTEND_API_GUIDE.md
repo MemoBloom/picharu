@@ -517,3 +517,7 @@ JPY 的 amount_minor=500 表示 500 日元，不除以 100。套餐价格由服�
 ## 12. 本次文档校验
 
 2026-10-20：19 个带 Schema 标记的 JSON 示例通过当前共享 Schema 校验；18 个 Web 操作与现有 OpenAPI 匹配；20 工具参数表与工具配置逐项匹配。本轮仅修改文档及索引，没有修改应用行为或执行真实云端/模型调用。
+
+## SEO运营扩展
+
+SEO管理员鉴权、草稿可选观察计划、固定基线与不可变复盘见 [观察复盘协议](../seo/OBSERVATION_REVIEW.md)；准确Schema以packages/contracts及生成OpenAPI为准。该扩展不改变原任务、支付或用户照片协议。

@@ -17,3 +17,5 @@
 - [SEO S0–S4 实施与验收](seo/DELIVERY.md)、[Google与云端配置指南](seo/CLOUD_SETUP.md)
 
 - [SEO CSV研究与健康检查](seo/RESEARCH_IMPORT.md)、[S0–S4要求复核](seo/REQUIREMENTS_AUDIT.md)
+
+- [SEO内容优化计划与观察复盘](seo/OBSERVATION_REVIEW.md)

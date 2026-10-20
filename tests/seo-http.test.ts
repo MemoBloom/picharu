@@ -5,6 +5,7 @@ import { createHmac, randomUUID } from 'node:crypto';
 import { createSeoHandler } from '../apps/web/src/server/seo/http';
 import { baselineContent } from '../apps/web/src/server/seo/content';
 import { SeoError, type SeoRpc } from '../apps/web/src/server/seo/repository';
+import { matureWindow } from '../apps/web/src/server/seo/calendar';
 
 let db: PGlite;
 const author = randomUUID(), reviewer = randomUUID(), outsider = randomUUID(), secret = 'offline-fixture-signing-secret-long-enough';
@@ -20,12 +21,24 @@ beforeAll(async () => {
   db = new PGlite(); await db.exec('create schema auth;create table auth.users(id uuid primary key);create role anon;create role authenticated;create role service_role bypassrls;grant usage on schema public to anon,authenticated,service_role;');
   await db.exec(await readFile('supabase/migrations/20261020153000_seo.sql', 'utf8'));
   await db.exec(await readFile('supabase/migrations/20261020163245_seo_health.sql', 'utf8'));
+ await db.exec(await readFile('supabase/migrations/20261020164700_seo_observation.sql','utf8'));
   await db.query('insert into auth.users values($1),($2),($3)', [author, reviewer, outsider]);
   await db.query("insert into seo_members values($1,'editor'),($2,'reviewer')", [author, reviewer]);
 });
 afterAll(() => db.close());
-beforeEach(async () => { invalidate.mockClear(); await db.exec('truncate seo_changes,seo_revisions,seo_pages,seo_webhook_nonces cascade'); });
+beforeEach(async () => { invalidate.mockClear(); await db.exec('truncate seo_observations,seo_plans,seo_changes,seo_revisions,seo_pages,seo_webhook_nonces cascade'); });
 describe('SEO HTTP integrates the real migration, authorization and publish boundaries', () => {
+  it('persists optional private plans and validates observation input before calling SQL',async()=>{
+    const handle=createSeoHandler(deps),to=matureWindow('America/Los_Angeles').to,from=new Date(Date.parse(to+'T00:00:00Z')-13*86400000).toISOString().slice(0,10);
+    const plan={hypothesis:'Improve page intent with consistent title and body.',change_summary:'Review visible copy and preserve real product constraints.',target_queries:['写真から人を消す'],risk_notes:'Search recrawling and seasonal demand can change metrics.',rollback_conditions:'Restore the prior revision if a claim is incorrect.',source_property:'sc-domain:picmoko.com',baseline_from:from,baseline_to:to,observation_days:14,minimum_impressions:300,is_fixture:true};
+    const saved=await handle(request('admin/drafts',{content:baselineContent('/ja/tools/remove_person')!.content,expected_revision:null,plan}));expect(saved.status).toBe(201);const revision=(await saved.json()).id;
+    const overview=await handle(request('admin/overview?fixture=true'));const data=await overview.json();expect(data.plans.find((p:any)=>p.revision_id===revision)).toMatchObject({plan:{is_fixture:true},baseline_snapshot:{ready:false}});
+    const body={revision_id:revision,publish_operation_id:randomUUID(),operation_id:randomUUID(),observation_to:to,decision:'insufficient',notes:'No fabricated data or causal conclusion.'};
+    expect((await handle(request('admin/observations',body))).status).toBe(404);
+    expect((await handle(request('admin/observations',{...body,observation_to:'2026-02-30'}))).status).toBe(400);
+    expect((await handle(request('admin/observations',body,outsider))).status).toBe(403);
+    expect((await handle(request('admin/observations',body,'invalid'))).status).toBe(401);
+  });
   it('reports missing collection through the authorized overview without suggesting changes',async()=>{
     const handle=createSeoHandler(deps);
     const response=await handle(request('admin/overview?fixture=true'));expect(response.status).toBe(200);
