@@ -61,8 +61,12 @@ export function createRouter(deps:Dependencies){return async(request:Request):Pr
  if(path==='/api/stripe/webhook'&&method==='POST')return await webhook(deps,request,id);
  const authorization=request.headers.get('authorization');if(!authorization?.startsWith('Bearer ')||authorization.length>8192)throw new ApiError('UNAUTHORIZED',401);
  const user=await deps.db.authenticate(authorization.slice(7));await rate(deps,user.id,'api',120);
- if(path==='/api/me'&&method==='GET')return response({user_id:user.id,email:user.email??null,locale:'ja'},id);
- if(path==='/api/credits'&&method==='GET'){const row=await deps.db.one('credit_accounts',{owner_id:user.id});return response(row?{available:row.available,reserved:row.reserved,status:row.status}:{available:0,reserved:0,status:'active'},id);}
+ if(path==='/api/me'&&method==='GET'){
+ const [profile,account]=await Promise.all([deps.db.one('profiles',{id:user.id}),deps.db.one('credit_accounts',{owner_id:user.id})]);
+ if(!profile||!account)throw new ApiError('SERVICE_UNAVAILABLE',503,true);
+ return response({user_id:user.id,email:user.email??null,locale:'ja'},id);
+ }
+ if(path==='/api/credits'&&method==='GET'){const row=await deps.db.one('credit_accounts',{owner_id:user.id});if(!row)throw new ApiError('SERVICE_UNAVAILABLE',503,true);return response({available:row.available,reserved:row.reserved,status:row.status},id);}
  if(path==='/api/images/upload-url'&&method==='POST'){
  await rate(deps,user.id,'uploads',10);const body=await json(request,UploadRequest);const imageId=randomUUID();const key=`staging/${user.id}/${imageId}`;const expires=new Date(deps.now().getTime()+retentionDays()*86400000).toISOString();
  await deps.db.rpc('app_create_upload',{p_user_id:user.id,p_image_id:imageId,p_mime_type:body.mime_type,p_bytes:body.bytes,p_temp_key:key,p_expires_at:expires});
