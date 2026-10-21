@@ -28,3 +28,6 @@
 - [双看板合入main验证](verification/CONSOLE_MAIN_MERGE.md)：实际合并、前端WIP保护、认证/邮件及跨模块回归。
 - [picmoko品牌UI合并验证](verification/PICMOKO_UI_MAIN_MERGE.md)：云朵/A1字标、日文字体、移动编辑、Google图标与main看板的整合。
 - 网页字体来源/OFL/摘要：apps/web/public/fonts/picmoko/README.md；Google图标来源：apps/web/public/auth/README.md。
+
+- [剩余19文件逐项审计](verification/RESIDUAL_WORK_AUDIT_2026-10-21.md)：已合入/等效覆盖/需补漏的分类、法律404与数据库回归、文档状态修正。
+- [消除类退出一期](verification/TOOL_RETIREMENT_2026-10-21.md)：当前18活动方向、历史20 ID与幂等/积分兼容。
