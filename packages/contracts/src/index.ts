@@ -67,6 +67,28 @@ export const OrderView=z.object({order_id:Id,package_id:Id,credits:z.number().in
 export const DeleteImageResponse=z.object({image_id:Id,status:z.literal('deleted'),cleanup_pending:z.boolean()}).strict();
 export const CheckoutResponse=z.object({order_id:Id,checkout_url:z.string().url()}).strict();
 export const CreditPackage=z.object({package_id:Id,credits:z.number().int().positive(),amount_minor:z.number().int().positive(),currency:z.literal('JPY')}).strict();
+
+// Personal console. Ownership always comes from the verified bearer, never query parameters.
+const ConsoleTime=z.string().datetime({offset:true});
+const ConsoleCount=z.number().int().nonnegative().safe();
+export const PersonalSummary=z.object({
+ as_of:ConsoleTime,window:z.object({start:ConsoleTime,end:ConsoleTime,timezone:z.literal('Asia/Tokyo')}).strict(),
+ credits:CreditView,ongoing_jobs:ConsoleCount,pending_orders:ConsoleCount,consumed_credits:ConsoleCount,
+ jobs:z.object({total:ConsoleCount,queued:ConsoleCount,processing:ConsoleCount,completed:ConsoleCount,failed:ConsoleCount,cancelled:ConsoleCount}).strict(),
+ recent_jobs:z.array(JobView).max(5),recent_works:z.array(JobView).max(5),
+}).strict();
+export const LedgerKind=z.enum(['reserve','release','consume','purchase','revoke','adjustment']);
+export const PersonalLedgerQuery=Pagination.extend({kind:LedgerKind.optional(),start:ConsoleTime.optional(),end:ConsoleTime.optional(),before:ConsoleTime.optional()}).strict();
+export const PersonalJobsQuery=Pagination.extend({status:JobStatus.optional(),tool_id:z.string().regex(/^[a-z][a-z0-9_]{0,99}$/).optional(),start:ConsoleTime.optional(),end:ConsoleTime.optional(),before:ConsoleTime.optional()}).strict();
+export const PersonalWorksQuery=PersonalJobsQuery.omit({status:true}).extend({availability:z.enum(['ready','expired','deleted','missing']).optional()}).strict();
+export const PersonalLedgerEntry=z.object({
+ entry_id:Id,kind:LedgerKind,available_delta:z.number().int().safe(),reserved_delta:z.number().int().safe(),
+ reference_id:Id.nullable(),reference_type:z.enum(['job','order','other']),created_at:ConsoleTime,
+}).strict();
+export const PersonalLedgerPage=z.object({as_of:ConsoleTime,snapshot_before:ConsoleTime,items:z.array(PersonalLedgerEntry).max(50),next_cursor:z.string().nullable()}).strict();
+export const PersonalJobsPage=z.object({as_of:ConsoleTime,snapshot_before:ConsoleTime,items:z.array(JobView).max(50),next_cursor:z.string().nullable()}).strict();
+export const PersonalWork=z.object({job:JobView,availability:z.enum(['ready','expired','deleted','missing']),expires_at:ConsoleTime.nullable()}).strict();
+export const PersonalWorksPage=z.object({as_of:ConsoleTime,snapshot_before:ConsoleTime,items:z.array(PersonalWork).max(50),next_cursor:z.string().nullable()}).strict();
 export const WorkerDrainRequest=z.object({contract_version:z.literal(CONTRACT_VERSION),limit:z.number().int().min(1).max(20).default(5)}).strict();
 export const WorkerAck=z.object({contract_version:z.literal(CONTRACT_VERSION),request_id:Id,processed:z.number().int().min(0).max(20),remaining:z.boolean()}).strict();
 

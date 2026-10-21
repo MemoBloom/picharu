@@ -9,6 +9,7 @@ import { models,generationEnabled,appOrigin,retentionDays } from './config';
 import { normalizeImage } from './media';
 import { recommend } from './recommend';
 import { consoleRoute } from './console';
+import { personalConsoleRoute } from './personal-console';
 function canonical(value:unknown):string{if(Array.isArray(value))return `[${value.map(canonical).join(',')}]`;if(value&&typeof value==='object')return `{${Object.keys(value).sort().map(k=>`${JSON.stringify(k)}:${canonical((value as Row)[k])}`).join(',')}}`;return JSON.stringify(value);}
 export function requestHash(request:EditRequest){return createHash('sha256').update(canonical(request)).digest('hex');}
 function jobView(j:Row){return {job_id:j.id,tool_id:j.tool_id,status:j.status,stage:j.stage,inputs:j.inputs,parent_job_id:j.parent_job_id??null,result_image_id:j.result_image_id??null,credits_reserved:j.credits_reserved,error_code:j.error_code??null,created_at:j.created_at,completed_at:j.completed_at??null};}
@@ -64,6 +65,8 @@ export function createRouter(deps:Dependencies){return async(request:Request):Pr
  const user=await deps.db.authenticate(authorization.slice(7));await rate(deps,user.id,'api',120);
  const consoleResponse=await consoleRoute(deps,request,user.id,id,()=>new Set(publicTools().filter(t=>t.available).map(t=>t.tool_id)));
  if(consoleResponse)return consoleResponse;
+ const personalResponse=await personalConsoleRoute(deps,request,user.id,id);
+ if(personalResponse)return personalResponse;
  if(path==='/api/me'&&method==='GET'){
  const [profile,account]=await Promise.all([deps.db.one('profiles',{id:user.id}),deps.db.one('credit_accounts',{owner_id:user.id})]);
  if(!profile||!account)throw new ApiError('SERVICE_UNAVAILABLE',503,true);

@@ -13,3 +13,4 @@
 - [完整生成链路及跨仓库离线验收](backend/FULL_FLOW.md)：Web创建、Worker同步执行、R2保存、积分结算和结果读取。
 - [Google/邮箱真实登录接入](backend/AUTH_SETUP.md)：picharu.vercel.app的Supabase/Google/SMTP配置、新用户初始化与验收。
 - [双看板三阶段开发](backend/CONSOLE_IMPLEMENTATION.md)、[阶段1数据与权限](backend/CONSOLE_FOUNDATION.md)、[分阶段验收](verification/CONSOLE_VERIFICATION.md)。
+- [阶段2个人控制台](backend/PERSONAL_CONSOLE.md)：本人使用总览、任务/作品筛选及积分流水。

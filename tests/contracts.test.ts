@@ -187,6 +187,7 @@ describe('generated OpenAPI document', () => {
       '/api/credit-packages': ['get'], '/api/checkout': ['post'], '/api/orders': ['get'],
       '/api/stripe/webhook': ['post'],
       '/api/admin/session': ['get'], '/api/analytics/events': ['post'],
+      '/api/dashboard': ['get'], '/api/credits/ledger': ['get'], '/api/account/jobs': ['get'], '/api/account/works': ['get'],
     };
     for (const [path, methods] of Object.entries(expected)) {
       for (const method of methods) expect(generated.paths?.[path]).toHaveProperty(method);
@@ -222,7 +223,7 @@ describe('generated OpenAPI document', () => {
     }
     visit(generated);
     expect(new Set(operationIds).size).toBe(operationIds.length);
-    expect(operationIds).toHaveLength(26);
+    expect(operationIds).toHaveLength(30);
   });
 
   it('documents real body-limit, media-type and unavailable responses plus versioned health', () => {

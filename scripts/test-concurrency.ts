@@ -89,6 +89,7 @@ async function main(){
   await db.query(await readFile('supabase/migrations/202610190001_web_backend.sql','utf8'));
   await db.query(await readFile('supabase/migrations/202610200400_worker.sql','utf8'));
   await db.query(await readFile('supabase/migrations/202610210100_console_foundation.sql','utf8'));
+  await db.query(await readFile('supabase/migrations/202610210200_personal_console.sql','utf8'));
   await db.query('insert into auth.users(id) values($1)',[owner]);await seedImage(image);
   const cs=await clients(20);
   await db.query('update credit_accounts set available=100 where owner_id=$1',[owner]);
@@ -234,6 +235,18 @@ async function main(){
   check(downloadOutcomes.filter(r=>r.status==='fulfilled'&&r.value.recording==='recorded').length,1,'one save-behavior event for 20 signed-link replays');
   check(Number((await db.query("select count(*) n from analytics_events where name='download_url_issued' and job_id=$1",[consoleJob])).rows[0].n),1,'only one durable save event after concurrency');
   await closeClients(cc);
+  const summary=await rpc(db,'app_personal_summary',[owner]);
+  const directCount=Number((await db.query('select count(*) n from edit_jobs where owner_id=$1 and created_at>=$2 and created_at<$3',[owner,summary.window.start,summary.as_of])).rows[0].n);
+  check(summary.jobs.total,directCount,'native personal summary agrees with owner-bound facts');
+  const personalJobs=await rpc(db,'app_personal_jobs',[owner,JSON.stringify({limit:50,status:'completed'}),false]);
+  check(personalJobs.items.every((j:any)=>j.status==='completed'),true,'native personal jobs filter uses public DTOs');
+  check(JSON.stringify(personalJobs.items).includes('final_prompt'),false,'native personal job projection excludes execution prompts');
+  const personalWorks=await rpc(db,'app_personal_jobs',[owner,JSON.stringify({limit:50,availability:'ready'}),true]);
+  check(personalWorks.items.some((w:any)=>w.job.job_id===consoleJob),true,'native works query includes the ready generated result');
+  const personalLedger=await rpc(db,'app_personal_ledger',[owner,JSON.stringify({limit:2})]);
+  check(personalLedger.items.length,2,'native ledger respects page limit');
+  check(typeof personalLedger.next_cursor,'string','native ledger emits a stable continuation cursor');
+  check(personalLedger.items.some((e:any)=>'business_key' in e),false,'native ledger excludes internal business keys');
   console.log(`Native PostgreSQL independent-session concurrency passed: ${assertions} assertions; 20 same-key creates, 20 competing balances, 20 cancellations, 20 paid events, 30 delete/create races (${createdFirst} creation wins / ${deletedFirst} deletion wins); full/partial/disputed known-Charge facts and later reversal races.`);
  }finally{
   if(db)await db.query('rollback').catch(()=>{});

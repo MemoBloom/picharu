@@ -39,6 +39,7 @@ try {
  await db.exec(await readFile('supabase/migrations/202610190001_web_backend.sql','utf8'));
  await db.exec(await readFile('supabase/migrations/202610200400_worker.sql','utf8'));
  await db.exec(await readFile('supabase/migrations/202610210100_console_foundation.sql','utf8'));
+ await db.exec(await readFile('supabase/migrations/202610210200_personal_console.sql','utf8'));
  await sql('insert into auth.users(id) values($1),($2)',[owner,other]);
  check(await account(),{available:0,reserved:0,status:'active'},'new accounts have zero credits');
  await upload(image); await upload(foreignImage,other);

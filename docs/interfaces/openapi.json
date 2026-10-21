@@ -913,6 +913,17 @@
         ],
         "additionalProperties": false
       },
+      "LedgerKind": {
+        "type": "string",
+        "enum": [
+          "reserve",
+          "release",
+          "consume",
+          "purchase",
+          "revoke",
+          "adjustment"
+        ]
+      },
       "ModelProfile": {
         "type": "object",
         "properties": {
@@ -1154,6 +1165,1077 @@
           "type",
           "required"
         ],
+        "additionalProperties": false
+      },
+      "PersonalJobsPage": {
+        "type": "object",
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "snapshot_before": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "job_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "tool_id": {
+                  "type": "string",
+                  "enum": [
+                    "remove_person",
+                    "remove_object",
+                    "change_background",
+                    "photo_color_grade",
+                    "weather_season",
+                    "light_time",
+                    "ai_avatar",
+                    "natural_beauty",
+                    "hair_color",
+                    "hairstyle",
+                    "professional_headshot",
+                    "anime_photo",
+                    "illustration_photo",
+                    "chibi_person",
+                    "pet_illustration",
+                    "pet_humanization",
+                    "multi_photo_composite",
+                    "product_background",
+                    "room_redesign",
+                    "clothing_recolor"
+                  ]
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "queued",
+                    "processing",
+                    "completed",
+                    "failed",
+                    "cancelled"
+                  ]
+                },
+                "stage": {
+                  "type": "string"
+                },
+                "inputs": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "image_id": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "role": {
+                        "type": "string",
+                        "enum": [
+                          "primary",
+                          "subject_reference",
+                          "background_reference",
+                          "style_reference",
+                          "identity_reference"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "image_id",
+                      "role"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "parent_job_id": {
+                  "type": "string",
+                  "nullable": true,
+                  "format": "uuid"
+                },
+                "result_image_id": {
+                  "type": "string",
+                  "nullable": true,
+                  "format": "uuid"
+                },
+                "credits_reserved": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "error_code": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "created_at": {
+                  "type": "string"
+                },
+                "completed_at": {
+                  "type": "string",
+                  "nullable": true
+                }
+              },
+              "required": [
+                "job_id",
+                "tool_id",
+                "status",
+                "stage",
+                "inputs",
+                "parent_job_id",
+                "result_image_id",
+                "credits_reserved",
+                "error_code",
+                "created_at",
+                "completed_at"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 50
+          },
+          "next_cursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "as_of",
+          "snapshot_before",
+          "items",
+          "next_cursor"
+        ],
+        "additionalProperties": false
+      },
+      "PersonalJobsQuery": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "default": 20
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "processing",
+              "completed",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "tool_id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,99}$"
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "before": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PersonalLedgerEntry": {
+        "type": "object",
+        "properties": {
+          "entry_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "reserve",
+              "release",
+              "consume",
+              "purchase",
+              "revoke",
+              "adjustment"
+            ]
+          },
+          "available_delta": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "reserved_delta": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "reference_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "reference_type": {
+            "type": "string",
+            "enum": [
+              "job",
+              "order",
+              "other"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "entry_id",
+          "kind",
+          "available_delta",
+          "reserved_delta",
+          "reference_id",
+          "reference_type",
+          "created_at"
+        ],
+        "additionalProperties": false
+      },
+      "PersonalLedgerPage": {
+        "type": "object",
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "snapshot_before": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "entry_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "reserve",
+                    "release",
+                    "consume",
+                    "purchase",
+                    "revoke",
+                    "adjustment"
+                  ]
+                },
+                "available_delta": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "reserved_delta": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "reference_id": {
+                  "type": "string",
+                  "nullable": true,
+                  "format": "uuid"
+                },
+                "reference_type": {
+                  "type": "string",
+                  "enum": [
+                    "job",
+                    "order",
+                    "other"
+                  ]
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "entry_id",
+                "kind",
+                "available_delta",
+                "reserved_delta",
+                "reference_id",
+                "reference_type",
+                "created_at"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 50
+          },
+          "next_cursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "as_of",
+          "snapshot_before",
+          "items",
+          "next_cursor"
+        ],
+        "additionalProperties": false
+      },
+      "PersonalLedgerQuery": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "default": 20
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "reserve",
+              "release",
+              "consume",
+              "purchase",
+              "revoke",
+              "adjustment"
+            ]
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "before": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PersonalSummary": {
+        "type": "object",
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "window": {
+            "type": "object",
+            "properties": {
+              "start": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "end": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "timezone": {
+                "type": "string",
+                "enum": [
+                  "Asia/Tokyo"
+                ]
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "timezone"
+            ],
+            "additionalProperties": false
+          },
+          "credits": {
+            "type": "object",
+            "properties": {
+              "available": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "reserved": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "active",
+                  "restricted"
+                ]
+              }
+            },
+            "required": [
+              "available",
+              "reserved",
+              "status"
+            ],
+            "additionalProperties": false
+          },
+          "ongoing_jobs": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "pending_orders": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "consumed_credits": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "jobs": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "queued": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "processing": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "completed": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "failed": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "cancelled": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "total",
+              "queued",
+              "processing",
+              "completed",
+              "failed",
+              "cancelled"
+            ],
+            "additionalProperties": false
+          },
+          "recent_jobs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "job_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "tool_id": {
+                  "type": "string",
+                  "enum": [
+                    "remove_person",
+                    "remove_object",
+                    "change_background",
+                    "photo_color_grade",
+                    "weather_season",
+                    "light_time",
+                    "ai_avatar",
+                    "natural_beauty",
+                    "hair_color",
+                    "hairstyle",
+                    "professional_headshot",
+                    "anime_photo",
+                    "illustration_photo",
+                    "chibi_person",
+                    "pet_illustration",
+                    "pet_humanization",
+                    "multi_photo_composite",
+                    "product_background",
+                    "room_redesign",
+                    "clothing_recolor"
+                  ]
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "queued",
+                    "processing",
+                    "completed",
+                    "failed",
+                    "cancelled"
+                  ]
+                },
+                "stage": {
+                  "type": "string"
+                },
+                "inputs": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "image_id": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "role": {
+                        "type": "string",
+                        "enum": [
+                          "primary",
+                          "subject_reference",
+                          "background_reference",
+                          "style_reference",
+                          "identity_reference"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "image_id",
+                      "role"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "parent_job_id": {
+                  "type": "string",
+                  "nullable": true,
+                  "format": "uuid"
+                },
+                "result_image_id": {
+                  "type": "string",
+                  "nullable": true,
+                  "format": "uuid"
+                },
+                "credits_reserved": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "error_code": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "created_at": {
+                  "type": "string"
+                },
+                "completed_at": {
+                  "type": "string",
+                  "nullable": true
+                }
+              },
+              "required": [
+                "job_id",
+                "tool_id",
+                "status",
+                "stage",
+                "inputs",
+                "parent_job_id",
+                "result_image_id",
+                "credits_reserved",
+                "error_code",
+                "created_at",
+                "completed_at"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 5
+          },
+          "recent_works": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "job_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "tool_id": {
+                  "type": "string",
+                  "enum": [
+                    "remove_person",
+                    "remove_object",
+                    "change_background",
+                    "photo_color_grade",
+                    "weather_season",
+                    "light_time",
+                    "ai_avatar",
+                    "natural_beauty",
+                    "hair_color",
+                    "hairstyle",
+                    "professional_headshot",
+                    "anime_photo",
+                    "illustration_photo",
+                    "chibi_person",
+                    "pet_illustration",
+                    "pet_humanization",
+                    "multi_photo_composite",
+                    "product_background",
+                    "room_redesign",
+                    "clothing_recolor"
+                  ]
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "queued",
+                    "processing",
+                    "completed",
+                    "failed",
+                    "cancelled"
+                  ]
+                },
+                "stage": {
+                  "type": "string"
+                },
+                "inputs": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "image_id": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "role": {
+                        "type": "string",
+                        "enum": [
+                          "primary",
+                          "subject_reference",
+                          "background_reference",
+                          "style_reference",
+                          "identity_reference"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "image_id",
+                      "role"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "parent_job_id": {
+                  "type": "string",
+                  "nullable": true,
+                  "format": "uuid"
+                },
+                "result_image_id": {
+                  "type": "string",
+                  "nullable": true,
+                  "format": "uuid"
+                },
+                "credits_reserved": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "error_code": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "created_at": {
+                  "type": "string"
+                },
+                "completed_at": {
+                  "type": "string",
+                  "nullable": true
+                }
+              },
+              "required": [
+                "job_id",
+                "tool_id",
+                "status",
+                "stage",
+                "inputs",
+                "parent_job_id",
+                "result_image_id",
+                "credits_reserved",
+                "error_code",
+                "created_at",
+                "completed_at"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 5
+          }
+        },
+        "required": [
+          "as_of",
+          "window",
+          "credits",
+          "ongoing_jobs",
+          "pending_orders",
+          "consumed_credits",
+          "jobs",
+          "recent_jobs",
+          "recent_works"
+        ],
+        "additionalProperties": false
+      },
+      "PersonalWork": {
+        "type": "object",
+        "properties": {
+          "job": {
+            "type": "object",
+            "properties": {
+              "job_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "tool_id": {
+                "type": "string",
+                "enum": [
+                  "remove_person",
+                  "remove_object",
+                  "change_background",
+                  "photo_color_grade",
+                  "weather_season",
+                  "light_time",
+                  "ai_avatar",
+                  "natural_beauty",
+                  "hair_color",
+                  "hairstyle",
+                  "professional_headshot",
+                  "anime_photo",
+                  "illustration_photo",
+                  "chibi_person",
+                  "pet_illustration",
+                  "pet_humanization",
+                  "multi_photo_composite",
+                  "product_background",
+                  "room_redesign",
+                  "clothing_recolor"
+                ]
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "queued",
+                  "processing",
+                  "completed",
+                  "failed",
+                  "cancelled"
+                ]
+              },
+              "stage": {
+                "type": "string"
+              },
+              "inputs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "image_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "role": {
+                      "type": "string",
+                      "enum": [
+                        "primary",
+                        "subject_reference",
+                        "background_reference",
+                        "style_reference",
+                        "identity_reference"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "image_id",
+                    "role"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "parent_job_id": {
+                "type": "string",
+                "nullable": true,
+                "format": "uuid"
+              },
+              "result_image_id": {
+                "type": "string",
+                "nullable": true,
+                "format": "uuid"
+              },
+              "credits_reserved": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "error_code": {
+                "type": "string",
+                "nullable": true
+              },
+              "created_at": {
+                "type": "string"
+              },
+              "completed_at": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "job_id",
+              "tool_id",
+              "status",
+              "stage",
+              "inputs",
+              "parent_job_id",
+              "result_image_id",
+              "credits_reserved",
+              "error_code",
+              "created_at",
+              "completed_at"
+            ],
+            "additionalProperties": false
+          },
+          "availability": {
+            "type": "string",
+            "enum": [
+              "ready",
+              "expired",
+              "deleted",
+              "missing"
+            ]
+          },
+          "expires_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "job",
+          "availability",
+          "expires_at"
+        ],
+        "additionalProperties": false
+      },
+      "PersonalWorksPage": {
+        "type": "object",
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "snapshot_before": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "job": {
+                  "type": "object",
+                  "properties": {
+                    "job_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "tool_id": {
+                      "type": "string",
+                      "enum": [
+                        "remove_person",
+                        "remove_object",
+                        "change_background",
+                        "photo_color_grade",
+                        "weather_season",
+                        "light_time",
+                        "ai_avatar",
+                        "natural_beauty",
+                        "hair_color",
+                        "hairstyle",
+                        "professional_headshot",
+                        "anime_photo",
+                        "illustration_photo",
+                        "chibi_person",
+                        "pet_illustration",
+                        "pet_humanization",
+                        "multi_photo_composite",
+                        "product_background",
+                        "room_redesign",
+                        "clothing_recolor"
+                      ]
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "queued",
+                        "processing",
+                        "completed",
+                        "failed",
+                        "cancelled"
+                      ]
+                    },
+                    "stage": {
+                      "type": "string"
+                    },
+                    "inputs": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "image_id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "role": {
+                            "type": "string",
+                            "enum": [
+                              "primary",
+                              "subject_reference",
+                              "background_reference",
+                              "style_reference",
+                              "identity_reference"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "image_id",
+                          "role"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "parent_job_id": {
+                      "type": "string",
+                      "nullable": true,
+                      "format": "uuid"
+                    },
+                    "result_image_id": {
+                      "type": "string",
+                      "nullable": true,
+                      "format": "uuid"
+                    },
+                    "credits_reserved": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "error_code": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "completed_at": {
+                      "type": "string",
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "job_id",
+                    "tool_id",
+                    "status",
+                    "stage",
+                    "inputs",
+                    "parent_job_id",
+                    "result_image_id",
+                    "credits_reserved",
+                    "error_code",
+                    "created_at",
+                    "completed_at"
+                  ],
+                  "additionalProperties": false
+                },
+                "availability": {
+                  "type": "string",
+                  "enum": [
+                    "ready",
+                    "expired",
+                    "deleted",
+                    "missing"
+                  ]
+                },
+                "expires_at": {
+                  "type": "string",
+                  "nullable": true,
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "job",
+                "availability",
+                "expires_at"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 50
+          },
+          "next_cursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "as_of",
+          "snapshot_before",
+          "items",
+          "next_cursor"
+        ],
+        "additionalProperties": false
+      },
+      "PersonalWorksQuery": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "default": 20
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "tool_id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,99}$"
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "before": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "availability": {
+            "type": "string",
+            "enum": [
+              "ready",
+              "expired",
+              "deleted",
+              "missing"
+            ]
+          }
+        },
         "additionalProperties": false
       },
       "PublicRecommendation": {
@@ -4680,6 +5762,1348 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST or INVALID_PROMPT; webhook signature failures also return 400.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED or internal INVALID_SIGNATURE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND, including resources owned by another user.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED. Retry-After indicates the retry delay in seconds.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "Seconds before retry."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR; details are not exposed.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "GENERATION_DISABLED or SERVICE_UNAVAILABLE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard": {
+      "get": {
+        "operationId": "getPersonalSummary",
+        "summary": "Owned 30 JST calendar-day usage, current credits and recent jobs in one database snapshot",
+        "tags": [
+          "Vercel BFF"
+        ],
+        "security": [
+          {
+            "SupabaseBearer": []
+          }
+        ],
+        "x-implementation-status": "local-implementation-requires-configured-services",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalSummary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST or INVALID_PROMPT; webhook signature failures also return 400.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED or internal INVALID_SIGNATURE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND, including resources owned by another user.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED. Retry-After indicates the retry delay in seconds.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "Seconds before retry."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR; details are not exposed.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "GENERATION_DISABLED or SERVICE_UNAVAILABLE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/credits/ledger": {
+      "get": {
+        "operationId": "getPersonalLedger",
+        "summary": "Owned ledger, with immutable deltas and stable keyset pagination",
+        "description": "before is the stable creation cutoff: pass snapshot_before from the first page with subsequent cursors. as_of is the actual page-read timestamp. Filters are UTC half-open start/end. No arbitrary user_id or internal business_key.",
+        "tags": [
+          "Vercel BFF"
+        ],
+        "security": [
+          {
+            "SupabaseBearer": []
+          }
+        ],
+        "x-implementation-status": "local-implementation-requires-configured-services",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "cursor",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "reserve",
+                "release",
+                "consume",
+                "purchase",
+                "revoke",
+                "adjustment"
+              ]
+            },
+            "required": false,
+            "name": "kind",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "start",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "end",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "before",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalLedgerPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST or INVALID_PROMPT; webhook signature failures also return 400.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED or internal INVALID_SIGNATURE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND, including resources owned by another user.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED. Retry-After indicates the retry delay in seconds.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "Seconds before retry."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR; details are not exposed.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "GENERATION_DISABLED or SERVICE_UNAVAILABLE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account/jobs": {
+      "get": {
+        "operationId": "getPersonalJobs",
+        "summary": "Owned jobs filtered by status, stable tool ID and creation interval",
+        "description": "before fixes creation cutoff; status is current at the returned as_of. No historical state reconstruction. Use the exact same filters with each cursor.",
+        "tags": [
+          "Vercel BFF"
+        ],
+        "security": [
+          {
+            "SupabaseBearer": []
+          }
+        ],
+        "x-implementation-status": "local-implementation-requires-configured-services",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "cursor",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "queued",
+                "processing",
+                "completed",
+                "failed",
+                "cancelled"
+              ]
+            },
+            "required": false,
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]{0,99}$"
+            },
+            "required": false,
+            "name": "tool_id",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "start",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "end",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "before",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalJobsPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST or INVALID_PROMPT; webhook signature failures also return 400.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED or internal INVALID_SIGNATURE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND, including resources owned by another user.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED. Retry-After indicates the retry delay in seconds.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "Seconds before retry."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR; details are not exposed.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "GENERATION_DISABLED or SERVICE_UNAVAILABLE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account/works": {
+      "get": {
+        "operationId": "getPersonalWorks",
+        "summary": "Owned successful results including explicit ready/expired/deleted availability",
+        "description": "Pagination does not extend retention: availability and expiry are checked at the actual page-read as_of. Open previews/downloads only through normal owner-checked short-lived image APIs.",
+        "tags": [
+          "Vercel BFF"
+        ],
+        "security": [
+          {
+            "SupabaseBearer": []
+          }
+        ],
+        "x-implementation-status": "local-implementation-requires-configured-services",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "cursor",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]{0,99}$"
+            },
+            "required": false,
+            "name": "tool_id",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "start",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "end",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "before",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ready",
+                "expired",
+                "deleted",
+                "missing"
+              ]
+            },
+            "required": false,
+            "name": "availability",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalWorksPage"
                 }
               }
             }
