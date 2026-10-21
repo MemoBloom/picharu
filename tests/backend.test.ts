@@ -9,7 +9,8 @@ import { ApiError } from '../apps/web/src/server/errors';
 import { dbError } from '../apps/web/src/server/supabase';
 import { StripePayments } from '../apps/web/src/server/payments';
 import { normalizeImage } from '../apps/web/src/server/media';
-import { ToolView,JobView,WorkerSnapshot,ImageView,PublicRecommendation,EditRequest } from '@picjp/contracts';
+import { ToolView,JobView,WorkerSnapshot,ImageView,PublicRecommendation,EditRequest,ModelProfile } from '@picjp/contracts';
+import { snapshot } from '@picjp/prompts';
 import type { Database,Storage,Payments,Dependencies,Row } from '../apps/web/src/server/ports';
 
 const uid='00000000-0000-4000-8000-000000000001',other='00000000-0000-4000-8000-000000000002';
@@ -83,7 +84,20 @@ describe('Vercel backend with real PostgreSQL semantics and isolated external po
  });
  it('serves public health and exactly 18 active sanitized tools with no setup secrets',async()=>{
  const health=await call('/api/health','GET',undefined,'');expect(health.status).toBe(200);expect(health.headers.get('X-Contract-Version')).toBe('1.0.0');
- const body=await(await call('/api/tools','GET',undefined,'')).json();expect(body.tools).toHaveLength(18);for(const tool of body.tools)expect(ToolView.safeParse(tool).success).toBe(true);expect(JSON.stringify(body)).not.toContain('final_prompt');
+ const body=await(await call('/api/tools','GET',undefined,'')).json();expect(body.tools).toHaveLength(18);for(const tool of body.tools)expect(ToolView.safeParse(tool).success).toBe(true);expect(JSON.stringify(body)).not.toContain('final_prompt');expect(body.tools.map((tool:any)=>tool.tool_id)).not.toContain('remove_person');expect(body.tools.map((tool:any)=>tool.tool_id)).not.toContain('remove_object');
+ });
+ it('rejects retired removal tools before reserving credits even when the model profile permits them',async()=>{
+ const image=await upload();await credits();vi.stubEnv('MODEL_PROFILES_JSON',JSON.stringify([{...profile,verified_tool_ids:['remove_person','remove_object']}]));
+ for(const tool_id of ['remove_person','remove_object']){const res=await call('/api/edit','POST',edit(image.image_id,{tool_id,parameters:{target:'background subject'}}));expect(res.status).toBe(409);expect((await res.json()).error.code).toBe('UNSUPPORTED_CAPABILITY');}
+ expect(await(await call('/api/credits')).json()).toMatchObject({available:20,reserved:0});expect((await pg.query('select * from edit_jobs')).rows).toHaveLength(0);
+ });
+ it('keeps an existing retired-tool job readable and replays its original reservation without creating a new task',async()=>{
+ const image=await upload();await credits();const body=EditRequest.parse(edit(image.image_id,{tool_id:'remove_person',parameters:{target:'background subject'}}));
+ // Seed a task as it would exist before retirement, using the real transaction and frozen snapshot.
+ const stored=await deps.db.rpc('app_create_job',{p_user_id:uid,p_idempotency_key:body.idempotency_key,p_request_hash:requestHash(body),p_inputs:body.inputs,p_snapshot:snapshot(body,ModelProfile.parse(profile)),p_reserved_credits:3,p_parent_job_id:null});
+ vi.stubEnv('GENERATION_ENABLED','false');expect((await call(`/api/jobs/${stored.job_id}`)).status).toBe(200);
+ const replay=await call('/api/edit','POST',body);expect(replay.status).toBe(202);expect(await replay.json()).toMatchObject({job_id:stored.job_id,replayed:true,credits_reserved:3});
+ expect(await(await call('/api/credits')).json()).toMatchObject({available:17,reserved:3});expect((await pg.query('select * from edit_jobs')).rows).toHaveLength(1);
  });
  it('requires verified auth and never accepts a user_id override',async()=>{expect((await call('/api/credits','GET',undefined,'')).status).toBe(401);expect((await call('/api/credits','GET',undefined,'forged')).status).toBe(401);const denied=await call('/api/images/upload-url','POST',{mime_type:'image/png',bytes:5,user_id:other});expect(denied.status).toBe(400);});
  it('canonicalizes uploads and repeated completion keeps the immutable version',async()=>{

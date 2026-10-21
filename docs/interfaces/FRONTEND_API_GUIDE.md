@@ -1,10 +1,10 @@
 # 前端接口接入规范 v1.0.0
 
-更新：2026-10-20。状态：依据当前 Web 路由、共享 Schema 和 OpenAPI 整理的前端接入视图，可用于开始前端开发；不是新的平行协议。本轮仅输出文档，不开发前端或修改后端行为。
+更新：2026-10-21。状态：依据当前 Web 路由、共享 Schema 和 OpenAPI 整理的前端接入视图，日语前端客户端已经接入；不是新的平行协议。品牌UI已通过PR #7合入main，真实支付与完整生成另行验收。
 
 权威来源：[统一接口协议](INTERFACE_SPEC_V1.md)、[可导入 OpenAPI](openapi.json)、[可执行 Schema](../../packages/contracts/src/index.ts)、[当前路由](../../apps/web/src/server/router.ts)。业务字段变化应先同步这些来源，再维护本文。
 
-页面数量、入口与跳转提案见 [前端页面与跳转设计](../../../../docs/product/FRONTEND_PAGE_MAP.md)。其中 /ja/... 为拟开发的页面路由，不是本规范承诺已实现的 /api 路由。
+页面数量、入口与跳转提案见 [前端页面与跳转设计](../../../../docs/product/FRONTEND_PAGE_MAP.md)。其中 /ja/... 页面已经实现；客户端实施见 [前端设计](../../../../docs/design/FRONTEND_DESIGN.md)。页面存在不表示对应云服务已验收。
 
 ## 1. 当前可用边界
 
@@ -440,7 +440,7 @@ JPY 的 amount_minor=500 表示 500 日元，不除以 100。套餐价格由服�
 
 跳转 checkout_url，记录 order_id。网络重试复用同一 key；同键换套餐会冲突。用户明确新建另一笔购买才创建新 key，不能因暂时 pending 就自动创建新订单。服务端不接受前端金额、积分数量或回跳 URL。
 
-当前 Stripe 配置的回跳页面，前端需要实现：
+当前 Stripe 配置的回跳页面，前端已实现（沙盒实际付款验收仍待）：
 
 - 成功：/ja/billing/success?session_id=...。
 - 用户退出付款：/ja/pricing。

@@ -30,6 +30,7 @@ function OwnedTelemetry({owner,children}:{owner:string|null;children:ReactNode})
   const signal=scope.controller?.signal;
   if(!enabled||!owner||!signal||signal.aborted)return {event_id:event.event_id,recording:'disabled'};
   for(let attempt=0;attempt<3;attempt++){
+   if(signal.aborted)return {event_id:event.event_id,recording:'disabled'};
    try{return await api<ConsoleEventReceipt>('/api/analytics/events',{method:'POST',body:event,signal,expectedOwnerId:owner,keepalive:true});}
    catch(error){if(signal.aborted||attempt===2||!(error instanceof ApiError)||!error.retryable)throw error;
     await new Promise<void>(resolve=>{const done=()=>{clearTimeout(timer);signal.removeEventListener('abort',done);resolve();};const timer=setTimeout(done,Math.min(4000,(error.retryAfter??(attempt+1))*1000));signal.addEventListener('abort',done,{once:true});});

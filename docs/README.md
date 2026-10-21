@@ -43,3 +43,5 @@
 - [SEO剩余任务与完成标准](seo/REMAINING_TASKS.md)：上线前6项任务、上线后数据/效果闭环及可延期事项。
 
 - [SEO与最新主分支集成](integration/SEO_MAIN_INTEGRATION.md)：保留品牌/登录/双看板、认证回调生命周期修复及最终回归，索引仍关闭。
+- [剩余19文件逐项审计](verification/RESIDUAL_WORK_AUDIT_2026-10-21.md)：已合入/等效覆盖/需补漏的分类、法律404与数据库回归、文档状态修正。
+- [消除类退出一期](verification/TOOL_RETIREMENT_2026-10-21.md)：当前18活动方向、历史20 ID与幂等/积分兼容。
