@@ -56,3 +56,13 @@ it('does not erase a new account adopted before the previous logout promise comp
   await flush(async () => { resolve({ error: null }); await pending; });
   expect(host.textContent).toBe('owner-b'); expect(sessionStorage.getItem('picjp:draft:owner-b')).toBe('private-b');
 });
+it('lets a new owner sign out while the previous owner request is still finishing', async () => {
+  let finishA!: (value: { error: null }) => void, finishB!: (value: { error: null }) => void;
+  sdk.signOut.mockReturnValueOnce(new Promise(done => { finishA = done; })).mockReturnValueOnce(new Promise(done => { finishB = done; }));
+  const first = auth.signOut();
+  await flush(() => { sdk.notify?.('SIGNED_OUT', null); sdk.notify?.('SIGNED_IN', { user: { id: 'owner-b' } }); });
+  const second = auth.signOut(); expect(first).not.toBe(second); expect(sdk.signOut).toHaveBeenCalledTimes(2);
+  await flush(async () => { finishA({ error: null }); await first; }); expect(host.textContent).toBe('owner-b');
+  expect(auth.signOut()).toBe(second);
+  await flush(async () => { finishB({ error: null }); await second; }); expect(host.textContent).toBe('signed-out');
+});
