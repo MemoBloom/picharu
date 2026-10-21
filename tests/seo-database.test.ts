@@ -8,7 +8,7 @@ import { importWindow } from '../scripts/seo/import';
 import type { SeoRpc } from '../apps/web/src/server/seo/repository';
 const author='00000000-0000-4000-8000-000000000001',reviewer='00000000-0000-4000-8000-000000000002',outsider='00000000-0000-4000-8000-000000000003';
 let db:PGlite;
-const content=()=>baselineContent('/ja/tools/remove_person')!.content;
+const content=()=>baselineContent('/ja/tools/change_background')!.content;
 async function rpc(name:string,args:unknown[]){return (await db.query<{v:any}>(`select public.${name}(${args.map((_,i)=>'$'+(i+1)).join(',')}) v`,args)).rows[0].v;}
 async function draft(actor=author,base:string|null=null){return (await rpc('seo_save_draft',[actor,JSON.stringify(content()),base])).id as string;}
 const transition=(id:string,action:string,actor=reviewer,expected:string|null=null,op=randomUUID())=>rpc('seo_transition',[actor,id,action,expected,op]);
@@ -34,7 +34,7 @@ describe('SEO persisted approval, publish, rollback and import transactions',()=
   await expect(transition(a,'rollback',reviewer,null,op)).rejects.toThrow('SEO_IDEMPOTENCY_CONFLICT');
   const b=await draft(author,a);await approve(b);await expect(transition(b,'publish',reviewer,null)).rejects.toThrow('SEO_REVISION_CONFLICT');
   await transition(b,'publish',reviewer,a);await transition(a,'rollback',reviewer,b);
-  expect((await rpc('seo_get_published',['/ja/tools/remove_person']))[0].revision).toBe(a);
+  expect((await rpc('seo_get_published',['/ja/tools/change_background']))[0].revision).toBe(a);
   await expect(db.query('update seo_revisions set content=$2 where id=$1',[a,JSON.stringify({...content(),title:'changed title'})])).rejects.toThrow('SEO_IMMUTABLE_REVISION');
  });
  it('rejects a stale draft even when the publisher refreshes the current pointer',async()=>{

@@ -4,12 +4,12 @@ import { readFile } from 'node:fs/promises';
 import { createHash,createHmac,randomUUID } from 'node:crypto';
 import sharp from 'sharp';
 import Stripe from 'stripe';
-import { createRouter } from '../apps/web/src/server/router';
+import { createRouter,requestHash } from '../apps/web/src/server/router';
 import { ApiError } from '../apps/web/src/server/errors';
 import { dbError } from '../apps/web/src/server/supabase';
 import { StripePayments } from '../apps/web/src/server/payments';
 import { normalizeImage } from '../apps/web/src/server/media';
-import { ToolView,JobView,WorkerSnapshot,ImageView,PublicRecommendation } from '@picjp/contracts';
+import { ToolView,JobView,WorkerSnapshot,ImageView,PublicRecommendation,EditRequest } from '@picjp/contracts';
 import type { Database,Storage,Payments,Dependencies,Row } from '../apps/web/src/server/ports';
 
 const uid='00000000-0000-4000-8000-000000000001',other='00000000-0000-4000-8000-000000000002';
@@ -68,9 +68,22 @@ beforeEach(async()=>{
 });
 
 describe('Vercel backend with real PostgreSQL semantics and isolated external ports',()=>{
- it('serves public health and exactly 20 sanitized tools with no setup secrets',async()=>{
+ it('rejects new retired tools before generation or reservation while replaying historical keys',async()=>{
+  const image=await upload();await credits();
+  for(const tool_id of ['remove_person','remove_object']){
+   const response=await call('/api/edit','POST',edit(image.image_id,{tool_id}));
+   expect(response.status).toBe(409);expect((await response.json()).error.code).toBe('UNSUPPORTED_CAPABILITY');
+  }
+  expect((await pg.query('select * from edit_jobs')).rows).toHaveLength(0);
+  const body=edit(image.image_id,{tool_id:'remove_person'});
+  const historical={id:randomUUID(),request_hash:requestHash(EditRequest.parse(body)),status:'completed',credits_reserved:3};
+  vi.spyOn(deps.db,'findJob').mockResolvedValue(historical);
+  const replay=await call('/api/edit','POST',body);
+  expect(replay.status).toBe(202);expect((await replay.json()).replayed).toBe(true);
+ });
+ it('serves public health and exactly 18 active sanitized tools with no setup secrets',async()=>{
  const health=await call('/api/health','GET',undefined,'');expect(health.status).toBe(200);expect(health.headers.get('X-Contract-Version')).toBe('1.0.0');
- const body=await(await call('/api/tools','GET',undefined,'')).json();expect(body.tools).toHaveLength(20);for(const tool of body.tools)expect(ToolView.safeParse(tool).success).toBe(true);expect(JSON.stringify(body)).not.toContain('final_prompt');
+ const body=await(await call('/api/tools','GET',undefined,'')).json();expect(body.tools).toHaveLength(18);for(const tool of body.tools)expect(ToolView.safeParse(tool).success).toBe(true);expect(JSON.stringify(body)).not.toContain('final_prompt');
  });
  it('requires verified auth and never accepts a user_id override',async()=>{expect((await call('/api/credits','GET',undefined,'')).status).toBe(401);expect((await call('/api/credits','GET',undefined,'forged')).status).toBe(401);const denied=await call('/api/images/upload-url','POST',{mime_type:'image/png',bytes:5,user_id:other});expect(denied.status).toBe(400);});
  it('canonicalizes uploads and repeated completion keeps the immutable version',async()=>{

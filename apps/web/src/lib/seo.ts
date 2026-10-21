@@ -1,5 +1,11 @@
 import type { Metadata } from 'next';
 import { publicToolContent } from './tool-content';
+import { isRetiredTool } from '@picjp/tool-config/lifecycle';
+
+export function isRetiredSeoPath(path: string) {
+  return path === '/ja/guides/remove-unwanted-people' ||
+    path.startsWith('/ja/tools/') && isRetiredTool(path.slice('/ja/tools/'.length));
+}
 
 export const PRIMARY_ORIGIN = 'https://picmoko.com';
 export const PUBLIC_PATHS = ['/ja', '/ja/tools', '/ja/help'] as const;

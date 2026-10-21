@@ -70,7 +70,7 @@ async function main() {
       check(/<h1\b[^>]*>([\s\S]*?)<\/h1>/.exec(visible)?.[1],expected.h1,'actual server body heading matches the revision');
       check(visible.includes(expected.lead),true,'actual server body lead matches the revision');
     }
-    const initial=baselineContent('/ja/tools/remove_person')!.content;
+    const initial=baselineContent('/ja/tools/change_background')!.content;
     const first={...initial,title:'Isolated publication A｜評価用ページ',h1:'Visible body A｜公開本文の確認',lead:'Visible lead A: isolated fixture content for checking actual server-rendered copy.'};const a=await publish(first,null);await rendered(initial.path,a,first);
     const today=(await db.query<{v:string}>("select ((now() at time zone 'America/Los_Angeles')::date)::text v")).rows[0].v;
     const day=(n:number)=>new Date(Date.parse(today+'T00:00:00Z')+n*86400000).toISOString().slice(0,10);
@@ -82,7 +82,7 @@ async function main() {
     const observation=await call('observations',{revision_id:b,publish_operation_id:operation,operation_id:randomUUID(),observation_to:day(-10),decision:'keep',notes:'Explicit historical fixture. Observational comparison only, never a causal claim.'},'reviewer');
     check(observation.report.comparison_ready,true,'complete fixture evidence window');check(observation.report.delta.clicks,42,'correct before/after comparison');check(observation.report.limitations.includes('observational_not_causal'),true,'observation limits persisted');
     await call('transitions',{revision_id:a,action:'rollback',expected_revision:b,operation_id:randomUUID()},'reviewer');await rendered(initial.path,a,first);
-    const guide={...baselineContent('/ja/guides/remove-unwanted-people')!.content,path:'/ja/guides/isolated-published-guide',title:'Isolated new guide｜公開評価ページ'};
+    const guide={...baselineContent('/ja/guides/change-background-photo')!.content,path:'/ja/guides/isolated-published-guide',title:'Isolated new guide｜公開評価ページ'};
     const g=await publish(guide,null);await rendered(guide.path,g,guide);
     const index=await(await fetch(base+'/ja/guides')).text();check(index.includes('href="'+guide.path+'"'),true,'guide directory cache updated after publication');
     const linkedTool=await(await fetch(base+initial.path)).text();check(linkedTool.includes('href="'+guide.path+'"'),true,'published guide becomes a crawlable related tool link after tag invalidation');

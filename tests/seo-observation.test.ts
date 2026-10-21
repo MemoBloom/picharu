@@ -5,7 +5,7 @@ import { randomUUID } from 'node:crypto';
 import { baselineContent } from '../apps/web/src/server/seo/content';
 import { SeoOptimizationPlan,SeoObservationRequest } from '@picjp/contracts';
 let db:PGlite,today:string;
-const author=randomUUID(),reviewer=randomUUID(),outsider=randomUUID(),property='sc-domain:picmoko.com',path='/ja/tools/remove_person';
+const author=randomUUID(),reviewer=randomUUID(),outsider=randomUUID(),property='sc-domain:picmoko.com',path='/ja/tools/change_background';
 const rpc=async(name:string,args:unknown[])=>(await db.query<{v:any}>(`select ${name}(${args.map((_,i)=>'$'+(i+1)).join(',')}) v`,args)).rows[0].v;
 const day=(offset:number)=>new Date(Date.parse(today+'T00:00:00Z')+offset*86400000).toISOString().slice(0,10);
 function plan(){return {hypothesis:'より明確な手順で検索意図との一致を改善する。',change_summary:'タイトルと本文の説明を合わせて見直します。',target_queries:['写真から人を消す'],risk_notes:'検索結果の更新には時間がかかるため即断しない。',rollback_conditions:'機能にない約束や公開ページの不具合があれば戻す。',source_property:property,baseline_from:day(-38),baseline_to:day(-25),observation_days:14,minimum_impressions:300,is_fixture:true};}

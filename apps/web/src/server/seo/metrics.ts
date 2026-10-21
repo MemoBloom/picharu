@@ -1,3 +1,4 @@
+import { isRetiredSeoPath } from '../../lib/seo';
 import { z } from 'zod';
 import { SeoPath } from '@picjp/contracts';
 
@@ -18,6 +19,6 @@ export function aggregateSearch(rows:MetricRow[]){
  return {impressions,clicks,ctr:impressions?clicks/impressions:null,position:impressions&&knownPosition?weighted/impressions:null};
 }
 export function opportunities(rows:MetricRow[],minimumImpressions=300){
- const groups=new Map<string,MetricRow[]>();for(const row of rows){const path=row.dimensions.page;if(!path)continue;groups.set(path,[...(groups.get(path)||[]),row]);}
+ const groups=new Map<string,MetricRow[]>();for(const row of rows){const path=row.dimensions.page;if(!path||isRetiredSeoPath(path))continue;groups.set(path,[...(groups.get(path)||[]),row]);}
  return [...groups].map(([path,rows])=>({path,...aggregateSearch(rows)})).filter(row=>row.impressions>=minimumImpressions&&row.position!==null&&row.position>=4&&row.position<=20).map(row=>({...row,reason:'PAGE_WITH_SEARCH_EXPOSURE',confidence:'heuristic_not_significance',suggestion:'Review intent, title, examples and internal links; check product availability before editing.'}));
 }

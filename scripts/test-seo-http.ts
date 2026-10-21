@@ -23,7 +23,7 @@ async function page(path:string,eligible:boolean,revision=false){
 }
 async function main(){
 const home=await page('/ja',true);assert(home.includes('WebSite'));assert(home.includes('href="/ja/tools"'));
-const directory=await page('/ja/tools',true);for(const t of publicToolContent)assert(directory.includes(`href="/ja/tools/${t.tool_id}"`),'missing crawlable tool link '+t.tool_id);
+const directory=await page('/ja/tools',true);for(const id of ['remove_person','remove_object']){assert(!directory.includes('href="/ja/tools/'+id+'"'));assert(!home.includes('href="/ja/tools/'+id+'"'));}for(const t of publicToolContent)assert(directory.includes(`href="/ja/tools/${t.tool_id}"`),'missing crawlable tool link '+t.tool_id);
 await page('/ja/help',true);
 for(const t of publicToolContent){const html=await page('/ja/tools/'+t.tool_id,false,true);
  assert(html.includes(`href="/ja/edit?tool=${t.tool_id}"`),t.tool_id+': editor entry loses the selected tool');
@@ -34,7 +34,7 @@ for(const g of guides)await page(g.path,false,true);
 for(const path of ['/ja/login','/ja/account','/ja/history','/ja/billing/success','/auth/callback']){
  const r=await fetch(base+path);const html=visibleHtml(await r.text());assert(r.headers.get('x-robots-tag')?.includes('noindex'),path);assert(/name="robots" content="[^"]*noindex/.test(html),path);results.push({path,noindex:true});
 }
-for(const path of ['/ja/tools/missing-seo-test','/ja/tools/remove_person/deep','/ja/guides/missing-seo-test','/ja/guides/remove-unwanted-people/deep']){const bad=await fetch(base+path);assert.equal(bad.status,404,path);assert(bad.headers.get('x-robots-tag')?.includes('noindex'));results.push({path,true_404:true});}
+for(const path of ['/ja/tools/remove_person','/ja/tools/remove_object','/ja/guides/remove-unwanted-people','/ja/tools/missing-seo-test','/ja/tools/remove_person/deep','/ja/guides/missing-seo-test','/ja/guides/remove-unwanted-people/deep']){const bad=await fetch(base+path);assert.equal(bad.status,404,path);assert(bad.headers.get('x-robots-tag')?.includes('noindex'));results.push({path,true_404:true});}
 const admin=await fetch(base+'/admin/seo');assert.equal(admin.status,200);assert(admin.headers.get('x-robots-tag')?.includes('noindex'));assert((await admin.text()).includes('SEO'));results.push({path:'/admin/seo',noindex:true});
 const denied=await fetch(base+'/api/seo/admin/overview');assert.equal(denied.status,401);assert.equal(denied.headers.get('cache-control'),'no-store');
 const disabled=await fetch(base+'/api/seo/consent',{method:'POST',headers:{Origin:base,'Content-Type':'application/json'},body:JSON.stringify({consent:true,landing_path:'/ja',source:'direct'})});assert.equal(disabled.status,503);assert(!(disabled.headers.get('set-cookie')));results.push({analytics_disabled:true,admin_api_unauthorized:true});

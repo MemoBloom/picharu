@@ -1,4 +1,5 @@
 import type { ToolId } from '@picjp/contracts';
+import { isRetiredTool } from '@picjp/tool-config/lifecycle';
 
 export const toolCategories = ['日常の写真', '人物・プロフィール', 'イラスト・ペット', '暮らし・アイデア'] as const;
 export type ToolCategory = typeof toolCategories[number];
@@ -16,7 +17,7 @@ export type PublicToolContent = {
 };
 
 // Public editorial copy only. Execution prompts remain in the server package.
-export const publicToolContent: PublicToolContent[] = [
+const historicalToolContent: PublicToolContent[] = [
   { tool_id: 'remove_person', name_ja: '写り込んだ人を消す', name_zh: '去除路人', description: '残したい思い出に、視線を集めて。背景に写り込んだ人の除去を依頼できます。', category_ja: '日常の写真', icon: 'person', request_example: '右奥に写っている人を消して、手前の二人は残してください。', input_tip: '残したい人と消したい人が区別できる写真がおすすめです。', limitation: '人が重なっている部分や隠れた背景は、元どおりに再現できない場合があります。', faq: { question: '消す人はどう指定しますか？', answer: '「右奥の赤い服の人」のように、位置と特徴を入力してください。現在、ブラシで範囲を指定する機能はありません。' } },
   { tool_id: 'remove_object', name_ja: '不要なものを消す', name_zh: '去除杂物', description: '電線や小さな写り込みを整理して、写真をすっきりした印象に。', category_ja: '日常の写真', icon: 'eraser', request_example: 'テーブルの左端にある空き缶だけを消してください。', input_tip: '消したいものの位置と見た目を、できるだけ具体的に指定してください。', limitation: '細かい模様や文字がある背景では、補完部分が不自然になることがあります。', faq: { question: '一度に複数のものを指定できますか？', answer: '文章で複数指定できますが、まず一つの対象から試すと結果を確認しやすくなります。' } },
   { tool_id: 'change_background', name_ja: '背景を変える', name_zh: '更换背景', description: '主役の特徴を伝えながら、写真の背景を思い描いた場所や色に近づけます。', category_ja: '日常の写真', icon: 'landscape', request_example: '背景を明るい白い壁に変えて、人物の服は残してください。', input_tip: '主役の輪郭が見えやすい写真を選び、希望する背景を入力してください。', limitation: '髪の毛や透明なものの輪郭、光の当たり方が変わることがあります。', faq: { question: '背景用の写真も使えますか？', answer: 'その時点のツール設定で参考画像の追加が可能な場合に使えます。追加できる枚数と役割は編集画面で確認してください。' } },
@@ -39,6 +40,10 @@ export const publicToolContent: PublicToolContent[] = [
   { tool_id: 'clothing_recolor', name_ja: '服の色を変える', name_zh: '衣服改色', description: '気になる色の組み合わせを、今ある写真から試してみませんか。', category_ja: '暮らし・アイデア', icon: 'shirt', request_example: '手前の人物のシャツだけを深い緑に。柄と質感は残してください。', input_tip: '誰の、どの服を変えたいかを具体的に入力してください。', limitation: '柄や素材感、肌や背景の一部まで変わることがあります。実際の商品の色の再現ではありません。', faq: { question: '複数の服を別々の色にできますか？', answer: '文章で指定できますが、対象が多いほど意図が伝わりにくくなる場合があります。結果を確認しながら試してください。' } },
 ];
 
+export const publicToolContent = historicalToolContent.filter(tool => !isRetiredTool(tool.tool_id));
+export function findHistoricalToolContent(toolId: string) {
+  return historicalToolContent.find(tool => tool.tool_id === toolId);
+}
 export function findToolContent(toolId: string) {
   return publicToolContent.find((tool) => tool.tool_id === toolId);
 }

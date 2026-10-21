@@ -1,22 +1,6 @@
-// Initial hypotheses from the reviewed 20-tool seed worksheet. No fabricated volume or ranking.
+// Current 18 intents; retired removal IDs remain valid only for historical records. No fabricated volume or ranking.
 import type { ToolId } from '@picjp/contracts';
 export const seoIntents: {tool_id:ToolId;intent_zh:string;primary_keyword_ja:string;path:string;priority:string;metrics_status:'unverified'}[] = [
-  {
-    "tool_id": "remove_person",
-    "intent_zh": "去除路人",
-    "primary_keyword_ja": "写真から人を消す",
-    "path": "/ja/tools/remove_person",
-    "priority": "P1_candidate",
-    "metrics_status": "unverified"
-  },
-  {
-    "tool_id": "remove_object",
-    "intent_zh": "去除杂物",
-    "primary_keyword_ja": "写真の不要なものを消す",
-    "path": "/ja/tools/remove_object",
-    "priority": "P1_candidate",
-    "metrics_status": "unverified"
-  },
   {
     "tool_id": "change_background",
     "intent_zh": "更换背景",

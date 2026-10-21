@@ -28,10 +28,23 @@ beforeAll(async () => {
 afterAll(() => db.close());
 beforeEach(async () => { invalidate.mockClear(); await db.exec('truncate seo_observations,seo_plans,seo_changes,seo_revisions,seo_pages,seo_webhook_nonces cascade'); });
 describe('SEO HTTP integrates the real migration, authorization and publish boundaries', () => {
+  it('rejects retired drafts and old approved publish/rollback targets while preserving SQL history',async()=>{
+    const handle=createSeoHandler(deps),active=baselineContent('/ja/tools/change_background')!.content;
+    for(const path of ['/ja/tools/remove_person','/ja/tools/remove_object','/ja/guides/remove-unwanted-people']){
+      const content={...active,path,kind:path.includes('/guides/')?'guide':'tool'};
+      expect((await handle(request('admin/drafts',{content,expected_revision:null}))).status).toBe(404);
+      const revision=(await rpc<any>('seo_save_draft',{p_actor:author,p_content:content,p_expected_revision:null})).id;
+      for(const [action,actor]of [['submit',author],['approve',reviewer]])await rpc('seo_transition',{p_actor:actor,p_revision:revision,p_action:action,p_expected_revision:null,p_operation:randomUUID()});
+      for(const action of ['publish','rollback'])expect((await handle(request('admin/transitions',{revision_id:revision,action,expected_revision:null,operation_id:randomUUID()},reviewer))).status).toBe(404);
+      expect((await rpc<any>('seo_get_revision',{p_actor:reviewer,p_revision:revision})).content.path).toBe(path);
+    }
+    expect((await handle(request('admin/drafts',{content:{...active,related_tools:['remove_person']},expected_revision:null}))).status).toBe(400);
+    expect(invalidate).not.toHaveBeenCalled();
+  });
   it('persists optional private plans and validates observation input before calling SQL',async()=>{
     const handle=createSeoHandler(deps),to=matureWindow('America/Los_Angeles').to,from=new Date(Date.parse(to+'T00:00:00Z')-13*86400000).toISOString().slice(0,10);
     const plan={hypothesis:'Improve page intent with consistent title and body.',change_summary:'Review visible copy and preserve real product constraints.',target_queries:['写真から人を消す'],risk_notes:'Search recrawling and seasonal demand can change metrics.',rollback_conditions:'Restore the prior revision if a claim is incorrect.',source_property:'sc-domain:picmoko.com',baseline_from:from,baseline_to:to,observation_days:14,minimum_impressions:300,is_fixture:true};
-    const saved=await handle(request('admin/drafts',{content:baselineContent('/ja/tools/remove_person')!.content,expected_revision:null,plan}));expect(saved.status).toBe(201);const revision=(await saved.json()).id;
+    const saved=await handle(request('admin/drafts',{content:baselineContent('/ja/tools/change_background')!.content,expected_revision:null,plan}));expect(saved.status).toBe(201);const revision=(await saved.json()).id;
     const overview=await handle(request('admin/overview?fixture=true'));const data=await overview.json();expect(data.plans.find((p:any)=>p.revision_id===revision)).toMatchObject({plan:{is_fixture:true},baseline_snapshot:{ready:false}});
     const body={revision_id:revision,publish_operation_id:randomUUID(),operation_id:randomUUID(),observation_to:to,decision:'insufficient',notes:'No fabricated data or causal conclusion.'};
     expect((await handle(request('admin/observations',body))).status).toBe(404);
@@ -49,15 +62,15 @@ describe('SEO HTTP integrates the real migration, authorization and publish boun
   });
   it('rejects unverified and non-member callers, invalid input and unexpected routes', async () => {
     const handle = createSeoHandler(deps);
-    expect((await handle(request('admin/baseline?path=/ja/tools/remove_person', undefined, 'invalid'))).status).toBe(401);
-    expect((await handle(request('admin/baseline?path=/ja/tools/remove_person', undefined, outsider))).status).toBe(403);
+    expect((await handle(request('admin/baseline?path=/ja/tools/change_background', undefined, 'invalid'))).status).toBe(401);
+    expect((await handle(request('admin/baseline?path=/ja/tools/change_background', undefined, outsider))).status).toBe(403);
     expect((await handle(request('admin/drafts', { content: { path: '/ja/edit' }, expected_revision: null }))).status).toBe(400);
     expect((await handle(request('admin/missing'))).status).toBe(404);
     const wrongType = new Request('https://picmoko.com/api/seo/admin/drafts', { method: 'POST', headers: { Authorization: 'Bearer ' + author, 'Content-Type': 'text/plain' }, body: '{}' });
     expect((await handle(wrongType)).status).toBe(415);
   });
   it('requires independent approval, publishes a single revision and replays the same operation safely', async () => {
-    const handle = createSeoHandler(deps), content = baselineContent('/ja/tools/remove_person')!.content;
+    const handle = createSeoHandler(deps), content = baselineContent('/ja/tools/change_background')!.content;
     const saved = await handle(request('admin/drafts', { content, expected_revision: null })); expect(saved.status).toBe(201); const revision = (await saved.json()).id;
     const read=await handle(request('admin/revision?revision_id='+revision));expect(read.status).toBe(200);expect((await read.json()).base_revision).toBeNull();
     const action = (name: string, actor: string, expected: string | null = null, op = randomUUID()) => handle(request('admin/transitions', { revision_id: revision, action: name, expected_revision: expected, operation_id: op }, actor));
@@ -69,7 +82,7 @@ describe('SEO HTTP integrates the real migration, authorization and publish boun
     expect(invalidate).toHaveBeenCalledTimes(2); expect((await rpc<any[]>('seo_get_published', { p_path: content.path }))[0].revision).toBe(revision);
   });
   it('validates exact signed bytes, current revision, timestamp and single-use nonce', async () => {
-    const content = baselineContent('/ja/tools/remove_person')!.content;
+    const content = baselineContent('/ja/tools/change_background')!.content;
     const revision = (await rpc<any>('seo_save_draft', { p_actor: author, p_content: content, p_expected_revision: null })).id;
     for (const [action, actor] of [['submit', author], ['approve', reviewer], ['publish', reviewer]]) await rpc('seo_transition', { p_actor: actor, p_revision: revision, p_action: action, p_expected_revision: null, p_operation: randomUUID() });
     const handle = createSeoHandler(deps);

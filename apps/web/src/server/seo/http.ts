@@ -7,6 +7,13 @@ import { baselineContent } from './content';
 import { opportunities } from './metrics';
 import { verifyEvidenceAssets } from './evidence';
 import { readPipelineHealth } from './health';
+import { isRetiredSeoPath } from '../../lib/seo';
+import { isRetiredTool } from '@picjp/tool-config/lifecycle';
+
+function requireActiveContent(content:SeoContent){
+ if(isRetiredSeoPath(content.path))throw new SeoError('SEO_NOT_FOUND',404);
+ if(content.related_tools.some(isRetiredTool))throw new SeoError('SEO_INVALID_REQUEST',400);
+}
 
 type Deps={rpc:SeoRpc;authenticate:(request:Request)=>Promise<string>;invalidate:(path:string)=>Promise<void>;now:()=>number;secret:()=>string|undefined;databaseContentEnabled?:()=>boolean;verifyEvidence?:(content:SeoContent)=>Promise<void>};
 async function body(request:Request,max=65536){if(!request.headers.get('content-type')?.startsWith('application/json'))throw new SeoError('SEO_INVALID_CONTENT_TYPE',415);return await boundedBytes(request,max);}
@@ -51,6 +58,7 @@ export function createSeoHandler(deps:Deps){return async(request:Request)=>{
   }
   if(path==='/api/seo/admin/drafts'&&request.method==='POST'){
    const data=SeoDraftRequest.parse(JSON.parse((await body(request)).toString()));
+   requireActiveContent(data.content);
    if(data.content.kind==='tool'&&!ToolId.safeParse(data.content.path.split('/').at(-1)).success)throw new SeoError('SEO_NOT_FOUND',404);
    if(data.content.related_tools.some(id=>!ToolId.safeParse(id).success))throw new SeoError('SEO_INVALID_REQUEST',400);
    await deps.verifyEvidence?.(data.content);
@@ -63,7 +71,7 @@ export function createSeoHandler(deps:Deps){return async(request:Request)=>{
   if(path==='/api/seo/admin/transitions'&&request.method==='POST'){
    const data=SeoTransitionRequest.parse(JSON.parse((await body(request)).toString()));
    if(['publish','rollback'].includes(data.action)&&!deps.databaseContentEnabled?.())throw new SeoError('SEO_DATABASE_CONTENT_DISABLED',409);
-   if(['publish','rollback'].includes(data.action)&&deps.verifyEvidence){const revision=await deps.rpc<{content:any}>('seo_get_revision',{p_actor:actor,p_revision:data.revision_id});await deps.verifyEvidence(SeoContent.parse(revision.content));}
+   if(['publish','rollback'].includes(data.action)){const revision=await deps.rpc<{content:any}>('seo_get_revision',{p_actor:actor,p_revision:data.revision_id});const content=SeoContent.parse(revision.content);requireActiveContent(content);await deps.verifyEvidence?.(content);}
    const result=await deps.rpc<{path:string}>('seo_transition',{p_actor:actor,p_revision:data.revision_id,p_action:data.action,p_expected_revision:data.expected_revision,p_operation:data.operation_id});
    if(data.action==='publish'||data.action==='rollback')await deps.invalidate(result.path);
    return respond(result);

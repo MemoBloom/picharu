@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ApiError, UserFacingError, api } from '../lib/api';
-import { findToolContent } from '../lib/tool-content';
+import { findHistoricalToolContent } from '../lib/tool-content';
 import type { ImageAsset, Job } from '../lib/types';
 import { AuthGate, ErrorNotice, Loading, Notice, PageHeading } from './ui';
 
@@ -157,7 +157,7 @@ function JobContent({ jobId }: { jobId: string }) {
     if (job && terminal.has(job.status)) window.dispatchEvent(new Event('picjp:credits-changed'));
   }, [job?.status]);
 
-  const content = job ? findToolContent(job.tool_id) : null;
+  const content = job ? findHistoricalToolContent(job.tool_id) : null;
   const image = showOriginal ? original : result;
   return <div className="container section">
     <PageHeading title={job ? statusText[job.status] || '編集の状況' : '編集の状況'} description={content?.name_ja} backHref="/ja/history" backLabel="編集履歴へ" />

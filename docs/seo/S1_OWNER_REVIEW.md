@@ -4,9 +4,7 @@
 
 | 候选工具 | 当前候选内容版本 | 文案/日语结论 | 样例与模型效果记录 | 公开授权 | 发布/索引决定 |
 |---|---|---|---|---|---|
-| remove_person | git-sha256-00dba984d5e7122a780f05e3 | 待确认 | 待提供 | 待确认 | 待决定 |
-| remove_object | git-sha256-5b04ef45b9229fce8caa2ea6 | 待确认 | 待提供 | 待确认 | 待决定 |
-| change_background | git-sha256-9ad474361aae0b6d7f9b9fef | 待确认 | 待提供 | 待确认 | 待决定 |
+| change_background | git-sha256-230d4e2c96c208424a2c9250 | 待确认 | 待提供 | 待确认 | 待决定 |
 | hair_color | git-sha256-dbd19d078adee4389ebea121 | 待确认 | 待提供 | 待确认 | 待决定 |
 | pet_illustration | git-sha256-f3798823bc6b6c97aff07f3f | 待确认 | 待提供 | 待确认 | 待决定 |
 

@@ -198,7 +198,7 @@ async function main(){
   await db.query(await readFile('supabase/migrations/20261020164700_seo_observation.sql','utf8'));
   const reviewer=randomUUID();await db.query('insert into auth.users values($1)',[reviewer]);
   await db.query("insert into seo_members values($1,'editor'),($2,'reviewer')",[owner,reviewer]);
-  const seoClients=await clients(10),content=baselineContent('/ja/tools/remove_person')!.content;
+  const seoClients=await clients(10),content=baselineContent('/ja/tools/change_background')!.content;
   const drafts:string[]=[];
   for(let i=0;i<10;i++){
    const revision=(await rpc(db,'seo_save_draft',[owner,JSON.stringify({...content,title:content.title+' '+i}),null])).id;

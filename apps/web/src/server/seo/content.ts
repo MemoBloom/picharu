@@ -3,6 +3,7 @@ import { cache } from 'react';
 import { unstable_cache } from 'next/cache';
 import { SeoContent } from '@picjp/contracts';
 import { publicToolContent } from '../../lib/tool-content';
+import { isRetiredSeoPath } from '../../lib/seo';
 import { guides } from '../../content/seo/guides';
 import { launchCandidates } from '../../content/seo/launch-candidates';
 import { seoIntents } from '../../content/seo/intent-map';
@@ -30,6 +31,7 @@ const databaseContent=unstable_cache(async()=>{
  return rows.map(row=>({revision:row.revision,content:SeoContent.parse(row.content),source:'database' as const}));
 },['seo-published-content-v1'],{tags:['seo:content'],revalidate:300});
 export const getPublishedContent = cache(async (path: string): Promise<PublishedContent | null> => {
+ if(isRetiredSeoPath(path))return null;
  if(process.env.SEO_CONTENT_BACKEND==='database'){
   const published=(await databaseContent()).find(row=>row.content.path===path);
   if(published)return published;
@@ -40,6 +42,6 @@ export function contentPaths() { return [...publicToolContent.map(tool => `/ja/t
 export async function allPublishedContent(){
  const database=process.env.SEO_CONTENT_BACKEND==='database'?await databaseContent():[];
  const merged=new Map(contentPaths().map(path=>[path,baselineContent(path)!]));
- for(const snapshot of database)merged.set(snapshot.content.path,snapshot);
+ for(const snapshot of database)if(!isRetiredSeoPath(snapshot.content.path))merged.set(snapshot.content.path,snapshot);
  return [...merged.values()];
 }

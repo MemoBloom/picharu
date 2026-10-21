@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { ToolId,InputRole,type ModelProfile } from '@picjp/contracts';
 import catalog from './catalog.json';
+import { isRetiredTool } from './lifecycle';
+export { isRetiredTool, retiredToolIds } from './lifecycle';
 const text=z.string().trim().min(1).max(500);
 const strength=z.enum(['subtle','balanced','strong']);
 const styles=z.enum(['natural','anime','watercolor','line_art','chibi','studio','cinematic']);
@@ -29,6 +31,7 @@ export const tools=catalog.map((entry)=>{
     subjects:pets.has(id)?['dog','cat','pet']:portraits.has(id)?['person']:['person','pet','landscape','object'],
     risk:entry.main_risk,parameters_schema:specs[id].strict()};
 });
+export const activeTools=tools.filter(tool=>!isRetiredTool(tool.tool_id));
 export function getTool(id:ToolId){return tools.find(t=>t.tool_id===id)!;}
 export function validateToolParameters(id:ToolId,parameters:Record<string,unknown>){return getTool(id).parameters_schema.parse(parameters);}
 export function profileForTool(id:ToolId,profiles:ModelProfile[]){return profiles.find(p=>p.verified_tool_ids.includes(id));}

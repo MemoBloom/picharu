@@ -25,7 +25,7 @@ describe('evaluated public sample asset integrity', () => {
       await mkdir(join(root, 'seo-examples'));
       const bytes = await sharp({ create: { width: 1, height: 1, channels: 3, background: '#ffffff' } }).png().toBuffer();
       const digest = createHash('sha256').update(bytes).digest('hex'), path = `/seo-examples/fixture-${digest}.png`;
-      const content = SeoContent.parse({ ...baselineContent('/ja/tools/remove_person')!.content, indexable: true, examples: [{ before: path, after: path, model_profile_version: 'fixture-only', rights_review: 'isolated-synthetic-test', evaluated_at: new Date().toISOString(), evaluation_reference: 'test-not-real-model-evaluation' }] });
+      const content = SeoContent.parse({ ...baselineContent('/ja/tools/change_background')!.content, indexable: true, examples: [{ before: path, after: path, model_profile_version: 'fixture-only', rights_review: 'isolated-synthetic-test', evaluated_at: new Date().toISOString(), evaluation_reference: 'test-not-real-model-evaluation' }] });
       await expect(verifyEvidenceAssets(content, await buildEvidenceManifest(root))).rejects.toThrow('SEO_EVIDENCE_REQUIRED');
       await writeFile(root + path, bytes); await expect(verifyEvidenceAssets(content, await buildEvidenceManifest(root))).resolves.toBeUndefined();
       await writeFile(root + path, 'not an image'); await expect(buildEvidenceManifest(root)).rejects.toThrow('SEO_EVIDENCE_HASH_MISMATCH');

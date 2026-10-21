@@ -5,7 +5,7 @@
 ## 目录
 
 - apps/web：同一个 Next.js 应用的页面、组件及 API；业务服务代码在 src/server。
-- packages/contracts：Zod 共享字段和校验；packages/tool-config：初期20工具；packages/prompts：仅服务端使用的执行Prompt与推荐资料。
+- packages/contracts：Zod 共享字段和校验；packages/tool-config：当前18方向及历史20个ID的生命周期；packages/prompts：仅服务端使用的执行Prompt与推荐资料。
 - supabase/migrations：Web数据库迁移、权限和事务。
 - tests、scripts：测试与工程命令；.github/workflows：本仓库的CI与版本标签。
 - docs/interfaces：统一协议、前端接入说明及生成的OpenAPI；docs/backend：实现和数据库；docs/verification：已执行验证。
@@ -31,7 +31,7 @@ verify检查OpenAPI一致、类型、业务/契约/媒体测试、PGlite数据�
 - [统一接口](docs/interfaces/INTERFACE_SPEC_V1.md)、[前端接入](docs/interfaces/FRONTEND_API_GUIDE.md)、[OpenAPI](docs/interfaces/openapi.json)
 - [Web实施说明](docs/backend/VERCEL_BACKEND.md)、[数据库](docs/backend/DATABASE_SCHEMA.md)、[验证](docs/verification/VERIFICATION.md)
 
-日语前端已实现 12 个页面模板、20 工具详情和移动端底部导航；顶部使用普通「ホーム」，不放待定域名或临时品牌。页面直接接现有同源 API，登录、上传、任务和支付仍待真实云端联调。
+日语前端已实现 12 个页面模板、18 个公开工具详情和移动端底部导航；顶部使用普通「ホーム」。remove_person/remove_object退出目录和新任务，历史ID/任务及同key重放保留；两项旧SEO页面与消除教程返回404，即使数据库中已有旧发布也不再暴露。页面接现有同源API，云端验收以各模块记录为准。
 
 接口稳定性与模型选择分离。新增效果可扩展配置和契约版本，不变更已创建任务快照；20不是长期上限。真实效果和上线联调尚未完成，已有页面代码不代表生成服务已可用。
 

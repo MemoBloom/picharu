@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { indexingEnabled, isPrivatePath, seoOrigin, toolPathExists } from './lib/seo';
+import { indexingEnabled, isPrivatePath, isRetiredSeoPath, seoOrigin, toolPathExists } from './lib/seo';
 
 import { guides } from './content/seo/guides';
 import { seoRpc } from './server/seo/repository';
@@ -13,14 +13,14 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(destination, 308);
   }
   let guideExists = true;
-  if (pathname.startsWith('/ja/guides/')) {
+  if (pathname.startsWith('/ja/guides/') && !isRetiredSeoPath(pathname)) {
     guideExists = guides.some(guide => guide.path === pathname);
     if (!guideExists && /^\/ja\/guides\/[a-z0-9-]+$/.test(pathname) && process.env.SEO_CONTENT_BACKEND === 'database') {
       try { guideExists = (await seoRpc<any[]>('seo_get_published', { p_path: pathname })).some(row => row.content?.path === pathname && row.content?.kind === 'guide'); }
       catch { return new NextResponse('Service temporarily unavailable', { status: 503, headers: { 'X-Robots-Tag': 'noindex', 'Cache-Control': 'no-store', 'Retry-After': '60' } }); }
     }
   }
-  if (!toolPathExists(pathname) || !guideExists) {
+  if (isRetiredSeoPath(pathname) || !toolPathExists(pathname) || !guideExists) {
     return new NextResponse('<!doctype html><html lang="ja"><head><meta name="robots" content="noindex"><title>ページが見つかりません | picmoko</title></head><body><main><h1>ページが見つかりません</h1><p>指定されたページはありません。</p><a href="/ja/tools">ツール一覧に戻る</a></main></body></html>', { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8', 'X-Robots-Tag': 'noindex', 'Cache-Control': 'no-store' } });
   }
   const response = NextResponse.next();
