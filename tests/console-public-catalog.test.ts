@@ -1,5 +1,6 @@
 import {describe,it,expect,vi} from 'vitest';
 import {ToolId} from '@picjp/contracts';
+import {activeTools} from '@picjp/tool-config';
 import {findToolContent,findHistoricalToolContent,findPublicToolContent,publicToolContent} from '../apps/web/src/lib/tool-content';
 vi.mock('../apps/web/src/components/public-pages',()=>({ToolDetail:()=>null}));
 import Page,{dynamicParams,generateStaticParams,generateMetadata} from '../apps/web/src/app/ja/tools/[toolId]/page';
@@ -8,6 +9,7 @@ describe('current public scope and immutable historical tool names',()=>{
  it('publishes exactly 18 unique directions without the two retired erasure tools',()=>{
   const ids=publicToolContent.map(tool=>tool.tool_id);
   expect(ids).toHaveLength(18);expect(new Set(ids).size).toBe(18);
+  expect([...ids].sort()).toEqual(activeTools.map(tool=>tool.tool_id).sort());
   expect(ids).not.toContain('remove_person');expect(ids).not.toContain('remove_object');
   expect(ids).toContain('ai_avatar');expect(ids).toContain('anime_photo');expect(ids).toContain('illustration_photo');expect(ids).toContain('chibi_person');
  });

@@ -1,0 +1,215 @@
+{
+  "date": "2026-10-21",
+  "repository": "MemoBloom/picharu",
+  "baseline": "2117eb44c54088d0b8917aa4826eb3f0c9176967",
+  "stash": "46ed8935df7c3e03361a3ce300cb43e799ecf09f",
+  "summary": {
+    "byte_identical": 3,
+    "equivalent_or_superseded": 7,
+    "extracted": 9
+  },
+  "files": [
+    {
+      "path": ".env.example",
+      "disposition": "等效已覆盖",
+      "reason": "浏览器Supabase公开URL/publishable/anon变量已经存在；差异仅注释，保留main。",
+      "saved_sha256": "4de837a4aff8c1b4280e456cabf2cced930ee82a104d70a037046c51e2da423b",
+      "baseline_sha256": "65420142b899228a399b2e5f31c6fe30efab90b567d636e48d647fa9c0703edb"
+    },
+    {
+      "path": ".gitignore",
+      "disposition": "字节相同",
+      "reason": "私有Prompt忽略规则已随PR #7合入。",
+      "saved_sha256": "868a5e155d10aa47734220a249d3e3111f738d66be5ed0f8ccaa415ef09c7bd8",
+      "baseline_sha256": "868a5e155d10aa47734220a249d3e3111f738d66be5ed0f8ccaa415ef09c7bd8"
+    },
+    {
+      "path": "README.md",
+      "disposition": "等效已覆盖",
+      "reason": "当前main已含品牌、字体、18活动/20历史、移动编辑与看板的更新说明。",
+      "saved_sha256": "39a283dae6078b667e426690b2b1a2b120e5b70ba981673f098614f0aee4aedb",
+      "baseline_sha256": "faabd7fc234fc895e705527641a1e96f4c6c4f5f186de3ed9225f95f0eb0ef9e"
+    },
+    {
+      "path": "apps/web/src/app/ja/legal/[document]/page.tsx",
+      "disposition": "提取补入",
+      "reason": "遗漏dynamicParams=false；线上未知法律路径实测200，本次补回并验证404。",
+      "saved_sha256": "1940e42bb594a7b8069f50a5b6c4a4c9753e7654f9628ae1291f1b8eaaa16900",
+      "baseline_sha256": "1c45bf22e9989190dadbdd76858144cde85afd04cbc6d3597e8cc45cac9d2ce7"
+    },
+    {
+      "path": "apps/web/src/app/ja/tools/[toolId]/page.tsx",
+      "disposition": "等效已覆盖",
+      "reason": "main已有静态参数限制，另强化公开工具与metadata的404；保留新版本。",
+      "saved_sha256": "85e2f04b56edcf6b45fee5cb22c314abab4de1369d4bd6790493042aa16cfd26",
+      "baseline_sha256": "87509975ae20369bd6345fb1bf0a16e29cd87f3911be2d9a53a625f966ab4552"
+    },
+    {
+      "path": "apps/web/src/lib/auth.tsx",
+      "disposition": "字节相同",
+      "reason": "useSyncExternalStore hydration保护已在main。",
+      "saved_sha256": "007ade31c1a2098c11f81212aa795c1df49c36cd422d630d68a946bf8468a1f9",
+      "baseline_sha256": "007ade31c1a2098c11f81212aa795c1df49c36cd422d630d68a946bf8468a1f9"
+    },
+    {
+      "path": "apps/web/src/lib/tool-content.ts",
+      "disposition": "等效已覆盖",
+      "reason": "18项公开与20项历史目录已经实现；main的findPublicToolContent/历史lookup拆分更完整。",
+      "saved_sha256": "e269736919a8f39357b8a1124a684590b8080fe4f1e821176b671069c86d39de",
+      "baseline_sha256": "e3be5145fbab56ab3e39e0539d702d30bf6311ab4682e6f8d9abea00f507672a"
+    },
+    {
+      "path": "apps/web/src/server/router.ts",
+      "disposition": "等效已覆盖",
+      "reason": "活动目录/新退役任务拒绝/旧key优先重放已存在；旧副本缺看板、设备冻结及退款事实，禁止覆盖。",
+      "saved_sha256": "b298971dcb9ac45d1cac43bdf3942c7758f2e9c1add82b6363085c83c3262980",
+      "baseline_sha256": "04ca243ef3533b5a20189f88730de66af695e59a0a6255d5bc397d90f07c74c1"
+    },
+    {
+      "path": "docs/README.md",
+      "disposition": "提取补入",
+      "reason": "补退役说明与本审计入口，保留看板、邮件、字体等现有链接。",
+      "saved_sha256": "d00b388ebd4ae684be58f2cb11f43932cd65dec4b9780184e5627f3125908560",
+      "baseline_sha256": "5a63313edd5dec8e81a625238a79650634109d0d911c40bfcb193516aec9c80c"
+    },
+    {
+      "path": "docs/backend/AUTH_SETUP.md",
+      "disposition": "提取补入",
+      "reason": "归并入口/注册方式/异常与退出、历史QA及用户真实邮件验收；更新主站及完整品牌模板入口。",
+      "saved_sha256": "da4d3a2072b67802b1f9e5c94ae30081871b6d916828f511044938b3871fe322",
+      "baseline_sha256": "0f35070135ceac8f3272f6b3fe3bda20ceb930b3409c9b5119ab26a927525a02"
+    },
+    {
+      "path": "docs/backend/VERCEL_BACKEND.md",
+      "disposition": "提取补入",
+      "reason": "补前端已接入、浏览器配置和支付页面状态；修正无前端/Worker仅设计/从未部署等过时描述。",
+      "saved_sha256": "290f1bddfc767e63f516e31f72e1f876b24f0008fb622d03496861e36b1d6a22",
+      "baseline_sha256": "3b40efd23838fd4511ba65d11f284e02b4adc3cfabbea7b3bcd1211713e7a8d0"
+    },
+    {
+      "path": "docs/interfaces/FRONTEND_API_GUIDE.md",
+      "disposition": "提取补入",
+      "reason": "将页面/客户端/支付回跳从待开发更新为已实现；保留双看板接口增量。",
+      "saved_sha256": "047cb4ef271e46d71e6ab504c54351e593d22a2a250f56388a615c35a3add62f",
+      "baseline_sha256": "49b0a55a10717eefa63796c23c7098bc9f5ddf892a7ab87188a52fb9c60d2e4e"
+    },
+    {
+      "path": "docs/verification/TOOL_RETIREMENT_2026-10-21.md",
+      "disposition": "提取补入",
+      "reason": "新增退役行为与分层证据文档，按main当前实现更新，历史未发布描述不当作现状。",
+      "saved_sha256": "982d2c113658e4309dfaecdb13be2ffd304fdce5b852de317be7d44be000a9d5",
+      "baseline_sha256": null
+    },
+    {
+      "path": "docs/verification/VERIFICATION.md",
+      "disposition": "提取补入",
+      "reason": "整理UI/Logo/字标/字体/登录入口各阶段历史QA；标明历史范围与当前证据入口。",
+      "saved_sha256": "82ebff4b2902a15c59374c39bb632cfeffd2762bef63a5e6e0aeb99ae2f22c15",
+      "baseline_sha256": "4ec11a3d2303b407e348215613297e39a7f82dd12b7a8cf7113349044ec839cc"
+    },
+    {
+      "path": "packages/tool-config/package.json",
+      "disposition": "字节相同",
+      "reason": "主入口及./lifecycle导出已在main。",
+      "saved_sha256": "ffbe2c8252f0be1a3f21a54f29b4a29a8c734a6d0b1cd799f762fab010e3e979",
+      "baseline_sha256": "ffbe2c8252f0be1a3f21a54f29b4a29a8c734a6d0b1cd799f762fab010e3e979"
+    },
+    {
+      "path": "packages/tool-config/src/index.ts",
+      "disposition": "等效已覆盖",
+      "reason": "activeTools和生命周期导出完全同效；仅注释有差异。",
+      "saved_sha256": "df058325b234f26ad99bb4670ba9138c84fc7cbfd44487d0d7f2bc21e79106b8",
+      "baseline_sha256": "f24eebdb0864db521ec0048fb9360c3ba66d0f8e79d5c1b5d4cea60cc2e4e41f"
+    },
+    {
+      "path": "packages/tool-config/src/lifecycle.ts",
+      "disposition": "等效已覆盖",
+      "reason": "退役两ID与判断完全同效；仅注释/缩进不同。",
+      "saved_sha256": "897e1e5b2a5b1994abdba53190be7b8b934b216475ac7584877cbd2f7ff3d539",
+      "baseline_sha256": "95d0bf27cb823becfcb46490a89869ee8b86682f680b534cb6229a31c9859120"
+    },
+    {
+      "path": "tests/backend.test.ts",
+      "disposition": "提取补入",
+      "reason": "提取两项真实PGlite退役拒绝/历史重放与积分断言；不覆盖当前测试文件。",
+      "saved_sha256": "718b3b3c54ba6bfd356340eac06b3045ac5df25330fc8e26e783c3539a7e346b",
+      "baseline_sha256": "5504b95e36915b57b5c7a5897d430a1fdc4ce3b6c8cac737d263ad55cd16e6a8"
+    },
+    {
+      "path": "tests/tool-retirement.test.ts",
+      "disposition": "提取补入",
+      "reason": "有价值的前后端目录一致性断言迁入console-public-catalog.test.ts；历史/公开名称断言按main新helper语义保留，不恢复旧重复测试文件。",
+      "saved_sha256": "777859c411ba41778ded5f81e00773cbd058297f3db5b280127e023053b893ed",
+      "baseline_sha256": null
+    }
+  ],
+  "local_validation": {
+    "verify": {
+      "test_files": 25,
+      "tests": 317,
+      "pglite_assertions": 90,
+      "production_build": "passed",
+      "contracts": "passed",
+      "types": "passed"
+    },
+    "http": [
+      {
+        "path": "/ja/legal/terms",
+        "status": 200,
+        "nonempty": true,
+        "framework_error": false
+      },
+      {
+        "path": "/ja/legal/privacy",
+        "status": 200,
+        "nonempty": true,
+        "framework_error": false
+      },
+      {
+        "path": "/ja/legal/commercial-disclosure",
+        "status": 200,
+        "nonempty": true,
+        "framework_error": false
+      },
+      {
+        "path": "/ja/legal/residual-audit-unknown",
+        "status": 404,
+        "nonempty": true,
+        "framework_error": false
+      },
+      {
+        "path": "/ja/legal/__proto__",
+        "status": 404,
+        "nonempty": true,
+        "framework_error": false
+      },
+      {
+        "path": "/ja/tools/remove_person",
+        "status": 404,
+        "nonempty": true,
+        "framework_error": false
+      },
+      {
+        "path": "/ja/tools/remove_object",
+        "status": 404,
+        "nonempty": true,
+        "framework_error": false
+      },
+      {
+        "path": "/ja/tools/ai_avatar",
+        "status": 200,
+        "nonempty": true,
+        "framework_error": false
+      }
+    ]
+  },
+  "live_before": {
+    "url": "https://picmoko.com/ja/legal/residual-audit-unknown",
+    "http_status": 200
+  },
+  "cloud_operations": {
+    "smtp": false,
+    "sql": false,
+    "paid_model_calls": 0
+  }
+}
