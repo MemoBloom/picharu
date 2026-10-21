@@ -33,3 +33,15 @@ HTTP 回归覆盖归属、坏文件与声明不一致、固定上传版本、多
 - 无前端页面、上线监控告警和生产发布流水线。本轮后端通过本地验证，不等于整个产品完成或可开放收费生成。
 
 复查命令与安全限制见 [后端说明](../backend/VERCEL_BACKEND.md)、[数据库说明](../backend/DATABASE_SCHEMA.md)。GENERATION_ENABLED 保持 false。验证结束已停止本轮临时 Next 服务与 PostgreSQL 测试实例。
+
+
+## 2026-10-20 独立认证发布候选
+
+fix/live-auth从线上main 878383f派生，移入Google PKCE/邮箱token_hash回调、账户readiness、服务端Supabase新Secret兼容和hydration初始快照保护。保留UI主工作区，不带Worker协议/迁移；认证SQL测试仅运行基础migration。npm run verify通过116测试、90 SQL断言、类型/契约及生产构建；无真实OAuth、发信或模型调用。生产网站登录页200、Google到达登录页，尚不等同最终注册完成。部署/真实配置检查另记AUTH_SETUP，不假定已上线。
+
+
+## 2026-10-20 邮件品牌静态资源
+
+fix/email-brand-assets基于生产main4b744d1，复用原云朵和A1字标，WebP→PNG解码后RGBA逐字节一致，来源SHA与尺寸见public/email-assets/v1/manifest.json。官网同字族Zen角黑400/700与Zen丸700使用Google Fonts官方text接口生成当前两份邮件字符子集，共83,636字节，OFL随资源保存。v1公开静态路径设置CORS *、immutable缓存与nosniff，不影响其他路径或认证逻辑。
+
+完整npm run verify通过116测试、90 SQL断言、类型/契约及生产构建；无新增依赖。邮件HTML在工作区docs/design/email/picmoko，静态检查每份2品牌图片/3font-face/仅1个原token_hash认证链接，分别7,473和5,619字节。后台模板尚未替换，没有发送真实邮件；字体客户端回退和图片加载限制保留，真实收件验收另行完成。

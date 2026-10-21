@@ -55,7 +55,7 @@ export function LoginPage() {
     } catch { setError(authError()); } finally { setBusy(null); }
   }
   return <div className="container page-stack auth-panel surface stack">
-    <PageHeading title="写真の続きを、ここから。" description="ログインすると、写真の編集や履歴の確認ができます。初めての方も同じ方法で始められます。" />
+    <PageHeading title="ログイン・新規登録" description="写真の続きを、ここから。初めての方は、同じ手順でアカウントを作成できます。" />
     {!auth.ready ? <Loading label="ログイン状態を確認しています" /> : !auth.configured ? <Notice>ログイン機能はただいま準備中です。ツールの紹介はログインせずにご覧いただけます。</Notice> : auth.user ? error ? <><Notice tone="error">{error}</Notice><button className="button" onClick={() => setVerification(value => value + 1)}>アカウントをもう一度確認</button></> : <Loading label="アカウントを確認しています" /> : <>
       <button type="button" className="button button-secondary" disabled={!!busy} onClick={google}>{busy === 'google' ? 'Google に接続しています…' : 'Google で続ける'}</button>
       <div className="auth-divider"><span>またはメールアドレスで</span></div>

@@ -1,4 +1,4 @@
--- Read-only. Run after the two existing migrations in Supabase SQL Editor.
+-- Read-only. Run after the existing base migration in Supabase SQL Editor.
 -- Outputs structure/counts only: no email, metadata, token, key, or balance values.
 select
  exists(select 1 from pg_trigger t join pg_class c on c.oid=t.tgrelid join pg_namespace n on n.oid=c.relnamespace

@@ -11,10 +11,18 @@
 
 - [Worker接口评审与本地实现边界](interfaces/WORKER_INTERFACE_REVIEW.md)；共享SQL增量随Web管理，执行服务在独立Worker仓库。
 - [完整生成链路及跨仓库离线验收](backend/FULL_FLOW.md)：Web创建、Worker同步执行、R2保存、积分结算和结果读取。
-- [Google/邮箱真实登录接入](backend/AUTH_SETUP.md)：picharu.vercel.app的Supabase/Google/SMTP配置、新用户初始化与验收。
 - [双看板三阶段开发](backend/CONSOLE_IMPLEMENTATION.md)、[阶段1数据与权限](backend/CONSOLE_FOUNDATION.md)、[分阶段验收](verification/CONSOLE_VERIFICATION.md)。
 - [阶段2个人控制台](backend/PERSONAL_CONSOLE.md)：本人使用总览、任务/作品筛选及积分流水。
 
 - [阶段3管理员完整数据看板](backend/ADMIN_ANALYTICS.md)：8页面、24指标、固定快照/分页/钻取/CSV、事件与实际退款事实。
 
 - [双看板逐项完成审计](verification/CONSOLE_COMPLETION_AUDIT.md)、[最新UI/Auth/SEO兼容与合并说明](integration/CONSOLE_UI_INTEGRATION.md)。
+
+- [真实登录发布与后台设置](backend/AUTH_SETUP.md)：生产环境、Google/邮箱回调、账户初始化及实际验收。
+
+- 邮件公开Logo/字体资源：apps/web/public/email-assets/v1/README.md；独立静态路径与公开字体跨域头，不变更Auth或网站页面样式。
+- [已确认的注册/登录邮件](../supabase/templates/README.md)：HTML权威源码、Subject及Supabase手动保存步骤。
+
+- [双看板 Supabase / Vercel 部署步骤](backend/CONSOLE_DEPLOYMENT.md)：迁移顺序、只读盘点、管理员授权与采集启用边界。
+
+- [双看板合入main验证](verification/CONSOLE_MAIN_MERGE.md)：实际合并、前端WIP保护、认证/邮件及跨模块回归。

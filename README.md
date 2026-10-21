@@ -48,6 +48,6 @@ git push -u origin main
 
 本仓库可单独clone、安装与运行CI，不要求检出父工作区或兄弟仓库。项目级产品规划和跨服务设计属于父工作区；未来Worker/GPU通过固定版本Schema/OpenAPI对接，不从本机兄弟路径直接导入代码。
 
-## 双看板功能分支
+## 双看板
 
-用户个人控制台与管理员完整数据看板的三阶段实现及本地证据见[实施计划](docs/backend/CONSOLE_IMPLEMENTATION.md)和[管理员实现](docs/backend/ADMIN_ANALYTICS.md)。采集默认关闭；本地验证不表示云迁移/部署/真实自然采集完成。当前独立分支已适配18方向，最新主UI/Auth/SEO已在隔离组合源码中完成兼容验证；合并与部署仍待单独执行。
+用户个人控制台与管理员完整数据看板的三阶段实现及本地证据见[实施计划](docs/backend/CONSOLE_IMPLEMENTATION.md)和[管理员实现](docs/backend/ADMIN_ANALYTICS.md)。采集默认关闭；本地验证不表示云迁移/部署/真实自然采集完成。三阶段已合入当前main源码，当前18方向/历史20ID兼容；main既有认证与邮件内容保留，前端WIP与SEO仍独立。实际合并验证见[记录](docs/verification/CONSOLE_MAIN_MERGE.md)，云端步骤见[部署清单](docs/backend/CONSOLE_DEPLOYMENT.md)。
