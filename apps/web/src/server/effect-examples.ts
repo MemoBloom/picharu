@@ -1,16 +1,18 @@
 import { access, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { avatarStyles, type EffectExample } from '../lib/effect-examples';
+import { publishedEffectDemos } from '../lib/effect-demo-catalog';
 
 const filenames = ['original.webp', ...avatarStyles.map(style => `${style.id}.webp`)];
 const localDirectory = () => path.join(process.cwd(), '.local', 'effect-samples');
 
-// Deliberately empty until a public sample has explicit publication rights and review.
-// Future approved examples use versioned same-origin public assets; no Worker dependency.
-const publishedExamples: EffectExample[] = [];
-
 export async function getEffectExamples(): Promise<EffectExample[]> {
-  if (process.env.NODE_ENV !== 'development') return publishedExamples;
+  // Default pages never automatically mix private experiments into approved public demos.
+  return publishedEffectDemos;
+}
+
+export async function getLocalEffectExamples(): Promise<EffectExample[]> {
+  if (process.env.NODE_ENV !== 'development') return [];
   try {
     await Promise.all(filenames.map(name => access(path.join(localDirectory(), name))));
     return avatarStyles.map(style => ({
@@ -19,7 +21,7 @@ export async function getEffectExamples(): Promise<EffectExample[]> {
       recipeVersion: 'avatar-six-style-2026-10-21-v2',
       experimental: style.id === 'clay-felt' || style.id === 'paper-cut',
     }));
-  } catch { return publishedExamples; }
+  } catch { return []; }
 }
 
 export async function localExampleAsset(filename: string) {

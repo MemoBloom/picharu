@@ -23,7 +23,9 @@
 .style-inspiration{scroll-margin-top:24px;padding-bottom:48px}
 .style-inspiration .section-heading{margin-bottom:24px;align-items:end}
 .style-inspiration .section-heading p{font-size:14px;color:var(--muted);margin-top:8px}
-.effect-style-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
+.effect-style-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px 22px}
+.effect-demo-label{align-self:flex-start;font-size:11px;line-height:1.6;color:var(--accent);background:var(--surface);padding:3px 8px;border-radius:5px;margin-top:2px}
+.hero-effect-preview .effect-compare-media.mode-compare figure,.avatar-gallery .effect-compare-media.mode-compare figure{height:auto;aspect-ratio:1}
 .effect-style-card{display:flex;flex-direction:column;min-width:0;gap:8px}
 .effect-style-image{position:relative;display:block;overflow:hidden;border-radius:12px;background:var(--surface);aspect-ratio:1}
 .effect-style-image>img:first-child{width:100%;height:100%;object-fit:contain;transition:transform .2s ease}
@@ -86,7 +88,7 @@
  .effect-home-hero .hero-actions .button{font-size:14px}
  .effect-home-hero .hero-actions .text-link{font-size:13px}
  .hero-effect-preview .effect-compare-media figure{height:300px}
- .hero-effect-preview .effect-compare-media.mode-compare figure{height:clamp(200px,62vw,250px)}
+ .hero-effect-preview .effect-compare-media.mode-compare figure{height:auto;aspect-ratio:1}
  .effect-compare-media figcaption{font-size:11px;bottom:8px;left:8px;max-width:calc(100% - 16px);padding:4px 6px}
  .effect-compare-controls{margin-top:8px}.effect-compare-controls button{font-size:12px}
  .style-inspiration{padding-bottom:32px}.style-inspiration .section-heading{margin-bottom:16px}

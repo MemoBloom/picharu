@@ -2,11 +2,12 @@
 import React, { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { AvatarShowcase, EffectComparison } from '../apps/web/src/components/effect-showcase';
+import { AvatarShowcase, EffectComparison, EffectCards, ToolEffectShowcase } from '../apps/web/src/components/effect-showcase';
 import { avatarStyles, avatarParameter, exampleEditorHref, type EffectExample } from '../apps/web/src/lib/effect-examples';
+import { publishedEffectDemos } from '../apps/web/src/lib/effect-demo-catalog';
 
 vi.mock('next/link', () => ({ default: ({ children, ...props }: React.PropsWithChildren<{ href: string }>) => React.createElement('a', props, children) }));
-vi.mock('../apps/web/src/components/tool-availability', () => ({ ToolAvailability: ({ editorHref }: { editorHref: string }) => React.createElement('a', { href: editorHref, 'data-editor-entry': true }, '編集画面へ') }));
+vi.mock('../apps/web/src/components/tool-availability', () => ({ ToolAvailability: ({ editorHref, toolId }: { editorHref?: string; toolId: string }) => React.createElement('a', { href: editorHref || `/ja/edit?tool=${toolId}`, 'data-editor-entry': true }, '編集画面へ') }));
 const examples: EffectExample[] = avatarStyles.map(style => ({ id: style.id, toolId: 'ai_avatar', before: '/before.webp', after: `/${style.id}.webp`, scope: 'local-preview', recipeVersion: 'test-v1', experimental: style.id === 'clay-felt' }));
 let root: Root | undefined;
 afterEach(async () => { if (root) await act(async () => root!.unmount()); root = undefined; document.body.innerHTML = ''; window.history.replaceState({}, '', '/'); });
@@ -50,5 +51,27 @@ describe('Visual effect discovery interactions', () => {
     expect(avatarParameter('felt')).toBeUndefined();
     expect(exampleEditorHref('unknown')).toBe('/ja/edit?tool=ai_avatar');
     expect(exampleEditorHref('flat-sticker')).not.toContain('&style=');
+  });
+  it('links each approved demonstration to its own tool and actual original', async () => {
+    const host = await render(React.createElement(EffectCards, { examples: publishedEffectDemos }));
+    expect(host.querySelectorAll('a')).toHaveLength(6);
+    for (const [index, example] of publishedEffectDemos.entries()) {
+      const card = host.querySelectorAll('a')[index];
+      expect(card.getAttribute('href')).toBe(`/ja/tools/${example.toolId}?example=${example.id}`);
+      expect(card.querySelector('.effect-original-inset')?.getAttribute('src')).toBe(example.before);
+      expect(card.textContent).toContain('デモ作例');
+    }
+  });
+  it('compares a non-avatar demo without inventing an avatar style or hiding its source', async () => {
+    const demo = publishedEffectDemos.find(example => example.toolId === 'hair_color')!;
+    const host = await render(React.createElement(ToolEffectShowcase, { example: demo }));
+    expect([...host.querySelectorAll('figure img')].map(image => image.getAttribute('src'))).toEqual([demo.before, demo.after]);
+    expect(host.textContent).toContain('ローズブラウン');
+    expect(host.textContent).toContain('imagegen');
+    expect(host.querySelector('[data-editor-entry]')?.getAttribute('href')).toBe('/ja/edit?tool=hair_color');
+    const before = [...host.querySelectorAll('button')].find(button => button.textContent === '元の写真')!;
+    await act(async () => before.click());
+    expect(host.querySelectorAll('figure')).toHaveLength(1);
+    expect(host.querySelector('figure img')?.getAttribute('src')).toBe(demo.before);
   });
 });
