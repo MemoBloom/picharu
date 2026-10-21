@@ -42,7 +42,7 @@ begin
 end $$;
 create trigger console_refund_immutable before update or delete on public.console_refunds for each row execute function public.console_refund_immutable();
 alter table public.console_audit drop constraint console_audit_action_check;
-alter table public.console_audit add constraint console_audit_action_check check(action in ('session','analytics_read','finance_read','export','role_change','collection_change','refund_fact','refund_gap'));
+alter table public.console_audit add constraint console_audit_action_check check(action in ('session','analytics_read','finance_read','export','role_change','collection_change','refund_fact','refund_gap','version_release_change'));
 create index console_refunds_window on public.console_refunds(occurred_at,order_id);
 create table public.console_refund_gaps(
  order_id uuid not null references public.orders(id),event_id text not null check(length(event_id) between 1 and 200),
@@ -89,6 +89,48 @@ begin
  return jsonb_build_object('recorded',n);
 end $$;
 
+-- Authoritative deployment/release facts are supplied by a controlled operator.
+-- First observed traffic is NOT a release timestamp. This table does not enable
+-- model execution, deploy a model or claim randomized experiment assignment.
+create function public.console_release_key(parts jsonb) returns text language sql immutable set search_path=public,pg_temp as $$
+ select '['||string_agg(value::text,',' order by ordinal)||']' from jsonb_array_elements(parts) with ordinality e(value,ordinal)
+$$;
+create function public.console_release_key_valid(k text) returns boolean language plpgsql immutable set search_path=public,pg_temp as $$
+declare parts jsonb;i integer;
+begin
+ if k is null or length(k) not between 1 and 2000 then return false;end if;
+ begin parts:=k::jsonb;exception when others then return false;end;
+ if jsonb_typeof(parts) is distinct from 'array' or jsonb_array_length(parts)<>6 then return false;end if;
+ if jsonb_typeof(parts->0) is distinct from 'string' or parts->>0 !~ '^[a-z][a-z0-9_]{0,99}$' then return false;end if;
+ for i in 1..3 loop
+  if jsonb_typeof(parts->i) not in('string','null') or (jsonb_typeof(parts->i)='string' and length(parts->>i) not between 1 and 200) then return false;end if;
+ end loop;
+ for i in 4..5 loop
+  if jsonb_typeof(parts->i)<>'null' and (jsonb_typeof(parts->i)<>'number' or parts->>i !~ '^[1-9][0-9]{0,8}$') then return false;end if;
+ end loop;
+ return k=console_release_key(parts);
+end $$;
+create function public.console_job_version_key(j public.edit_jobs) returns text language sql immutable set search_path=public,pg_temp as $$
+ select console_release_key(jsonb_build_array(j.tool_id,j.snapshot->'model_profile'->>'model_id',j.snapshot->'model_profile'->>'adapter_version',j.snapshot->>'prompt_id',
+ case when j.snapshot->>'prompt_version' ~ '^[1-9][0-9]{0,8}$' then (j.snapshot->>'prompt_version')::integer else null end,
+ case when j.snapshot->>'tool_version' ~ '^[1-9][0-9]{0,8}$' then (j.snapshot->>'tool_version')::integer else null end))
+$$;
+create table public.console_version_releases(
+ environment text not null check(environment in('test','live','unclassified')),
+ key text not null check(console_release_key_valid(key)),released_at timestamptz not null check(isfinite(released_at)),
+ scope text not null check(scope in('all_users','limited_rollout','internal_only')),
+ primary key(environment,key,released_at)
+);
+create index console_version_release_window on public.console_version_releases(environment,released_at);
+create function public.console_release_audit() returns trigger language plpgsql security definer set search_path=public,pg_temp as $$
+begin
+ insert into console_audit(actor_source,action,request_id,filter_summary) values('database','version_release_change',gen_random_uuid(),jsonb_build_object(
+ 'operation',tg_op,'key',coalesce(new.key,old.key),'previous_key_changed',case when tg_op='UPDATE' then old.key is distinct from new.key else false end,
+ 'before',case when tg_op='INSERT' then null else to_jsonb(old)-'key' end,'after',case when tg_op='DELETE' then null else to_jsonb(new)-'key' end));
+ return null;
+end $$;
+create trigger console_release_audit after insert or update or delete on public.console_version_releases for each row execute function public.console_release_audit();
+
 create table public.console_analytics_reports(
  id uuid primary key default gen_random_uuid(),owner_id uuid not null references auth.users(id),
  created_at timestamptz not null default statement_timestamp(),expires_at timestamptz not null default(statement_timestamp()+interval '15 minutes'),
@@ -124,8 +166,8 @@ create function public.console_analytics_dataset(q jsonb) returns jsonb language
 with b as(select statement_timestamp() as_of,(q->>'start')::timestamptz-((q->>'end')::timestamptz-(q->>'start')::timestamptz) lo,
  least(statement_timestamp(),(q->>'end')::timestamptz+interval '30 days') hi,q->>'environment' env,q->>'internal' internal),
 jbase as materialized(select j.* from edit_jobs j,b where j.analytics_environment=b.env
- and (b.internal='include' or j.analytics_internal=(b.internal='only')) and j.created_at<b.hi
- and (j.created_at>=b.lo or j.completed_at>=b.lo or j.status in('queued','processing')) limit 20001),
+ and (b.internal='include' or j.analytics_internal=(b.internal='only')) and j.created_at<=b.as_of
+ and ((j.created_at>=b.lo and j.created_at<b.hi) or (j.completed_at>=b.lo and j.completed_at<b.hi) or j.status in('queued','processing')) limit 20001),
 lbase as materialized(select l.*,coalesce(j.analytics_environment,o.analytics_environment,p.analytics_environment) env,
  coalesce(j.analytics_internal,o.analytics_internal,t.internal_account,false) internal from credit_ledger l cross join b
  left join edit_jobs j on j.id=l.reference_id and j.owner_id=l.owner_id left join orders o on o.id=l.reference_id and o.owner_id=l.owner_id
@@ -140,10 +182,11 @@ js as materialized(select j.* from edit_jobs j,b where j.analytics_environment=b
  (j.id in(select id from jbase) or j.id in(select reference_id from ls) or j.id in(select job_id from es) or j.parent_job_id in(select id from jbase) or j.id in(select parent_job_id from jbase)) limit 20001),
 us as materialized(select p.*,coalesce(t.internal_account,false) internal,to_jsonb(a)->>'email' email,c.status account_status,c.available,c.reserved
  from profiles p join auth.users a on a.id=p.id join credit_accounts c on c.owner_id=p.id left join console_user_tags t on t.user_id=p.id,b
- where p.created_at<b.hi and ((p.analytics_environment=b.env and (b.internal='include' or coalesce(t.internal_account,false)=(b.internal='only')))
+ where p.created_at<=b.as_of and ((p.created_at<b.hi and p.analytics_environment=b.env and (b.internal='include' or coalesce(t.internal_account,false)=(b.internal='only')))
  or p.id in(select owner_id from js) or p.id in(select owner_id from os) or p.id in(select owner_id from ls) or p.id in(select owner_id from es)) limit 20001),
 ims as materialized(select im.* from images im,b where im.owner_id in(select id from us) and
- (im.source_job_id in(select id from js) or im.id in(select result_image_id from js) or (im.source_kind='upload' and im.created_at>=b.lo and im.created_at<b.hi)) limit 20001),
+ (im.source_job_id in(select id from js) or im.id in(select result_image_id from js) or (im.source_kind='upload' and im.created_at>=b.lo and im.created_at<b.hi
+ and (im.analytics_environment='unclassified' or(im.analytics_environment=b.env and(b.internal='include' or im.analytics_internal=(b.internal='only')))))) limit 20001),
 ats as materialized(select a.* from job_attempts a where a.job_id in(select id from js) limit 20001),
 rs as materialized(select r.*,o.owner_id,o.analytics_environment,o.analytics_internal from console_refunds r join orders o on o.id=r.order_id,b
  where o.analytics_environment=b.env and (b.internal='include' or o.analytics_internal=(b.internal='only')) and r.occurred_at>=b.lo and r.occurred_at<b.hi limit 20001),
@@ -151,15 +194,15 @@ acts as materialized(select a.* from console_download_actions a,b where a.enviro
 rperiods as materialized(select p.* from console_refund_periods p,b where p.environment=b.env and p.started_at<=b.hi and(p.ended_at is null or p.ended_at>b.lo) limit 20001),
 periods as materialized(select p.* from console_collection_periods p,b where p.environment=b.env and p.started_at<=b.hi and(p.ended_at is null or p.ended_at>b.lo) limit 20001),
 history as materialized(select u.id,count(j.id) lifetime_jobs,max(j.created_at) last_generated_at,count(j.id) filter(where j.created_at>=b.as_of-interval '30 days') last_30d_jobs,min(j.completed_at) filter(where j.status='completed') first_completed_at
- from us u cross join b left join edit_jobs j on j.owner_id=u.id and j.analytics_environment=b.env and (b.internal='include' or j.analytics_internal=(b.internal='only')) and j.created_at<b.as_of group by u.id,b.as_of),
-firstpay as materialized(select u.id,min(o.paid_at) first_paid_at from us u cross join b left join orders o on o.owner_id=u.id and o.analytics_environment=b.env and(o.analytics_internal=(b.internal='only') or b.internal='include') and o.paid_at<b.as_of group by u.id)
-select jsonb_build_object('as_of',b.as_of,'query',q,'permissions','[]'::jsonb,'catalog','[]'::jsonb,
+ from us u cross join b left join edit_jobs j on j.owner_id=u.id and j.analytics_environment=b.env and (b.internal='include' or j.analytics_internal=(b.internal='only')) and j.created_at<=b.as_of group by u.id,b.as_of),
+firstpay as materialized(select u.id,min(o.paid_at) first_paid_at from us u cross join b left join orders o on o.owner_id=u.id and o.analytics_environment=b.env and(o.analytics_internal=(b.internal='only') or b.internal='include') and o.paid_at<=b.as_of group by u.id)
+select jsonb_build_object('as_of',b.as_of,'query',q,'version_releases',(select coalesce(jsonb_agg(jsonb_build_object('key',r.key,'released_at',r.released_at,'scope',r.scope) order by r.released_at,r.key),'[]') from(select r.* from console_version_releases r where r.environment=b.env and (b.internal<>'exclude' or r.scope<>'internal_only') and r.released_at<=b.as_of and r.key in(select console_job_version_key(j) from js j) limit 20001) r),'permissions','[]'::jsonb,'catalog','[]'::jsonb,
  'users',(select coalesce(jsonb_agg(jsonb_build_object('id',u.id,'created_at',u.created_at,'environment',u.analytics_environment,'internal',u.internal,
  'email_masked',case when u.email like '%@%' then left(split_part(u.email,'@',1),1)||'***@'||split_part(u.email,'@',2) else null end,
- 'account_status',u.account_status,'available',u.available,'reserved',u.reserved,'first_completed_at',h.first_completed_at,'first_paid_at',f.first_paid_at,'lifetime_jobs',h.lifetime_jobs,'last_generated_at',h.last_generated_at,'last_30d_jobs',h.last_30d_jobs,'history_complete',not exists(select 1 from edit_jobs unknown where unknown.owner_id=u.id and unknown.analytics_environment='unclassified' and b.env<>'unclassified')) order by u.id),'[]') from us u join history h on h.id=u.id join firstpay f on f.id=u.id),
+ 'account_status',u.account_status,'available',u.available,'reserved',u.reserved,'first_completed_at',h.first_completed_at,'first_paid_at',f.first_paid_at,'lifetime_jobs',h.lifetime_jobs,'last_generated_at',h.last_generated_at,'last_30d_jobs',h.last_30d_jobs,'history_complete',not exists(select 1 from edit_jobs unknown where unknown.owner_id=u.id and unknown.analytics_environment='unclassified' and b.env<>'unclassified'),'payment_history_complete',not exists(select 1 from orders unknown where unknown.owner_id=u.id and unknown.analytics_environment='unclassified' and unknown.paid_at is not null and unknown.paid_at<=b.as_of and b.env<>'unclassified')) order by u.id),'[]') from us u join history h on h.id=u.id join firstpay f on f.id=u.id),
  'jobs',(select coalesce(jsonb_agg(jsonb_build_object('id',j.id,'owner_id',j.owner_id,'tool_id',j.tool_id,'status',j.status,'stage',j.stage,'created_at',j.created_at,'completed_at',j.completed_at,'parent_job_id',j.parent_job_id,'result_image_id',j.result_image_id,'error_code',j.error_code,'credits_reserved',j.credits_reserved,'environment',j.analytics_environment,'internal',j.analytics_internal,'device',j.analytics_device,
  'provider',j.snapshot->'model_profile'->>'provider','model_id',j.snapshot->'model_profile'->>'model_id','adapter_version',j.snapshot->'model_profile'->>'adapter_version','prompt_id',j.snapshot->>'prompt_id','prompt_version',case when j.snapshot->>'prompt_version' ~ '^[1-9][0-9]{0,8}$' then (j.snapshot->>'prompt_version')::integer else null end,'tool_version',case when j.snapshot->>'tool_version' ~ '^[1-9][0-9]{0,8}$' then(j.snapshot->>'tool_version')::integer else null end) order by j.id),'[]') from js j),
- 'images',(select coalesce(jsonb_agg(jsonb_build_object('id',im.id,'owner_id',im.owner_id,'source_job_id',im.source_job_id,'source_kind',im.source_kind,'status',im.status,'created_at',im.created_at,'upload_completed_at',im.upload_completed_at,'expires_at',im.expires_at,'deleted_at',im.deleted_at) order by im.id),'[]') from ims im),
+ 'images',(select coalesce(jsonb_agg(jsonb_build_object('id',im.id,'owner_id',im.owner_id,'source_job_id',im.source_job_id,'source_kind',im.source_kind,'status',im.status,'created_at',im.created_at,'upload_completed_at',im.upload_completed_at,'environment',im.analytics_environment,'internal',im.analytics_internal,'expires_at',im.expires_at,'deleted_at',im.deleted_at) order by im.id),'[]') from ims im),
  'ledger',(select coalesce(jsonb_agg(jsonb_build_object('id',l.id,'owner_id',l.owner_id,'kind',l.kind,'available_delta',l.available_delta,'reserved_delta',l.reserved_delta,'reference_id',l.reference_id,'created_at',l.created_at,'environment',l.env,'internal',l.internal) order by l.id),'[]') from ls l),
  'orders',(select coalesce(jsonb_agg(jsonb_build_object('id',o.id,'owner_id',o.owner_id,'created_at',o.created_at,'paid_at',o.paid_at,'amount_minor',o.amount_minor,'currency',o.currency,'refunded_minor',o.refunded_minor,'status',o.status,'reversal_shortfall',o.reversal_shortfall,'environment',o.analytics_environment,'internal',o.analytics_internal) order by o.id),'[]') from os o),
  'refunds',(select coalesce(jsonb_agg(jsonb_build_object('id',r.id,'order_id',r.order_id,'owner_id',r.owner_id,'occurred_at',r.occurred_at,'amount_minor',r.amount_minor,'currency',r.currency,'status',r.status,'environment',r.analytics_environment,'internal',r.analytics_internal) order by r.id),'[]') from rs r),
@@ -169,7 +212,7 @@ select jsonb_build_object('as_of',b.as_of,'query',q,'permissions','[]'::jsonb,'c
  'periods',(select coalesce(jsonb_agg(jsonb_build_object('environment',p.environment,'started_at',p.started_at,'ended_at',p.ended_at) order by p.started_at),'[]') from periods p),
  'actions',(select coalesce(jsonb_agg(jsonb_build_object('owner_id',a.owner_id,'action_id',a.action_id,'image_id',a.image_id,'job_id',a.job_id,'created_at',a.created_at,'issued_at',a.issued_at,'state',a.state,'environment',a.environment) order by a.action_id),'[]') from acts a),
  'budgets',(select coalesce(jsonb_agg(jsonb_build_object('provider',provider,'model_id',model_id,'adapter_version',adapter_version,'currency',currency,'reserved_minor',reserved_minor,'committed_minor',committed_minor,'limit_minor',limit_minor,'enabled',enabled)),'[]') from(select * from provider_budgets limit 20001) budgets),
- 'quality',jsonb_build_object('history_complete',not exists(select 1 from edit_jobs unknown where unknown.owner_id in(select id from us) and unknown.analytics_environment='unclassified' and b.env<>'unclassified'),'refund_coverage_start',(select coverage_start from console_refund_settings where id),
+ 'quality',jsonb_build_object('history_complete',not exists(select 1 from edit_jobs unknown where unknown.owner_id in(select id from us) and unknown.analytics_environment='unclassified' and b.env<>'unclassified'),'payment_history_complete',not exists(select 1 from orders unknown where unknown.owner_id in(select id from us) and unknown.analytics_environment='unclassified' and unknown.paid_at is not null and unknown.paid_at<=b.as_of and b.env<>'unclassified'),'refund_coverage_start',(select coverage_start from console_refund_settings where id),
  'finance_gaps',(select count(*) from(select g.order_id from console_refund_gaps g join orders o on o.id=g.order_id where g.resolved_at is null and o.id in(select id from os) union select o.id from os o where o.refunded_minor<>(select coalesce(sum(r.amount_minor),0) from console_refunds r where r.order_id=o.id and r.status='succeeded')) gaps),
  'cleanup_pending',(select count(*) from ims where cleanup_pending),'cleanup_retrying',(select count(*) from object_cleanup_tasks t where t.state='pending' and t.attempt_count>0 and t.image_id in(select id from ims)),
  'collection_enabled',(select collection_enabled from console_settings where id),'unresolved_downloads',(select count(*) from acts where state='pending'),'source_limit',20000)) from b
@@ -201,7 +244,7 @@ begin
  if exists(select 1 from jsonb_array_elements(p_catalog) x group by x->>'tool_id' having count(*)>1) then raise exception 'INVALID_REQUEST';end if;
  authz:=app_console_authorize(p_user_id,'analytics:read',p_request_id,'analytics_read',null,p_query);
  d:=jsonb_set(console_analytics_dataset(p_query),'{catalog}',p_catalog);
- foreach k in array array['users','jobs','images','ledger','orders','refunds','attempts','events','periods','refund_periods','actions','budgets'] loop
+ foreach k in array array['version_releases','users','jobs','images','ledger','orders','refunds','attempts','events','periods','refund_periods','actions','budgets'] loop
   if jsonb_array_length(d->k)>20000 then raise exception 'QUERY_TOO_LARGE';end if;
  end loop;
  -- Bounded ephemeral retention. A report never prolongs image retention.
@@ -218,8 +261,31 @@ begin
  if not found then raise exception 'NOT_FOUND';end if;
  return jsonb_build_object('report_id',r.id,'expires_at',r.expires_at,'dataset',console_redact_analytics(r.dataset,authz->'permissions'));
 end $$;
+-- POST-only exact lookup: log the lookup kind, never the original identifier
+-- or full email. Two candidates mean ambiguity, never arbitrary first-match.
+create function public.app_console_resolve_user(p_user_id uuid,p_lookup jsonb,p_request_id uuid) returns jsonb language plpgsql security definer set search_path=public,pg_temp as $$
+declare kind text;v text;uid uuid;matches jsonb;n integer;
+begin
+ if jsonb_typeof(p_lookup) is distinct from 'object' or octet_length(p_lookup::text)>2048 then raise exception 'INVALID_REQUEST';end if;
+ if not worker_json_keys(p_lookup,array['kind','value']) or jsonb_typeof(p_lookup->'kind') is distinct from 'string' or jsonb_typeof(p_lookup->'value') is distinct from 'string' then raise exception 'INVALID_REQUEST';end if;
+ kind:=p_lookup->>'kind';v:=p_lookup->>'value';
+ if kind not in('id','email') then raise exception 'INVALID_REQUEST';end if;
+ if kind='id' then
+  if v !~* '^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$' then raise exception 'INVALID_REQUEST';end if;
+  begin uid:=v::uuid;exception when invalid_text_representation then raise exception 'INVALID_REQUEST';end;
+ else
+  v:=btrim(v,E' \t\n\r\v\f');
+  if length(v) not between 3 and 254 or v !~ '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$' then raise exception 'INVALID_REQUEST';end if;
+ end if;
+ perform app_console_authorize(p_user_id,'analytics:read',p_request_id,'analytics_read',null,jsonb_build_object('lookup_kind',kind));
+ select coalesce(jsonb_agg(jsonb_build_object('user_id',a.id,'email_masked',case when a.email like '%@%' then left(split_part(a.email,'@',1),1)||'***@'||split_part(a.email,'@',2) else null end)),'[]') into matches
+ from(select u.id,to_jsonb(u)->>'email' email from auth.users u where(kind='id' and u.id=uid) or(kind='email' and lower(to_jsonb(u)->>'email')=lower(v)) limit 2) a;
+ n:=jsonb_array_length(matches);
+ if n<>1 then return jsonb_build_object('match',case when n=0 then 'not_found' else 'ambiguous' end,'user_id',null,'email_masked',null);end if;
+ return(matches->0)||jsonb_build_object('match','matched');
+end $$;
 do $$declare t text;f record;begin
- foreach t in array array['console_refund_settings','console_refund_periods','console_refunds','console_refund_gaps','console_analytics_reports'] loop
+ foreach t in array array['console_version_releases','console_refund_settings','console_refund_periods','console_refunds','console_refund_gaps','console_analytics_reports'] loop
   execute format('alter table public.%I enable row level security',t);execute format('revoke all on public.%I from public,anon,authenticated',t);
   execute format('grant select,insert,update,delete on public.%I to service_role',t);
  end loop;

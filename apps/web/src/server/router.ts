@@ -1,7 +1,7 @@
 import { createHash,randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import { CONTRACT_VERSION,UploadRequest,ImageCompleteRequest,EditRequest,RecommendRequest,CheckoutRequest,Pagination,Id,ConsoleDevice,type ToolId } from '@picjp/contracts';
-import { tools,getTool,profileForTool,validateToolParameters } from '@picjp/tool-config';
+import { tools,activeTools,isRetiredTool,getTool,profileForTool,validateToolParameters } from '@picjp/tool-config';
 import { prompts,snapshot } from '@picjp/prompts';
 import type { Dependencies,Row } from './ports';
 import { ApiError,boundedBytes,failure,json,requestId,response } from './errors';
@@ -18,9 +18,14 @@ function jobView(j:Row){return {job_id:j.id,tool_id:j.tool_id,status:j.status,st
 function orderView(o:Row){return {order_id:o.id,package_id:o.package_id,credits:o.credits,amount_minor:o.amount_minor,currency:o.currency,status:o.status,refunded_minor:o.refunded_minor,created_at:o.created_at};}
 function pageRows(rows:Row[],limit:number,project:(r:Row)=>unknown){const selected=rows.slice(0,limit);const last=selected.at(-1);return {items:selected.map(project),next_cursor:rows.length>limit&&last?`${new Date(last.created_at).toISOString()}|${last.id}`:null};}
 function parameterFields(schema:z.AnyZodObject){return Object.entries(schema.shape).map(([name,field])=>{const optional=(field as z.ZodTypeAny).isOptional();let inner=field as z.ZodTypeAny;while(inner instanceof z.ZodOptional||inner instanceof z.ZodDefault)inner=inner._def.innerType;return {name,type:inner instanceof z.ZodEnum?'enum':'string',required:!optional,...(inner instanceof z.ZodEnum?{values:inner.options}:{})};});}
-export function publicTools(){const profiles=models();return tools.map(t=>{const profile=profileForTool(t.tool_id,profiles);const available=generationEnabled()&&!!profile&&profile.max_images>=t.minimum_input_count&&profile.roles.includes('primary')&&(t.minimum_input_count===1||profile.roles.some(r=>r!=='primary'));
+export function publicTools(){const profiles=models();return activeTools.map(t=>{const profile=profileForTool(t.tool_id,profiles);const available=generationEnabled()&&!!profile&&profile.max_images>=t.minimum_input_count&&profile.roles.includes('primary')&&(t.minimum_input_count===1||profile.roles.some(r=>r!=='primary'));
  return {tool_id:t.tool_id,name_ja:t.name_ja,name_zh:t.name_zh,category:t.category,tool_version:t.tool_version,minimum_input_count:t.minimum_input_count,maximum_input_count:Math.min(t.maximum_input_count,profile?.max_images??4),allowed_roles:profile?.roles??t.allowed_roles,prompt_id:t.default_prompt_id,prompt_version:1,evaluation_state:t.evaluation_state,available,unavailable_reason:available?null:!generationEnabled()?'GENERATION_DISABLED':'UNSUPPORTED_CAPABILITY',parameter_fields:parameterFields(t.parameters_schema),output_options:{qualities:profile?.qualities??[],aspect_ratios:profile?.aspect_ratios??[]},credit_cost:{standard:profile?.credits_standard??null,high:profile?.credits_high??null}};
  });}
+// Frozen reports require the full historical metadata, including retired tools.
+export function analyticsToolCatalog(){
+ const available=new Set(publicTools().filter(tool=>tool.available).map(tool=>tool.tool_id));
+ return tools.map(tool=>({tool_id:tool.tool_id,name:tool.name_zh,category:tool.category,available:available.has(tool.tool_id)}));
+}
 async function imageFor(deps:Dependencies,userId:string,id:string,allowDeleted=false){const row=await deps.db.one('images',{id,owner_id:userId});if(!row||(!allowDeleted&&row.status==='deleted')||new Date(row.expires_at).getTime()<=deps.now().getTime())throw new ApiError('NOT_FOUND',404);return row;}
 async function imageView(deps:Dependencies,row:Row){return {image_id:row.id,status:row.status,mime_type:row.mime_type??row.declared_mime,bytes:row.bytes??row.declared_bytes,width:row.width??null,height:row.height??null,preview_url:row.status==='ready'?await deps.storage.signGet(row.preview_key):null,expires_at:row.expires_at};}
 async function rate(deps:Dependencies,userId:string,scope:string,limit:number){if(!await deps.db.rpc<boolean>('app_consume_rate_limit',{p_key:`${scope}:${userId}`,p_limit:limit,p_window_seconds:60}))throw new ApiError('RATE_LIMITED',429,true,60);}
@@ -71,7 +76,7 @@ export function createRouter(deps:Dependencies){return async(request:Request):Pr
  const user=await deps.db.authenticate(authorization.slice(7));await rate(deps,user.id,'api',120);
  const consoleResponse=await consoleRoute(deps,request,user.id,id,()=>new Set(publicTools().filter(t=>t.available).map(t=>t.tool_id)));
  if(consoleResponse)return consoleResponse;
- const adminResponse=await adminAnalyticsRoute(deps,request,user.id,id,()=>publicTools().map(t=>({tool_id:t.tool_id,name:t.name_zh,category:t.category,available:t.available})));
+ const adminResponse=await adminAnalyticsRoute(deps,request,user.id,id,analyticsToolCatalog);
  if(adminResponse)return adminResponse;
  const personalResponse=await personalConsoleRoute(deps,request,user.id,id);
  if(personalResponse)return personalResponse;
@@ -109,10 +114,10 @@ export function createRouter(deps:Dependencies){return async(request:Request):Pr
  const deviceHeader=request.headers.get('X-Picjp-Device');if(deviceHeader!==null)ConsoleDevice.parse(deviceHeader);
  await rate(deps,user.id,'edit',10);const body=await json(request,EditRequest);body.parameters=validateToolParameters(body.tool_id,body.parameters);const hash=requestHash(body);
  const previous=await deps.db.findJob(user.id,body.idempotency_key);if(previous){if(previous.request_hash!==hash)throw new ApiError('IDEMPOTENCY_CONFLICT',409);return response({job_id:previous.id,status:previous.status,credits_reserved:previous.credits_reserved,replayed:true},id,202);}
+ if(isRetiredTool(body.tool_id))throw new ApiError('UNSUPPORTED_CAPABILITY',409);
  if(!generationEnabled())throw new ApiError('GENERATION_DISABLED',503);
  const tool=getTool(body.tool_id);const profile=profileForTool(body.tool_id,models());
  if(!profile||body.inputs.length<tool.minimum_input_count||body.inputs.length>profile.max_images||!body.inputs.every(i=>profile.roles.includes(i.role))||!profile.qualities.includes(body.output.quality)||!profile.aspect_ratios.includes(body.output.aspect_ratio))throw new ApiError('UNSUPPORTED_CAPABILITY',409);
- if(['remove_person','remove_object'].includes(body.tool_id)&&!body.parameters.target&&!body.user_instruction.trim())throw new ApiError('INVALID_REQUEST');
  for(const input of body.inputs){const image=await imageFor(deps,user.id,input.image_id);if(image.status!=='ready')throw new ApiError('IMAGE_NOT_READY',409);}
  let snap;try{snap=snapshot(body,profile);}catch{throw new ApiError('INVALID_PROMPT');}
  const result=await deps.db.rpc(deviceHeader===null?'app_create_job':'app_console_create_job',{...(deviceHeader===null?{}:{p_device:deviceHeader}),p_user_id:user.id,p_idempotency_key:body.idempotency_key,p_request_hash:hash,p_inputs:body.inputs,p_snapshot:snap,p_reserved_credits:body.output.quality==='high'?profile.credits_high:profile.credits_standard,p_parent_job_id:body.parent_job_id??null});

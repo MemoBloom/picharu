@@ -5328,6 +5328,79 @@
         ],
         "additionalProperties": false
       },
+      "ConsoleUserLookup": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "id"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "required": [
+              "kind",
+              "value"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "email"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "maxLength": 254,
+                "format": "email"
+              }
+            },
+            "required": [
+              "kind",
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "ConsoleUserLookupResult": {
+        "type": "object",
+        "properties": {
+          "match": {
+            "type": "string",
+            "enum": [
+              "matched",
+              "not_found",
+              "ambiguous"
+            ]
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "email_masked": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "match",
+          "user_id",
+          "email_masked"
+        ],
+        "additionalProperties": false
+      },
       "AnalyticsExportQuery": {
         "type": "object",
         "properties": {
@@ -8070,6 +8143,495 @@
               "additionalProperties": false
             }
           },
+          "version_trends": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "trend": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "bucket": {
+                        "type": "string"
+                      },
+                      "jobs": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "users": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "new_users": {
+                        "type": "integer",
+                        "nullable": true,
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "completed": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "failed": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "cancelled": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "in_flight": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "credits": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "saved_users": {
+                        "type": "integer",
+                        "nullable": true,
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "saved_jobs": {
+                        "type": "integer",
+                        "nullable": true,
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "save_status": {
+                        "type": "string",
+                        "enum": [
+                          "ready",
+                          "no_sample",
+                          "immature",
+                          "not_collected",
+                          "incomplete",
+                          "by_dimension",
+                          "forbidden",
+                          "unsupported_filters"
+                        ]
+                      },
+                      "tools": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "success": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "enum": [
+                              "M01",
+                              "M02",
+                              "M03",
+                              "M04",
+                              "M05",
+                              "M06",
+                              "M07",
+                              "M08",
+                              "M09",
+                              "M10",
+                              "M11",
+                              "M12",
+                              "M13",
+                              "M14",
+                              "M15",
+                              "M16",
+                              "M17",
+                              "M18",
+                              "M19",
+                              "M20",
+                              "M21",
+                              "M22",
+                              "M23",
+                              "M24"
+                            ]
+                          },
+                          "value": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "numerator": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "denominator": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "sample_size": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "unit": {
+                            "type": "string",
+                            "enum": [
+                              "count",
+                              "ratio",
+                              "credits",
+                              "milliseconds",
+                              "minor",
+                              "per_user"
+                            ]
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "ready",
+                              "no_sample",
+                              "immature",
+                              "not_collected",
+                              "incomplete",
+                              "by_dimension",
+                              "forbidden",
+                              "unsupported_filters"
+                            ]
+                          },
+                          "reason": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "coverage_start": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "date-time"
+                          },
+                          "auxiliary": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "value",
+                          "numerator",
+                          "denominator",
+                          "sample_size",
+                          "unit",
+                          "status",
+                          "reason",
+                          "coverage_start",
+                          "auxiliary"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "save_rate": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "enum": [
+                              "M01",
+                              "M02",
+                              "M03",
+                              "M04",
+                              "M05",
+                              "M06",
+                              "M07",
+                              "M08",
+                              "M09",
+                              "M10",
+                              "M11",
+                              "M12",
+                              "M13",
+                              "M14",
+                              "M15",
+                              "M16",
+                              "M17",
+                              "M18",
+                              "M19",
+                              "M20",
+                              "M21",
+                              "M22",
+                              "M23",
+                              "M24"
+                            ]
+                          },
+                          "value": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "numerator": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "denominator": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "sample_size": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "unit": {
+                            "type": "string",
+                            "enum": [
+                              "count",
+                              "ratio",
+                              "credits",
+                              "milliseconds",
+                              "minor",
+                              "per_user"
+                            ]
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "ready",
+                              "no_sample",
+                              "immature",
+                              "not_collected",
+                              "incomplete",
+                              "by_dimension",
+                              "forbidden",
+                              "unsupported_filters"
+                            ]
+                          },
+                          "reason": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "coverage_start": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "date-time"
+                          },
+                          "auxiliary": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "value",
+                          "numerator",
+                          "denominator",
+                          "sample_size",
+                          "unit",
+                          "status",
+                          "reason",
+                          "coverage_start",
+                          "auxiliary"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "latency_p50_ms": {
+                        "type": "number",
+                        "nullable": true
+                      },
+                      "latency_p95_ms": {
+                        "type": "number",
+                        "nullable": true
+                      },
+                      "currencies": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "currency": {
+                              "type": "string",
+                              "pattern": "^[A-Z]{3}$"
+                            },
+                            "paid_minor": {
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "refunded_minor": {
+                              "type": "integer",
+                              "nullable": true,
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "net_minor": {
+                              "type": "integer",
+                              "nullable": true,
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "refund_status": {
+                              "type": "string",
+                              "enum": [
+                                "ready",
+                                "not_collected",
+                                "incomplete"
+                              ]
+                            },
+                            "provider_report_minor": {
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "invoice_minor": {
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "known_cost_minor": {
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "estimated_minor": {
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "estimated_pending_minor": {
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            }
+                          },
+                          "required": [
+                            "currency",
+                            "paid_minor",
+                            "refunded_minor",
+                            "net_minor",
+                            "refund_status",
+                            "provider_report_minor",
+                            "invoice_minor",
+                            "known_cost_minor",
+                            "estimated_minor",
+                            "estimated_pending_minor"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "bucket",
+                      "jobs",
+                      "users",
+                      "new_users",
+                      "completed",
+                      "failed",
+                      "cancelled",
+                      "in_flight",
+                      "credits",
+                      "saved_users",
+                      "saved_jobs",
+                      "save_status",
+                      "tools",
+                      "success",
+                      "save_rate",
+                      "latency_p50_ms",
+                      "latency_p95_ms",
+                      "currencies"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "key",
+                "trend"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "version_releases": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "released_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "scope": {
+                  "type": "string",
+                  "enum": [
+                    "all_users",
+                    "limited_rollout",
+                    "internal_only"
+                  ]
+                }
+              },
+              "required": [
+                "key",
+                "released_at",
+                "scope"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "user_usage_ranking": {
+            "type": "object",
+            "properties": {
+              "top": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "user_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "email_masked": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "jobs": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "user_id",
+                    "email_masked",
+                    "jobs"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 15
+              },
+              "other_jobs": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "other_users": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "top",
+              "other_jobs",
+              "other_users"
+            ],
+            "additionalProperties": false
+          },
           "heatmap": {
             "type": "array",
             "items": {
@@ -9188,6 +9750,9 @@
           "tools",
           "versions",
           "trend",
+          "version_trends",
+          "version_releases",
+          "user_usage_ranking",
           "heatmap",
           "distribution",
           "retention",
@@ -11462,6 +12027,495 @@
                   "additionalProperties": false
                 }
               },
+              "version_trends": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    },
+                    "trend": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "bucket": {
+                            "type": "string"
+                          },
+                          "jobs": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "users": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "new_users": {
+                            "type": "integer",
+                            "nullable": true,
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "completed": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "failed": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "cancelled": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "in_flight": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "credits": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "saved_users": {
+                            "type": "integer",
+                            "nullable": true,
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "saved_jobs": {
+                            "type": "integer",
+                            "nullable": true,
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "save_status": {
+                            "type": "string",
+                            "enum": [
+                              "ready",
+                              "no_sample",
+                              "immature",
+                              "not_collected",
+                              "incomplete",
+                              "by_dimension",
+                              "forbidden",
+                              "unsupported_filters"
+                            ]
+                          },
+                          "tools": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            }
+                          },
+                          "success": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "enum": [
+                                  "M01",
+                                  "M02",
+                                  "M03",
+                                  "M04",
+                                  "M05",
+                                  "M06",
+                                  "M07",
+                                  "M08",
+                                  "M09",
+                                  "M10",
+                                  "M11",
+                                  "M12",
+                                  "M13",
+                                  "M14",
+                                  "M15",
+                                  "M16",
+                                  "M17",
+                                  "M18",
+                                  "M19",
+                                  "M20",
+                                  "M21",
+                                  "M22",
+                                  "M23",
+                                  "M24"
+                                ]
+                              },
+                              "value": {
+                                "type": "number",
+                                "nullable": true
+                              },
+                              "numerator": {
+                                "type": "number",
+                                "nullable": true
+                              },
+                              "denominator": {
+                                "type": "number",
+                                "nullable": true
+                              },
+                              "sample_size": {
+                                "type": "integer",
+                                "minimum": -9007199254740991,
+                                "maximum": 9007199254740991
+                              },
+                              "unit": {
+                                "type": "string",
+                                "enum": [
+                                  "count",
+                                  "ratio",
+                                  "credits",
+                                  "milliseconds",
+                                  "minor",
+                                  "per_user"
+                                ]
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "ready",
+                                  "no_sample",
+                                  "immature",
+                                  "not_collected",
+                                  "incomplete",
+                                  "by_dimension",
+                                  "forbidden",
+                                  "unsupported_filters"
+                                ]
+                              },
+                              "reason": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "coverage_start": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "date-time"
+                              },
+                              "auxiliary": {
+                                "type": "object",
+                                "additionalProperties": {
+                                  "type": "number"
+                                }
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "value",
+                              "numerator",
+                              "denominator",
+                              "sample_size",
+                              "unit",
+                              "status",
+                              "reason",
+                              "coverage_start",
+                              "auxiliary"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "save_rate": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "enum": [
+                                  "M01",
+                                  "M02",
+                                  "M03",
+                                  "M04",
+                                  "M05",
+                                  "M06",
+                                  "M07",
+                                  "M08",
+                                  "M09",
+                                  "M10",
+                                  "M11",
+                                  "M12",
+                                  "M13",
+                                  "M14",
+                                  "M15",
+                                  "M16",
+                                  "M17",
+                                  "M18",
+                                  "M19",
+                                  "M20",
+                                  "M21",
+                                  "M22",
+                                  "M23",
+                                  "M24"
+                                ]
+                              },
+                              "value": {
+                                "type": "number",
+                                "nullable": true
+                              },
+                              "numerator": {
+                                "type": "number",
+                                "nullable": true
+                              },
+                              "denominator": {
+                                "type": "number",
+                                "nullable": true
+                              },
+                              "sample_size": {
+                                "type": "integer",
+                                "minimum": -9007199254740991,
+                                "maximum": 9007199254740991
+                              },
+                              "unit": {
+                                "type": "string",
+                                "enum": [
+                                  "count",
+                                  "ratio",
+                                  "credits",
+                                  "milliseconds",
+                                  "minor",
+                                  "per_user"
+                                ]
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "ready",
+                                  "no_sample",
+                                  "immature",
+                                  "not_collected",
+                                  "incomplete",
+                                  "by_dimension",
+                                  "forbidden",
+                                  "unsupported_filters"
+                                ]
+                              },
+                              "reason": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "coverage_start": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "date-time"
+                              },
+                              "auxiliary": {
+                                "type": "object",
+                                "additionalProperties": {
+                                  "type": "number"
+                                }
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "value",
+                              "numerator",
+                              "denominator",
+                              "sample_size",
+                              "unit",
+                              "status",
+                              "reason",
+                              "coverage_start",
+                              "auxiliary"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "latency_p50_ms": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "latency_p95_ms": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "currencies": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "currency": {
+                                  "type": "string",
+                                  "pattern": "^[A-Z]{3}$"
+                                },
+                                "paid_minor": {
+                                  "type": "integer",
+                                  "minimum": -9007199254740991,
+                                  "maximum": 9007199254740991
+                                },
+                                "refunded_minor": {
+                                  "type": "integer",
+                                  "nullable": true,
+                                  "minimum": -9007199254740991,
+                                  "maximum": 9007199254740991
+                                },
+                                "net_minor": {
+                                  "type": "integer",
+                                  "nullable": true,
+                                  "minimum": -9007199254740991,
+                                  "maximum": 9007199254740991
+                                },
+                                "refund_status": {
+                                  "type": "string",
+                                  "enum": [
+                                    "ready",
+                                    "not_collected",
+                                    "incomplete"
+                                  ]
+                                },
+                                "provider_report_minor": {
+                                  "type": "integer",
+                                  "minimum": -9007199254740991,
+                                  "maximum": 9007199254740991
+                                },
+                                "invoice_minor": {
+                                  "type": "integer",
+                                  "minimum": -9007199254740991,
+                                  "maximum": 9007199254740991
+                                },
+                                "known_cost_minor": {
+                                  "type": "integer",
+                                  "minimum": -9007199254740991,
+                                  "maximum": 9007199254740991
+                                },
+                                "estimated_minor": {
+                                  "type": "integer",
+                                  "minimum": -9007199254740991,
+                                  "maximum": 9007199254740991
+                                },
+                                "estimated_pending_minor": {
+                                  "type": "integer",
+                                  "minimum": -9007199254740991,
+                                  "maximum": 9007199254740991
+                                }
+                              },
+                              "required": [
+                                "currency",
+                                "paid_minor",
+                                "refunded_minor",
+                                "net_minor",
+                                "refund_status",
+                                "provider_report_minor",
+                                "invoice_minor",
+                                "known_cost_minor",
+                                "estimated_minor",
+                                "estimated_pending_minor"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "bucket",
+                          "jobs",
+                          "users",
+                          "new_users",
+                          "completed",
+                          "failed",
+                          "cancelled",
+                          "in_flight",
+                          "credits",
+                          "saved_users",
+                          "saved_jobs",
+                          "save_status",
+                          "tools",
+                          "success",
+                          "save_rate",
+                          "latency_p50_ms",
+                          "latency_p95_ms",
+                          "currencies"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "key",
+                    "trend"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "version_releases": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    },
+                    "released_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "scope": {
+                      "type": "string",
+                      "enum": [
+                        "all_users",
+                        "limited_rollout",
+                        "internal_only"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "key",
+                    "released_at",
+                    "scope"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "user_usage_ranking": {
+                "type": "object",
+                "properties": {
+                  "top": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "user_id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "email_masked": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "jobs": {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "user_id",
+                        "email_masked",
+                        "jobs"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 15
+                  },
+                  "other_jobs": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "other_users": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "top",
+                  "other_jobs",
+                  "other_users"
+                ],
+                "additionalProperties": false
+              },
               "heatmap": {
                 "type": "array",
                 "items": {
@@ -12580,6 +13634,9 @@
               "tools",
               "versions",
               "trend",
+              "version_trends",
+              "version_releases",
+              "user_usage_ranking",
               "heatmap",
               "distribution",
               "retention",
@@ -15246,7 +16303,7 @@
     "/api/tools": {
       "get": {
         "operationId": "listTools",
-        "summary": "All 20 tool definitions and current availability",
+        "summary": "Active tool definitions and current availability (currently 18); historical IDs remain valid",
         "tags": [
           "Vercel BFF"
         ],
@@ -16827,6 +17884,374 @@
           },
           "404": {
             "description": "NOT_FOUND, including resources owned by another user.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED. Retry-After indicates the retry delay in seconds.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "Seconds before retry."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR; details are not exposed.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "GENERATION_DISABLED or SERVICE_UNAVAILABLE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/users/resolve": {
+      "post": {
+        "operationId": "consoleResolveUser",
+        "summary": "Resolve an exact user ID or email with current analytics permission; return a masked match only",
+        "description": "Exact case-insensitive email match or UUID. Ambiguous email returns no user ID. Audit stores lookup kind only; no raw lookup email is echoed or added to report filters. Drill into a fixed report separately; a lookup match does not add an out-of-scope account to a report.",
+        "tags": [
+          "Vercel BFF"
+        ],
+        "security": [
+          {
+            "SupabaseBearer": []
+          }
+        ],
+        "x-implementation-status": "local-implementation-requires-configured-services",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsoleUserLookup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsoleUserLookupResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST, QUERY_TOO_LARGE or INVALID_PROMPT; webhook signature failures also return 400.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED or internal INVALID_SIGNATURE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ACCOUNT_RESTRICTED or FORBIDDEN (no current administrator permission).",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "INVALID_REQUEST: request stream, uploaded media, or normalized asset exceeds the configured byte limit.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "INVALID_REQUEST: a JSON endpoint requires Content-Type application/json.",
             "headers": {
               "X-Request-ID": {
                 "description": "Trace UUID.",
@@ -21225,7 +22650,7 @@
       "post": {
         "operationId": "createEdit",
         "summary": "Atomically create queued job and reserve credits",
-        "description": "Optional X-Picjp-Device header is a coarse client viewport observation (mobile/tablet/desktop/unknown), frozen only on first creation; excluded from business idempotency hash. GENERATION_ENABLED defaults false until Worker and verified model profiles are available. Durable PG task; no fire-and-forget Worker request. Same normalized request/key returns the original snapshot and price, with replayed=true.",
+        "description": "Optional X-Picjp-Device header is a coarse client viewport observation (mobile/tablet/desktop/unknown), frozen only on first creation; excluded from business idempotency hash. Retired tools reject new jobs with UNSUPPORTED_CAPABILITY; an existing matching idempotency key still replays its frozen task. GENERATION_ENABLED defaults false until Worker and verified model profiles are available. Durable PG task; no fire-and-forget Worker request. Same normalized request/key returns the original snapshot and price, with replayed=true.",
         "tags": [
           "Vercel BFF"
         ],

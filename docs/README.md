@@ -16,3 +16,5 @@
 - [阶段2个人控制台](backend/PERSONAL_CONSOLE.md)：本人使用总览、任务/作品筛选及积分流水。
 
 - [阶段3管理员完整数据看板](backend/ADMIN_ANALYTICS.md)：8页面、24指标、固定快照/分页/钻取/CSV、事件与实际退款事实。
+
+- [双看板逐项完成审计](verification/CONSOLE_COMPLETION_AUDIT.md)、[最新UI/Auth/SEO兼容与合并说明](integration/CONSOLE_UI_INTEGRATION.md)。

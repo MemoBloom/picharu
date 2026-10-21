@@ -271,6 +271,22 @@ async function main(){
   check(Number((await db.query("select count(*) n from credit_ledger where reference_id=$1 and kind='reserve'",[deviceJob])).rows[0].n),1,'cross-device concurrency has one reserve ledger');
   await db.query("insert into console_roles(user_id,role,reason) values($1,'finance','native concurrency verification')",[owner]);
   const analyticsQuery={start:new Date(Date.now()-86400000).toISOString(),end:new Date(Date.now()+1000).toISOString(),timezone:'Asia/Tokyo',bucket:'day',environment:'test',internal:'exclude',cohort:'all'};
+  await db.query(`create function pg_temp.console_equal_asof(p_query jsonb) returns jsonb language plpgsql as $$
+   declare uid uuid:=gen_random_uuid();jid uuid:=gen_random_uuid();d jsonb;
+   begin
+    insert into auth.users(id) values(uid);
+    update profiles set created_at=statement_timestamp() where id=uid;
+    insert into edit_jobs(id,owner_id,tool_id,idempotency_key,request_hash,inputs,snapshot,credits_reserved,created_at)
+    values(jid,uid,'illustration_photo',gen_random_uuid()::text,repeat('a',64),'[]','{}',3,statement_timestamp());
+    d:=console_analytics_dataset(p_query);
+    return jsonb_build_object('id',jid,'owner_id',uid,'dataset',d);
+   end $$;`);
+  const equal=(await db.query('select pg_temp.console_equal_asof($1) value',[JSON.stringify(analyticsQuery)])).rows[0].value;
+  const equalJob=equal.dataset.jobs.find((j:any)=>j.id===equal.id),equalUser=equal.dataset.users.find((u:any)=>u.id===equal.owner_id);
+  check(!!equalJob,true,'native current queued task at the exact as_of is visible');
+  check(!!equalUser,true,'native new queued owner at the exact as_of is visible');
+  check(equalJob.created_at,equal.dataset.as_of,'native fixture forces exact job/as_of equality');
+  check(equalUser.created_at,equal.dataset.as_of,'native fixture forces exact user/as_of equality');
   // The writer has already inserted a task but deliberately has not committed.
   // Snapshot construction must neither see a half-published task nor combine
   // its eventual credit changes with earlier job facts.

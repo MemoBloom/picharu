@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { z } from 'zod';
 import type { PersonalSummary, PersonalLedgerPage, PersonalWorksPage, LedgerKind } from '@picjp/contracts';
 import { api } from '../lib/api';
-import { findToolContent } from '../lib/tool-content';
+import { findHistoricalToolContent as findToolContent } from '../lib/tool-content';
 import { ErrorNotice, Loading, Notice } from './ui';
 import styles from './personal-console.module.css';
 

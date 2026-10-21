@@ -47,6 +47,9 @@ export const AnalyticsJobRow=z.object({id:Id,user_id:Id,tool_id:ToolKey,status:z
 export const AnalyticsReport=z.object({
  meta:z.object({metric_version:z.string(),as_of:Time,query:AnalyticsQuery,previous_window:z.object({start:Time,end:Time}).strict(),coverage_start:Time.nullable(),warnings:z.array(z.string()),cohort_definitions:z.record(z.string())}).strict(),
  metrics:z.array(AnalyticsMetric).length(24),previous_metrics:z.array(AnalyticsMetric).length(24),users:z.array(AnalyticsUsageRow),tools:z.array(AnalyticsToolRow),versions:z.array(AnalyticsVersionRow),trend:z.array(AnalyticsTrendRow),
+ version_trends:z.array(z.object({key:z.string(),trend:z.array(AnalyticsTrendRow)}).strict()),
+ version_releases:z.array(z.object({key:z.string(),released_at:Time,scope:z.enum(['all_users','limited_rollout','internal_only'])}).strict()),
+ user_usage_ranking:z.object({top:z.array(z.object({user_id:Id,email_masked:z.string().nullable(),jobs:Count}).strict()).max(15),other_jobs:Count,other_users:Count}).strict(),
  heatmap:z.array(z.object({user_id:Id,date:z.string(),jobs:Count}).strict()),distribution:z.array(z.object({bucket:z.string(),users:Count}).strict()),retention:z.array(AnalyticsRetentionRow),
  funnel:z.object({user_steps:z.array(AnalyticsFunnelStep),job_steps:z.array(AnalyticsFunnelStep)}).strict(),segments:z.array(z.object({key:z.string(),users:Count,jobs:Count}).strict()),
  finance:z.object({budgets:z.array(z.object({provider:z.string(),model_id:z.string(),adapter_version:z.string(),currency:z.string(),reserved_minor:Integer,committed_minor:Integer,limit_minor:Integer,enabled:z.boolean(),scope:z.literal('global_current')}).strict()),status:AnalyticsMetricStatus,currencies:z.array(AnalyticsMoney),unknown_cost_attempts:Count,estimated_cost_attempts:Count,

@@ -224,7 +224,8 @@ describe('generated OpenAPI document', () => {
     }
     visit(generated);
     expect(new Set(operationIds).size).toBe(operationIds.length);
-    expect(operationIds).toHaveLength(34);
+    expect(operationIds).toContain('consoleResolveUser');
+    expect(operationIds).toHaveLength(35);
   });
 
   it('documents real body-limit, media-type and unavailable responses plus versioned health', () => {

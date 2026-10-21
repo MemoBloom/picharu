@@ -36,6 +36,9 @@ export type AnalyticsReport = {
     coverage_start: string | null; warnings: string[]; cohort_definitions: Record<string, string>};
   metrics: AnalyticsMetric[]; previous_metrics: AnalyticsMetric[];
   users: UsageRow[]; tools: ToolRow[]; versions: VersionRow[]; trend: TrendRow[];
+  version_trends:{key:string;trend:TrendRow[]}[];
+  version_releases:{key:string;released_at:string;scope:string}[];
+  user_usage_ranking: {top:{user_id:string;email_masked:string|null;jobs:number}[];other_jobs:number;other_users:number};
   heatmap: {user_id: string; date: string; jobs: number}[];
   distribution: {bucket: string; users: number}[];
   retention: RetentionRow[]; funnel: {user_steps: FunnelStep[]; job_steps: FunnelStep[]};

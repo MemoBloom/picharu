@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useEffect, useId, useMemo, useState } from 'react';
 import { api, errorMessage } from '../lib/api';
 import type { Tool } from '../lib/types';
-import { findToolContent, publicToolContent, toolCategories, type PublicToolContent } from '../lib/tool-content';
+import { findPublicToolContent, publicToolContent, toolCategories, type PublicToolContent } from '../lib/tool-content';
 import { Icon, Loading, Notice, PageHeading } from './ui';
 
 function useToolCatalog() {
@@ -101,7 +101,7 @@ export function ToolDirectory() {
 }
 
 export function ToolDetail({ toolId }: { toolId: string }) {
-  const content = findToolContent(toolId)!;
+  const content = findPublicToolContent(toolId)!;
   const { tools, error, retry } = useToolCatalog();
   const live = tools?.find((tool) => tool.tool_id === toolId);
   const related = publicToolContent.filter((tool) => tool.category_ja === content.category_ja && tool.tool_id !== toolId).slice(0, 4);

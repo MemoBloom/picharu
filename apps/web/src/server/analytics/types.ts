@@ -12,7 +12,7 @@ export type AnalyticsUser = {
  id: string; created_at: string; environment: Environment; internal: boolean;
  email_masked: string | null; account_status: string; available: number; reserved: number;
  first_completed_at: string | null; first_paid_at: string | null; lifetime_jobs: number;
- history_complete: boolean; last_generated_at?: string | null; last_30d_jobs?: number;
+ history_complete: boolean; payment_history_complete?: boolean; last_generated_at?: string | null; last_30d_jobs?: number;
 };
 export type AnalyticsJob = {
  id: string; owner_id: string; tool_id: string; status: 'queued' | 'processing' | 'completed' | 'failed' | 'cancelled';
@@ -26,6 +26,7 @@ export type AnalyticsImage = {
  id: string; owner_id: string; source_job_id: string | null; source_kind: string;
  status: string; created_at: string; upload_completed_at: string | null;
  expires_at: string; deleted_at: string | null;
+ environment?: Environment; internal?: boolean;
 };
 export type AnalyticsLedger = {
  id: string; owner_id: string; kind: string; available_delta: number; reserved_delta: number;
@@ -67,9 +68,10 @@ export type AnalyticsDataset = {
  events: AnalyticsEvent[]; periods: AnalyticsPeriod[]; actions: AnalyticsAction[];
  catalog: AnalyticsCatalogTool[];
  refund_periods?: AnalyticsPeriod[];
+ version_releases?: {key:string;released_at:string;scope:'all_users'|'limited_rollout'|'internal_only'}[];
  budgets?: {provider:string;model_id:string;adapter_version:string;currency:string;reserved_minor:number;committed_minor:number;limit_minor:number;enabled:boolean}[];
  quality: {
-  history_complete: boolean; refund_coverage_start: string | null; finance_gaps: number;
+  history_complete: boolean; payment_history_complete?: boolean; refund_coverage_start: string | null; finance_gaps: number;
   cleanup_pending: number; cleanup_retrying: number; collection_enabled: boolean;
   unresolved_downloads: number; source_limit: number;
  };

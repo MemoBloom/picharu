@@ -5,7 +5,7 @@
 ## 目录
 
 - apps/web：同一个 Next.js 应用的页面、组件及 API；业务服务代码在 src/server。
-- packages/contracts：Zod 共享字段和校验；packages/tool-config：初期20工具；packages/prompts：仅服务端使用的执行Prompt与推荐资料。
+- packages/contracts：Zod 共享字段和校验；packages/tool-config：当前18方向、历史20个Tool ID；packages/prompts：仅服务端使用的执行Prompt与推荐资料。
 - supabase/migrations：Web数据库迁移、权限和事务。
 - tests、scripts：测试与工程命令；.github/workflows：本仓库的CI与版本标签。
 - docs/interfaces：统一协议、前端接入说明及生成的OpenAPI；docs/backend：实现和数据库；docs/verification：已执行验证。
@@ -21,7 +21,7 @@ npm run hooks:install
 npm run dev
 ```
 
-将.env.example复制为apps/web/.env.local后配置自己的测试环境。真实凭据不提交。生成默认关闭；Worker未实现前不要开启GENERATION_ENABLED。无云凭据也可构建及运行health/tools路径，其余接口需要真实环境或测试端口。
+将.env.example复制为apps/web/.env.local后配置自己的测试环境。真实凭据不提交。生成默认关闭；Worker/模型与云端正式链路未验收前不要开启GENERATION_ENABLED。无云凭据也可构建及运行health/tools路径，其余接口需要真实环境或测试端口。
 
 verify检查OpenAPI一致、类型、业务/契约/媒体测试、PGlite数据库事务和生产构建。原生PostgreSQL17并发测试由CI单独运行。新clone后执行hooks:install启用本地pre-push；CI无需生产密钥。
 
@@ -31,7 +31,7 @@ verify检查OpenAPI一致、类型、业务/契约/媒体测试、PGlite数据�
 - [统一接口](docs/interfaces/INTERFACE_SPEC_V1.md)、[前端接入](docs/interfaces/FRONTEND_API_GUIDE.md)、[OpenAPI](docs/interfaces/openapi.json)
 - [Web实施说明](docs/backend/VERCEL_BACKEND.md)、[数据库](docs/backend/DATABASE_SCHEMA.md)、[验证](docs/verification/VERIFICATION.md)
 
-日语前端已实现 12 个页面模板、20 工具详情和移动端底部导航；顶部使用普通「ホーム」，不放待定域名或临时品牌。页面直接接现有同源 API，登录、上传、任务和支付仍待真实云端联调。
+日语前端已实现 12 个页面模板、当前18工具详情（保留历史20 ID）和移动端底部导航；顶部使用普通「ホーム」，不放待定域名或临时品牌。页面直接接现有同源 API，登录、上传、任务和支付仍待真实云端联调。
 
 接口稳定性与模型选择分离。新增效果可扩展配置和契约版本，不变更已创建任务快照；20不是长期上限。真实效果和上线联调尚未完成，已有页面代码不代表生成服务已可用。
 
@@ -50,4 +50,4 @@ git push -u origin main
 
 ## 双看板功能分支
 
-用户个人控制台与管理员完整数据看板的三阶段实现及本地证据见[实施计划](docs/backend/CONSOLE_IMPLEMENTATION.md)和[管理员实现](docs/backend/ADMIN_ANALYTICS.md)。采集默认关闭；本地验证不表示云迁移/部署/真实自然采集完成。当前独立分支仍待与主UI及最新18方向目录集成。
+用户个人控制台与管理员完整数据看板的三阶段实现及本地证据见[实施计划](docs/backend/CONSOLE_IMPLEMENTATION.md)和[管理员实现](docs/backend/ADMIN_ANALYTICS.md)。采集默认关闭；本地验证不表示云迁移/部署/真实自然采集完成。当前独立分支已适配18方向，最新主UI/Auth/SEO已在隔离组合源码中完成兼容验证；合并与部署仍待单独执行。

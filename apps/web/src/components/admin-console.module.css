@@ -5,3 +5,5 @@
 @media(prefers-reduced-motion:reduce){.app *{scroll-behavior:auto;transition:none}}
 
 .filterDetails>summary{display:none}.filterDetails{margin:0}.filterDetails[open]>.filterGrid{display:grid}@media(max-width:760px){.filterDetails>summary{display:list-item;cursor:pointer;padding:14px 12px;border:1px solid #e6e5e2;font-weight:600}.filterDetails[open]>.filterGrid{margin-top:16px}}
+
+.kpiValue .kpiMetricButton{font:inherit;line-height:inherit;background:none;border:0;padding:0;text-align:left;color:inherit;white-space:normal;overflow-wrap:anywhere;cursor:pointer;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}

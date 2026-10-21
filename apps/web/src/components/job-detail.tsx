@@ -6,7 +6,7 @@ import {coarseDevice} from '../lib/device';
 import {useResultObservation,ResultFeedback} from './analytics-provider';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ApiError, UserFacingError, api } from '../lib/api';
-import { findToolContent } from '../lib/tool-content';
+import { findHistoricalToolContent as findToolContent } from '../lib/tool-content';
 import { jobStageMessage } from '../lib/job-state';
 import type { ImageAsset, Job } from '../lib/types';
 import { AuthGate, ErrorNotice, Loading, Notice, PageHeading } from './ui';

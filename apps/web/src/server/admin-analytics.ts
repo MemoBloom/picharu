@@ -40,13 +40,13 @@ function paginated(report:AnalyticsReport,view:ReturnType<typeof AnalyticsViewQu
 }
 /** All potentially spreadsheet-executable strings are quoted and neutralized. */
 export function csvCell(value:unknown){let text=value===null||value===undefined?'':String(value);if(typeof value!=='number'&&/^[\s\uFEFF]*[=+\-@]/u.test(text))text="'"+text;return '"'+text.replace(/"/g,'""')+'"';}
-function csv(snapshot:Snapshot,report:AnalyticsReport,section:string){
+function csv(snapshot:Snapshot,report:AnalyticsReport,section:string,drill:{user_id?:string;tool_id?:string}){
  const rows:Row[]=section==='users'?report.users.map(u=>({user_id:u.user_id,email:u.email_masked,registered_at:u.created_at,jobs:u.jobs,completed:u.completed,failed:u.failed,in_flight:u.in_flight,credits:u.credits,saved_jobs:u.saved_jobs,save_rate:u.save_rate.value,save_status:u.save_rate.status,last_generated_at:u.last_generated_at,lifetime_jobs:u.lifetime_jobs,last_30d_jobs:u.last_30d_jobs})):
  section==='tools'?report.tools.map(t=>({tool_id:t.tool_id,name:t.name,available:t.available,jobs:t.jobs,users:t.users,task_share:t.task_share.value,user_reach:t.user_reach.value,success:t.success.value,save_rate:t.save_rate.value,save_status:t.save_rate.status,credits:t.credits,latency_p95_ms:t.latency_p95_ms})):
  section==='orders'?report.finance.orders:section==='ledger'?report.finance.ledger:section==='costs'?report.finance.costs:report.jobs;
  if(rows.length>5000)throw new ApiError('QUERY_TOO_LARGE');
  const columns=rows.length?Object.keys(rows[0]):['record'];
- const metadata=[['report_id',snapshot.report_id],['as_of',report.meta.as_of],['metric_version',report.meta.metric_version],['filters',JSON.stringify(report.meta.query)],['section',section]].map(row=>row.map(csvCell).join(','));
+ const metadata=[['report_id',snapshot.report_id],['as_of',report.meta.as_of],['metric_version',report.meta.metric_version],['filters',JSON.stringify(report.meta.query)],['drill',JSON.stringify(drill)],['section',section]].map(row=>row.map(csvCell).join(','));
  return '\uFEFF'+[...metadata,'',columns.map(csvCell).join(','),...rows.map(row=>columns.map(key=>csvCell(row[key])).join(','))].join('\r\n')+'\r\n';
 }
 export async function adminAnalyticsRoute(deps:Dependencies,request:Request,userId:string,requestId:string,catalog:()=>Catalog):Promise<Response|null>{
@@ -75,7 +75,7 @@ export async function adminAnalyticsRoute(deps:Dependencies,request:Request,user
   if(financeExports.has(q.section))requireFinance(snapshot);
   await deps.db.rpc('app_console_authorize',{p_user_id:userId,p_permission:financeExports.has(q.section)?'finance:read':'analytics:read',p_request_id:requestId,p_action:'export',p_target_id:reportId,p_filter:q});
   const report=build(snapshot,q);
-  return new Response(csv(snapshot,report,q.section),{headers:{'Content-Type':'text/csv; charset=utf-8','Content-Disposition':`attachment; filename="picmoko-${q.section}-${reportId}.csv"`,'Cache-Control':'no-store','X-Request-ID':requestId,'X-Report-As-Of':report.meta.as_of,'X-Content-Type-Options':'nosniff'}});
+  return new Response(csv(snapshot,report,q.section,{...(q.user_id?{user_id:q.user_id}:{}),...(q.tool_id?{tool_id:q.tool_id}:{})}),{headers:{'Content-Type':'text/csv; charset=utf-8','Content-Disposition':`attachment; filename="picmoko-${q.section}-${reportId}.csv"`,'Cache-Control':'no-store','X-Request-ID':requestId,'X-Report-As-Of':report.meta.as_of,'X-Content-Type-Options':'nosniff'}});
  }
  const q=AnalyticsViewQuery.parse(queryParams(url));
  const snapshot=await deps.db.rpc<Snapshot>('app_console_read_report',{p_user_id:userId,p_report_id:reportId,p_request_id:requestId,p_action:q.section==='finance'||['orders','costs','refunds','ledger'].includes(q.table??'')?'finance_read':'analytics_read'});

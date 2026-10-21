@@ -12,6 +12,17 @@ export const ConsoleSession = z.object({
   environment: ConsoleEnvironment, collection_enabled: z.boolean(),
 }).strict();
 
+/** Exact administrator lookup; responses never expose full email addresses. */
+export const ConsoleUserLookup = z.discriminatedUnion('kind', [
+ z.object({kind:z.literal('id'),value:Uuid}).strict(),
+ z.object({kind:z.literal('email'),value:z.string().trim().email().max(254)}).strict(),
+]);
+export const ConsoleUserLookupResult = z.object({
+ match:z.enum(['matched','not_found','ambiguous']),user_id:Uuid.nullable(),email_masked:z.string().nullable(),
+}).strict();
+export type ConsoleUserLookup = z.infer<typeof ConsoleUserLookup>;
+export type ConsoleUserLookupResult = z.infer<typeof ConsoleUserLookupResult>;
+
 const observation = {
   event_id: Uuid, occurred_at: z.string().datetime({ offset: true }),
   device: ConsoleDevice, page_view_id: Uuid,

@@ -1,18 +1,19 @@
 # 管理员数据看板实现
 
-代码位于Web应用：页面`src/app/admin`，交互`src/components/admin-console*`与`analytics-charts.tsx`，API`src/server/admin-analytics.ts`，纯统计引擎`src/server/analytics/engine.ts`。公开字段唯一权威为`packages/contracts/src/analytics.ts`，OpenAPI运行`npm run contracts:export`生成。初期目录20工具不是图表上限，按稳定ID及任务冻结版本分析。
+代码位于Web应用：页面`src/app/admin`，交互`src/components/admin-console*`与`analytics-charts.tsx`，API`src/server/admin-analytics.ts`，纯统计引擎`src/server/analytics/engine.ts`。公开字段唯一权威为`packages/contracts/src/analytics.ts`，OpenAPI运行`npm run contracts:export`生成。当前18方向、历史20工具不是图表上限，按稳定ID及任务冻结版本分析。
 
 ## 页面与接口
 
 8类页面：`/admin`总览，以及`/admin/users|tools|funnel|retention|versions|finance|data-quality`。默认先选范围再查询；没有权限、未采集、未成熟、无样本、覆盖不足和未知费用各自显示，不填示例数字。个人控制台仍在`/ja/account`，只查询本人事实。
 
+- `POST /api/admin/users/resolve`：完整UUID或精确邮箱（忽略大小写、去首尾空白）；每次重验analytics:read。只返回matched/not_found/ambiguous、user_id与脱敏邮箱，不回显完整查询值；审计仅记录lookup_kind。查找后在原report/as_of内钻取，范围外账号明确提示并保留当前统计，不能混入旧快照。
 - `GET /api/admin/session`：当前角色和权限，服务端复核、审计。
 - `POST /api/admin/analytics/reports`：创建15分钟有效的固定数据库快照，201返回报告。开始/结束为UTC半开区间；IANA时区决定日/周/cohort，最多366天，小时粒度最多31天。
 - `GET /api/admin/analytics/reports/:id`：同一报告8页面、钻取、排序及分页。`section`控制分析视图；`table`独立指定users/tools/versions/retention/jobs/orders/ledger/costs/refunds；`offset`和`limit`控制该表，其他表也限量。默认25、最大100条。全部图表不是把当前页明细重新当作总体；局部特效排行明确标注当前页。
-- `GET .../:id/export?section=users|tools|jobs|orders|ledger|costs`：同一快照及钻取的脱敏CSV，最多5000行，超限请缩窄范围。包含as_of、metric_version、原筛选及导出类别；公式前导字符加安全前缀。浏览器携带Bearer拉Blob，不把Token放URL。
+- `GET .../:id/export?section=users|tools|jobs|orders|ledger|costs`：同一快照及钻取的脱敏CSV，最多5000行，超限请缩窄范围。包含as_of、metric_version、原筛选、独立drill条件及导出类别；公式前导字符加安全前缀。浏览器携带Bearer拉Blob，不把Token放URL。
 - `GET /api/analytics/config`、`POST /api/analytics/events`：登录后粗粒观察配置及白名单事件；配置默认关闭。
 
-每类源事实最多20000条，超限明确返回`QUERY_TOO_LARGE`，不会截断后提供貌似正确的总量。工具/模型等维度由引擎在有界事实快照内筛选；大数据场景先缩短区间，未来可增加同口径分区/小时汇总。缓存到期不可读，下一次创建清理过期快照；稀疏用户日热力图仅Top20，所有用户仍可分页和钻取。
+每类源事实最多20000条；全版本稀疏趋势合计最多2000点，超过任一上限明确返回`QUERY_TOO_LARGE`，不会截断后提供貌似正确的总量。工具/模型等维度由引擎在有界事实快照内筛选；大数据场景先缩短区间，未来可增加同口径分区/小时汇总。缓存到期不可读，下一次创建清理过期快照；稀疏用户日热力图仅Top20，所有用户仍可分页和钻取。
 
 ## 指标映射与证据
 
@@ -51,3 +52,16 @@
 ## 交付边界
 
 本地测试使用合成用户/事实和离线端口，未连接真实支付/照片/模型。迁移、Vercel部署、云端联调、PAY-001、自然24h/7d/30d采集及人工模型evaluation继续独立验收。账户注销生命周期、受控调账/退款操作、第三方告警和规模化汇总不在本次只读看板实现中。
+
+
+## 收尾口径、完整图表与发布事实
+
+- `user_usage_ranking`来自完整用户集合，Top15及其他用户/任务合计不受分页影响；Top8特效及日期×特效堆叠来自完整trend.tools，稳定ID同名也不合并。局部覆盖/散点明确标“当前明细页”，热力图明确Top20和非零日期范围。
+- 全局趋势可选择任务状态、生成用户、新用户、保存行为用户、积分、成功耗时P50/P95及成功/保存率。自然周保存用户由引擎直接去重，不能由日UV相加；首尾周可能只覆盖所选部分。
+- `version_trends`在分页之前按冻结版本完整事实计算，稀疏桶覆盖创建、完成、显式下载动作及consume发生时间。图上使用完整全局时间轴，缺失日期断线，未成熟/未知不画0。版本趋势不分配注册人数或财务金额。
+- `console_version_releases(environment,key,released_at,scope)`供受控service_role维护真实发布证据并审计。key为`[tool_id,model_id,adapter_version,prompt_id,prompt_version,tool_version]`规范JSON，scope为all_users/limited_rollout/internal_only；只返回当前环境、匹配版本、as_of以前的事实，窗前发布基线可在说明中显示。没有记录时明确未记录，绝不用first_seen_at造发布时间；此表不部署模型或分配实验流量。
+- 上传首次完成事务冻结环境和内部标签，重放不改；历史来源未知不归入test/live漏斗。付款历史完整性独立于任务历史，未知首付不能显示确定复购/未付费分群。
+- M13和保存漏斗将未确认签发显示不完整，已知下载请求阶段仍保留；另一次pending不抹掉同任务已有确认成功。运行最老排队时长基于as_of当前积压，含所选历史窗口外及窗口后注册的当前用户；期间任务状态仍按T创建，两个时间轴明确区分。
+- 快捷时间范围、KPI口径跳转、包含图表摘要的复盘JSON已接入。验收见[完成审计](../verification/CONSOLE_COMPLETION_AUDIT.md)。
+
+快照边界：事实发生时间可等于`as_of`（包含），所选期间仍是`[start,end)`。真实PG与PGlite用同一statement_timestamp新建用户/任务验证当前积压，避免同毫秒创建后漏记；没有用测试延时掩盖边界。

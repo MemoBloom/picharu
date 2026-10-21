@@ -1,4 +1,5 @@
 'use client';
+import {findHistoricalToolContent} from '../lib/tool-content';
 
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -59,7 +60,7 @@ function HistoryContent() {
     </form>
     {!!error && <ErrorNotice error={error} onRetry={() => void load(jobs.length > 0 && !!cursor)} />}
     {loaded && !jobs.length && <section className="surface empty-state"><span className="empty-symbol" aria-hidden="true">＋</span><h2>{filters ? '該当する編集はありません' : '最初の一枚を、編集してみませんか。'}</h2><p>{filters ? '条件を変更して、もう一度ご確認ください。' : '編集した写真や、処理中の写真がここに並びます。'}</p><Link className="button" href="/ja/edit">写真を編集する</Link></section>}
-    {!!jobs.length && <div className="history-grid">{jobs.map(job => <HistoryCard key={job.job_id} job={job} name={tools.find(tool => tool.tool_id === job.tool_id)?.name_ja ?? '写真の編集'} />)}</div>}
+    {!!jobs.length && <div className="history-grid">{jobs.map(job => <HistoryCard key={job.job_id} job={job} name={tools.find(tool => tool.tool_id === job.tool_id)?.name_ja ?? findHistoricalToolContent(job.tool_id)?.name_ja ?? '写真の編集'} />)}</div>}
     {busy && <Loading label="編集履歴を読み込んでいます" />}{cursor && !busy && <div className="center-actions"><button type="button" className="button button-secondary" onClick={() => void load(true)}>もっと見る</button></div>}
     <p className="fine-print">保存期間を過ぎた写真や削除済みの写真は、プレビューを表示できない場合があります。処理状況は各編集の詳細で確認できます。</p>
   </div>;

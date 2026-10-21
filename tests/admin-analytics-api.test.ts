@@ -11,7 +11,7 @@ import type { Database, Dependencies, Row } from '../apps/web/src/server/ports';
 const admin='00000000-0000-4000-8000-000000000001',other='00000000-0000-4000-8000-000000000002';
 const DAY=86400000;
 let pg:PGlite,route:ReturnType<typeof createRouter>,lastSnapshot:Row|undefined;
-const profile={profile_id:'fixture',provider:'fixture',model_id:'fixture',adapter_version:'1',verified_tool_ids:['remove_person'],max_images:1,roles:['primary'],qualities:['standard'],aspect_ratios:['1:1'],credits_standard:3,credits_high:5,pricing_version:'fixture'};
+const profile={profile_id:'fixture',provider:'fixture',model_id:'fixture',adapter_version:'1',verified_tool_ids:['illustration_photo'],max_images:1,roles:['primary'],qualities:['standard'],aspect_ratios:['1:1'],credits_standard:3,credits_high:5,pricing_version:'fixture'};
 async function sql(q:string,args:unknown[]=[]){return pg.query<Row>(q,args);}
 async function rawRpc(name:string,args:Row):Promise<any>{const e=Object.entries(args);return(await sql(`select public.${name}(${e.map(([k],i)=>`${k}=>$${i+1}`).join(',')}) value`,e.map(([,v])=>v!==null&&typeof v==='object'?JSON.stringify(v):v))).rows[0]?.value;}
 const db:Database={
@@ -38,6 +38,12 @@ beforeEach(async()=>{
  await pg.exec('truncate auth.users,console_audit,console_collection_periods,console_refund_periods,console_analytics_reports,credit_packages,rate_buckets cascade');await pg.exec("update console_refund_settings set enabled=false,coverage_start=null;update console_settings set environment='test',collection_enabled=false");await sql("insert into auth.users(id,email) values($1,'alice@example.invalid'),($2,'other@example.invalid')",[admin,other]);await pg.exec("update profiles set created_at=now()-interval '40 days'");await pg.exec("insert into credit_packages(package_id,credits,amount_minor,currency) values('fixture',10,1000,'JPY')");
  const deps:Dependencies={db,now:()=>new Date(),fetch,storage:{async signPut(){throw Error('not used');},async read(){throw Error('not used');},async write(){throw Error('not used');},async remove(){throw Error('not used');},async signGet(){throw Error('not used');}},payments:{async createCheckout(){throw Error('not used');},verifyEvent(){throw Error('not used');},async retrieveSession(){throw Error('not used');},async retrievePaymentIntent(){throw Error('not used');},async retrieveCharge(){throw Error('not used');}}};route=createRouter(deps);
 });
+function csvMetadata(text:string):Record<string,string>{
+ const rows=text.replace(/^\uFEFF/,'').split('\r\n');
+ const metadata:Record<string,string>={};
+ for(const row of rows){if(!row)break;const cells=[...row.matchAll(/"((?:[^"]|"")*)"/g)].map(match=>match[1].replace(/""/g,'"'));if(cells.length===2)metadata[cells[0]]=cells[1];}
+ return metadata;
+}
 describe('stage 3 actual HTTP → RPC → SQL → engine → strict DTO',()=>{
  it('requires authentication/current role and exposes safe collection config to signed-in users',async()=>{
   expect((await call('/api/admin/analytics/reports','POST',query(),'')).status).toBe(401);expect((await call('/api/admin/analytics/reports','POST',query())).status).toBe(403);
@@ -50,7 +56,7 @@ describe('stage 3 actual HTTP → RPC → SQL → engine → strict DTO',()=>{
   await grant(admin,'finance');await job();await job('remove_person',other);const first=await create();await job();vi.stubEnv('GENERATION_ENABLED','false');
   for(const section of ['overview','users','tools','funnel','retention','versions','finance','data-quality']){const res=await call(`/api/admin/analytics/reports/${first.report_id}?section=${section}&limit=1`);expect(res.status).toBe(200);const r=AnalyticsReportResponse.parse(await res.json());expect(r.report.meta).toEqual(first.report.meta);expect(r.report.metrics).toEqual(first.report.metrics);expect(r.report.previous_metrics).toEqual(first.report.previous_metrics);expect(r.report.users.length).toBeLessThanOrEqual(1);expect(r.report.jobs.length).toBeLessThanOrEqual(1);}
   const page=await call(`/api/admin/analytics/reports/${first.report_id}?section=users&offset=1&limit=1`);expect(AnalyticsReportResponse.parse(await page.json()).pagination).toMatchObject({section:'users',offset:1,limit:1,total:2});
-  const tools=AnalyticsReportResponse.parse(await(await call(`/api/admin/analytics/reports/${first.report_id}?section=tools&limit=100`)).json());expect(tools.report.tools.find(t=>t.tool_id==='remove_person')?.available).toBe(true);expect((await create()).report.metrics.find(m=>m.id==='M03')?.value).toBe(3);
+  const tools=AnalyticsReportResponse.parse(await(await call(`/api/admin/analytics/reports/${first.report_id}?section=tools&limit=100`)).json());expect(tools.report.tools.find(t=>t.tool_id==='illustration_photo')?.available).toBe(true);expect((await create()).report.metrics.find(m=>m.id==='M03')?.value).toBe(3);expect(tools.report.tools.find(t=>t.tool_id==='remove_person')).toMatchObject({name:'去除路人',category:'日常修图',available:false});
  });
  it('preserves nonzero trusted facts through SQL, comparison windows and all 24 metric DTOs',async()=>{
   await grant(admin,'finance');await pg.exec("update console_settings set collection_enabled=true;insert into console_collection_periods(environment,started_at,ended_at) values('test',now()-interval '60 days',now()-interval '1 minute')");
@@ -89,4 +95,19 @@ describe('stage 3 actual HTTP → RPC → SQL → engine → strict DTO',()=>{
   const users=await(await call(`${base}/export?section=users&user_id=${admin}`)).text();expect(users).toContain('"\'=***@example.invalid"');expect(users).not.toContain('=formula');expect((await sql("select count(*)::int n from console_audit where action='export'")).rows[0].n).toBeGreaterThanOrEqual(2);
   const drill=AnalyticsReportResponse.parse(await(await call(`${base}?section=users&user_id=${other}`)).json());expect(drill.report.metrics.find(m=>m.id==='M03')?.value).toBe(0);
  });
+ it('records exact user/tool drill metadata separately from global filters in frozen CSV exports',async()=>{
+  await grant();const included=await job('remove_person',admin);const differentUser=await job('remove_person',other);const differentTool=await job('illustration_photo',admin);
+  const r=await create();const base=`/api/admin/analytics/reports/${r.report_id}`;const qs=`user_id=${admin}&tool_id=remove_person`;
+  const pageResponse=await call(`${base}?section=overview&${qs}`);expect(pageResponse.status).toBe(200);const page=AnalyticsReportResponse.parse(await pageResponse.json());expect(page.report.jobs.map(j=>j.id)).toEqual([included]);
+  const addedLater=await job('remove_person',admin);const exported=await call(`${base}/export?section=jobs&${qs}`);expect(exported.status).toBe(200);const text=await exported.text();const metadata=csvMetadata(text);
+  expect(metadata.report_id).toBe(r.report_id);expect(metadata.as_of).toBe(r.report.meta.as_of);expect(metadata.metric_version).toBe(r.report.meta.metric_version);expect(metadata.section).toBe('jobs');
+  expect(JSON.parse(metadata.filters)).toEqual(r.report.meta.query);expect(JSON.parse(metadata.drill)).toEqual({user_id:admin,tool_id:'remove_person'});expect(exported.headers.get('x-report-as-of')).toBe(page.report.meta.as_of);
+  expect(text).toContain(included);for(const excluded of [differentUser,differentTool,addedLater])expect(text).not.toContain(excluded);
+  const plain=csvMetadata(await(await call(`${base}/export?section=jobs`)).text());expect(JSON.parse(plain.drill)).toEqual({});expect(JSON.parse(plain.filters)).toEqual(r.report.meta.query);
+  const userOnly=csvMetadata(await(await call(`${base}/export?section=users&user_id=${admin}`)).text());expect(JSON.parse(userOnly.drill)).toEqual({user_id:admin});
+  const toolOnly=csvMetadata(await(await call(`${base}/export?section=tools&tool_id=remove_person`)).text());expect(JSON.parse(toolOnly.drill)).toEqual({tool_id:'remove_person'});
+  expect((await sql("select count(*)::int n from console_audit where action='export' and filter_summary->>'user_id'=$1 and filter_summary->>'tool_id'='remove_person'",[admin])).rows[0].n).toBeGreaterThan(0);
+  expect((await call(`${base}/export?section=jobs&tool_id=remove_person&tool_id=illustration_photo`)).status).toBe(400);
+ });
+
 });

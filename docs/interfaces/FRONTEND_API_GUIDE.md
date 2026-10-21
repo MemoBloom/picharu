@@ -521,3 +521,5 @@ JPY 的 amount_minor=500 表示 500 日元，不除以 100。套餐价格由服�
 ## 双看板增量
 
 个人控制台接口见[PERSONAL_CONSOLE](../backend/PERSONAL_CONSOLE.md)；管理员接口及8页面口径见[ADMIN_ANALYTICS](../backend/ADMIN_ANALYTICS.md)。字段以contracts与生成OpenAPI为准。管理员报表使用POST创建15分钟快照，所有页面/钻取/分页/导出复用report_id；明细table独立分页，订单/流水/退款/成本都须finance:read。浏览器认证请求支持expectedOwnerId，CSV必须Bearer fetch→Blob，禁止Token查询参数。新结果页下载按钮用POST+action_id，GET不计保存；粗粒X-Picjp-Device与埋点均不参与扣费事实。
+
+管理员精确定位使用`POST /api/admin/users/resolve`，请求`{kind:"id"|"email",value:string}`，响应match为matched/not_found/ambiguous，仅matched有user_id/脱敏email_masked。不得将完整邮箱写入URL、分析筛选或审计；匹配后必须继续使用原report_id查询用户切片，404表示当前快照不含该账号，保持原统计并提示调整范围。接口与快照读取每次重验权限，403清空旧管理数据。

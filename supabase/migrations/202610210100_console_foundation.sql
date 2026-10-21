@@ -72,6 +72,8 @@ alter table public.orders add column analytics_environment text not null default
  check(analytics_environment in ('test','live','unclassified')),
  add column analytics_internal boolean not null default false;
 alter table public.images add column upload_completed_at timestamptz;
+alter table public.images add column analytics_environment text not null default 'unclassified' check(analytics_environment in ('test','live','unclassified')),
+ add column analytics_internal boolean not null default false;
 create function public.console_capture_context() returns trigger language plpgsql security definer set search_path=public,pg_temp as $$
 declare u uuid;
 begin
@@ -96,10 +98,33 @@ end $$;
 create trigger console_profile_immutable before update on public.profiles for each row execute function public.console_context_immutable();
 create trigger console_job_immutable before update on public.edit_jobs for each row execute function public.console_context_immutable();
 create trigger console_order_immutable before update on public.orders for each row execute function public.console_context_immutable();
-create function public.console_upload_time() returns trigger language plpgsql as $$
+-- Upload context is frozen at the first successful completion, rather than
+-- inferred later from mutable account labels or the environment of a report.
+-- Existing images remain unclassified; generated assets inherit their job.
+create function public.console_image_context() returns trigger language plpgsql security definer set search_path=public,pg_temp as $$
 begin
- if old.status='uploading' and new.status='ready' and new.source_kind='upload' then new.upload_completed_at:=clock_timestamp();
- else new.upload_completed_at:=old.upload_completed_at;end if;
+ if new.source_kind='generated' then
+  select analytics_environment,analytics_internal into new.analytics_environment,new.analytics_internal from edit_jobs where id=new.source_job_id and owner_id=new.owner_id;
+  if not found then raise exception 'NOT_FOUND';end if;
+ elsif new.status='ready' then
+  select environment into new.analytics_environment from console_settings where id for share;
+  new.analytics_internal:=coalesce((select internal_account from console_user_tags where user_id=new.owner_id),false);
+ else
+  new.analytics_environment:='unclassified';new.analytics_internal:=false;
+ end if;
+ return new;
+end $$;
+create trigger console_image_context before insert on public.images for each row execute function public.console_image_context();
+create function public.console_upload_time() returns trigger language plpgsql security definer set search_path=public,pg_temp as $$
+begin
+ if old.status='uploading' and new.status='ready' and new.source_kind='upload' then
+  new.upload_completed_at:=clock_timestamp();
+  select environment into new.analytics_environment from console_settings where id for share;
+  new.analytics_internal:=coalesce((select internal_account from console_user_tags where user_id=new.owner_id),false);
+ else
+  if row(new.analytics_environment,new.analytics_internal) is distinct from row(old.analytics_environment,old.analytics_internal) then raise exception 'IMMUTABLE_ANALYTICS_CONTEXT';end if;
+  new.upload_completed_at:=old.upload_completed_at;
+ end if;
  return new;
 end $$;
 create trigger console_upload_time before update on public.images for each row execute function public.console_upload_time();

@@ -1,6 +1,6 @@
 import {
   ConsoleBrowserEvent, ConsoleDownloadRequest, ConsoleDownloadResponse,
-  ConsoleEventReceipt, ConsoleSession, Id,
+  ConsoleEventReceipt, ConsoleSession, ConsoleUserLookup, ConsoleUserLookupResult, Id,
 } from '@picjp/contracts';
 import type { Dependencies, Row } from './ports';
 import { ApiError, json, response } from './errors';
@@ -16,6 +16,13 @@ export async function consoleRoute(
       p_user_id: userId, p_permission: 'analytics:read', p_request_id: requestId, p_action: 'session',
     });
     return response(ConsoleSession.parse(data), requestId);
+  }
+  if (path === '/api/admin/users/resolve' && request.method === 'POST') {
+    const lookup = await json(request, ConsoleUserLookup);
+    const result = await deps.db.rpc('app_console_resolve_user', {
+      p_user_id: userId, p_lookup: lookup, p_request_id: requestId,
+    });
+    return response(ConsoleUserLookupResult.parse(result), requestId);
   }
   if (path === '/api/analytics/events' && request.method === 'POST') {
     const event = await json(request, ConsoleBrowserEvent);

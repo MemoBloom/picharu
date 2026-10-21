@@ -17,7 +17,7 @@ let failSigning = false;
 let failRecording = false;
 let deleteAfterSigning = false;
 let resultImage: string;
-const profile = { profile_id: 'fixture', provider: 'fixture', model_id: 'fixture', adapter_version: '1', verified_tool_ids: ['remove_person'], max_images: 1, roles: ['primary'], qualities: ['standard'], aspect_ratios: ['1:1'], credits_standard: 3, credits_high: 5, pricing_version: 'fixture' };
+const profile = { profile_id: 'fixture', provider: 'fixture', model_id: 'fixture', adapter_version: '1', verified_tool_ids: ['illustration_photo'], max_images: 1, roles: ['primary'], qualities: ['standard'], aspect_ratios: ['1:1'], credits_standard: 3, credits_high: 5, pricing_version: 'fixture' };
 async function sql(query: string, args: unknown[] = []) { return pg.query<Row>(query, args); }
 async function rawRpc(name: string, args: Row): Promise<any> {
   const entries = Object.entries(args);
@@ -39,7 +39,7 @@ async function call(path: string, method = 'GET', body?: unknown, user = owner) 
 }
 async function enable() { await pg.exec("update console_settings set environment='test',collection_enabled=true"); }
 async function grant(role = 'analyst', user = owner) { await sql('insert into console_roles(user_id,role,reason) values($1,$2,$3)', [user, role, 'local synthetic verification']); }
-function exposed(extra: Row = {}) { return { event_id: randomUUID(), name: 'tool_exposed', page_view_id: randomUUID(), exposure_id: randomUUID(), occurred_at: new Date().toISOString(), device: 'desktop', tool_id: 'remove_person', visible_ms: 1000, visible_ratio: 0.5, ...extra }; }
+function exposed(extra: Row = {}) { return { event_id: randomUUID(), name: 'tool_exposed', page_view_id: randomUUID(), exposure_id: randomUUID(), occurred_at: new Date().toISOString(), device: 'desktop', tool_id: 'illustration_photo', visible_ms: 1000, visible_ratio: 0.5, ...extra }; }
 async function completedJob(user = owner, environment = 'test') {
   await sql('update console_settings set environment=$1', [environment]);
   const jobId = randomUUID(), imageId = randomUUID();
