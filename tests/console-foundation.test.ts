@@ -173,7 +173,7 @@ describe('stage 1: trusted download and bounded browser observations', () => {
     expect((await sql('select state from console_download_actions')).rows[0].state).toBe('failed');
     expect((await sql('select * from analytics_events')).rows).toHaveLength(0);
     failSigning = false; failRecording = true;
-    expect((await (await call(`/api/images/${result.imageId}/download`, 'POST', { ...action, action_id: randomUUID() })).json()).recording).toBe('unavailable');
+    expect((await (await call(`/api/images/${result.imageId}/download`, 'POST', action)).json()).recording).toBe('unavailable');
     expect((await sql("select count(*)::int n from console_download_actions where state='pending'")).rows[0].n).toBe(1);
     expect((await sql('select status from edit_jobs')).rows[0].status).toBe('completed');
   });

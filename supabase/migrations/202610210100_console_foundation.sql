@@ -240,6 +240,7 @@ begin
  -- Check AFTER a concurrent insert has resolved too.
  select * into a from console_download_actions where owner_id=p_user_id and action_id=p_action_id for update;
  if row(a.image_id,a.device) is distinct from row(p_image_id,p_device) then raise exception 'IDEMPOTENCY_CONFLICT';end if;
+ update console_download_actions set state='pending' where owner_id=p_user_id and action_id=p_action_id and state in ('failed','disabled');
  return jsonb_build_object('storage_key',im.storage_key,'capture',true);
 end $$;
 
