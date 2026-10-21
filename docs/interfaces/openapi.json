@@ -357,6 +357,7 @@
         "type": "string",
         "enum": [
           "UNAUTHORIZED",
+          "FORBIDDEN",
           "NOT_FOUND",
           "INVALID_REQUEST",
           "INVALID_PROMPT",
@@ -385,6 +386,7 @@
                 "type": "string",
                 "enum": [
                   "UNAUTHORIZED",
+                  "FORBIDDEN",
                   "NOT_FOUND",
                   "INVALID_REQUEST",
                   "INVALID_PROMPT",
@@ -3876,6 +3878,372 @@
         ],
         "additionalProperties": false
       },
+      "ConsoleBrowserEvent": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "event_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "occurred_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "device": {
+                "type": "string",
+                "enum": [
+                  "mobile",
+                  "tablet",
+                  "desktop",
+                  "unknown"
+                ]
+              },
+              "page_view_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "name": {
+                "type": "string",
+                "enum": [
+                  "tool_exposed"
+                ]
+              },
+              "tool_id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,99}$"
+              },
+              "exposure_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "visible_ms": {
+                "type": "integer",
+                "minimum": 1000,
+                "maximum": 600000
+              },
+              "visible_ratio": {
+                "type": "number",
+                "minimum": 0.5,
+                "maximum": 1
+              }
+            },
+            "required": [
+              "event_id",
+              "occurred_at",
+              "device",
+              "page_view_id",
+              "name",
+              "tool_id",
+              "exposure_id",
+              "visible_ms",
+              "visible_ratio"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "event_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "occurred_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "device": {
+                "type": "string",
+                "enum": [
+                  "mobile",
+                  "tablet",
+                  "desktop",
+                  "unknown"
+                ]
+              },
+              "page_view_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "name": {
+                "type": "string",
+                "enum": [
+                  "tool_selected"
+                ]
+              },
+              "tool_id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,99}$"
+              },
+              "exposure_id": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "required": [
+              "event_id",
+              "occurred_at",
+              "device",
+              "page_view_id",
+              "name",
+              "tool_id",
+              "exposure_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "event_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "occurred_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "device": {
+                "type": "string",
+                "enum": [
+                  "mobile",
+                  "tablet",
+                  "desktop",
+                  "unknown"
+                ]
+              },
+              "page_view_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "name": {
+                "type": "string",
+                "enum": [
+                  "result_viewed"
+                ]
+              },
+              "job_id": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "required": [
+              "event_id",
+              "occurred_at",
+              "device",
+              "page_view_id",
+              "name",
+              "job_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "event_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "occurred_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "device": {
+                "type": "string",
+                "enum": [
+                  "mobile",
+                  "tablet",
+                  "desktop",
+                  "unknown"
+                ]
+              },
+              "page_view_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "name": {
+                "type": "string",
+                "enum": [
+                  "feedback_submitted"
+                ]
+              },
+              "job_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "rating": {
+                "type": "string",
+                "enum": [
+                  "positive",
+                  "negative"
+                ]
+              }
+            },
+            "required": [
+              "event_id",
+              "occurred_at",
+              "device",
+              "page_view_id",
+              "name",
+              "job_id",
+              "rating"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "ConsoleDevice": {
+        "type": "string",
+        "enum": [
+          "mobile",
+          "tablet",
+          "desktop",
+          "unknown"
+        ]
+      },
+      "ConsoleDownloadRequest": {
+        "type": "object",
+        "properties": {
+          "action_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device": {
+            "type": "string",
+            "enum": [
+              "mobile",
+              "tablet",
+              "desktop",
+              "unknown"
+            ]
+          }
+        },
+        "required": [
+          "action_id",
+          "device"
+        ],
+        "additionalProperties": false
+      },
+      "ConsoleDownloadResponse": {
+        "type": "object",
+        "properties": {
+          "download_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "action_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "recording": {
+            "type": "string",
+            "enum": [
+              "recorded",
+              "duplicate",
+              "disabled",
+              "unavailable"
+            ]
+          }
+        },
+        "required": [
+          "download_url",
+          "expires_at",
+          "action_id",
+          "recording"
+        ],
+        "additionalProperties": false
+      },
+      "ConsoleEnvironment": {
+        "type": "string",
+        "enum": [
+          "test",
+          "live",
+          "unclassified"
+        ]
+      },
+      "ConsoleEventReceipt": {
+        "type": "object",
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "recording": {
+            "type": "string",
+            "enum": [
+              "recorded",
+              "duplicate",
+              "disabled"
+            ]
+          }
+        },
+        "required": [
+          "event_id",
+          "recording"
+        ],
+        "additionalProperties": false
+      },
+      "ConsoleRole": {
+        "type": "string",
+        "enum": [
+          "analyst",
+          "finance",
+          "administrator"
+        ]
+      },
+      "ConsoleSession": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "analyst",
+                "finance",
+                "administrator"
+              ]
+            }
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "analytics:read",
+                "finance:read"
+              ]
+            }
+          },
+          "environment": {
+            "type": "string",
+            "enum": [
+              "test",
+              "live",
+              "unclassified"
+            ]
+          },
+          "collection_enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "user_id",
+          "roles",
+          "permissions",
+          "environment",
+          "collection_enabled"
+        ],
+        "additionalProperties": false
+      },
       "HealthResponse": {
         "type": "object",
         "properties": {
@@ -4312,6 +4680,1402 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST or INVALID_PROMPT; webhook signature failures also return 400.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED or internal INVALID_SIGNATURE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND, including resources owned by another user.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED. Retry-After indicates the retry delay in seconds.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "Seconds before retry."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR; details are not exposed.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "GENERATION_DISABLED or SERVICE_UNAVAILABLE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/session": {
+      "get": {
+        "operationId": "getConsoleSession",
+        "summary": "Current server-controlled administrator permissions; audited and checked on every request",
+        "tags": [
+          "Vercel BFF"
+        ],
+        "security": [
+          {
+            "SupabaseBearer": []
+          }
+        ],
+        "x-implementation-status": "local-implementation-requires-configured-services",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsoleSession"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST or INVALID_PROMPT; webhook signature failures also return 400.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED or internal INVALID_SIGNATURE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ACCOUNT_RESTRICTED or FORBIDDEN (no current administrator permission).",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED. Retry-After indicates the retry delay in seconds.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "Seconds before retry."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR; details are not exposed.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "GENERATION_DISABLED or SERVICE_UNAVAILABLE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/analytics/events": {
+      "post": {
+        "operationId": "recordConsoleEvent",
+        "summary": "Bounded lower-trust browser observation; owner and versions resolved server-side",
+        "description": "Never submit secrets, photographs, prompts or arbitrary properties. Only enabled catalog tools may be exposed/selected. Client observations do not prove device filesystem saves. Duplicate event/action keys do not inflate reports. Collection defaults disabled; old periods are never backfilled with zero.",
+        "tags": [
+          "Vercel BFF"
+        ],
+        "security": [
+          {
+            "SupabaseBearer": []
+          }
+        ],
+        "x-implementation-status": "local-implementation-requires-configured-services",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsoleBrowserEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsoleEventReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST or INVALID_PROMPT; webhook signature failures also return 400.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED or internal INVALID_SIGNATURE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND, including resources owned by another user.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "IMAGE_NOT_READY, IMAGE_IN_USE, IDEMPOTENCY_CONFLICT, JOB_NOT_CANCELLABLE or UNSUPPORTED_CAPABILITY.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "INVALID_REQUEST: request stream, uploaded media, or normalized asset exceeds the configured byte limit.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "INVALID_REQUEST: a JSON endpoint requires Content-Type application/json.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED. Retry-After indicates the retry delay in seconds.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "Seconds before retry."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR; details are not exposed.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "GENERATION_DISABLED or SERVICE_UNAVAILABLE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/images/{id}/download": {
+      "post": {
+        "operationId": "recordedResultDownload",
+        "summary": "Explicit owned successful-result download, with durable save-behavior receipt",
+        "description": "action_id is stable across retries. Records only after URL signing; does not prove local filesystem save. A post-sign telemetry failure returns recording=unavailable and leaves a durable pending intent. GET remains compatible and excluded from save metrics.",
+        "tags": [
+          "Vercel BFF"
+        ],
+        "security": [
+          {
+            "SupabaseBearer": []
+          }
+        ],
+        "x-implementation-status": "local-implementation-requires-configured-services",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsoleDownloadRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsoleDownloadResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST or INVALID_PROMPT; webhook signature failures also return 400.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED or internal INVALID_SIGNATURE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND, including resources owned by another user.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "IMAGE_NOT_READY, IMAGE_IN_USE, IDEMPOTENCY_CONFLICT, JOB_NOT_CANCELLABLE or UNSUPPORTED_CAPABILITY.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "INVALID_REQUEST: request stream, uploaded media, or normalized asset exceeds the configured byte limit.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "INVALID_REQUEST: a JSON endpoint requires Content-Type application/json.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED. Retry-After indicates the retry delay in seconds.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "Seconds before retry."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR; details are not exposed.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "GENERATION_DISABLED or SERVICE_UNAVAILABLE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "downloadImage",
+        "summary": "Signed attachment download for owned asset",
+        "tags": [
+          "Vercel BFF"
+        ],
+        "security": [
+          {
+            "SupabaseBearer": []
+          }
+        ],
+        "x-implementation-status": "local-implementation-requires-configured-services",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DownloadResponse"
                 }
               }
             }
@@ -5945,300 +7709,6 @@
         }
       }
     },
-    "/api/images/{id}/download": {
-      "get": {
-        "operationId": "downloadImage",
-        "summary": "Signed attachment download for owned asset",
-        "tags": [
-          "Vercel BFF"
-        ],
-        "security": [
-          {
-            "SupabaseBearer": []
-          }
-        ],
-        "x-implementation-status": "local-implementation-requires-configured-services",
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "required": true,
-            "name": "id",
-            "in": "path"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "headers": {
-              "X-Request-ID": {
-                "description": "Trace UUID.",
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "X-Contract-Version": {
-                "description": "Protocol version.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "1.0.0"
-                  ]
-                }
-              },
-              "Cache-Control": {
-                "description": "Private responses are not cached.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "no-store"
-                  ]
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DownloadResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "INVALID_REQUEST or INVALID_PROMPT; webhook signature failures also return 400.",
-            "headers": {
-              "X-Request-ID": {
-                "description": "Trace UUID.",
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "X-Contract-Version": {
-                "description": "Protocol version.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "1.0.0"
-                  ]
-                }
-              },
-              "Cache-Control": {
-                "description": "Private responses are not cached.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "no-store"
-                  ]
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "UNAUTHORIZED or internal INVALID_SIGNATURE.",
-            "headers": {
-              "X-Request-ID": {
-                "description": "Trace UUID.",
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "X-Contract-Version": {
-                "description": "Protocol version.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "1.0.0"
-                  ]
-                }
-              },
-              "Cache-Control": {
-                "description": "Private responses are not cached.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "no-store"
-                  ]
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "NOT_FOUND, including resources owned by another user.",
-            "headers": {
-              "X-Request-ID": {
-                "description": "Trace UUID.",
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "X-Contract-Version": {
-                "description": "Protocol version.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "1.0.0"
-                  ]
-                }
-              },
-              "Cache-Control": {
-                "description": "Private responses are not cached.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "no-store"
-                  ]
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "RATE_LIMITED. Retry-After indicates the retry delay in seconds.",
-            "headers": {
-              "X-Request-ID": {
-                "description": "Trace UUID.",
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "X-Contract-Version": {
-                "description": "Protocol version.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "1.0.0"
-                  ]
-                }
-              },
-              "Cache-Control": {
-                "description": "Private responses are not cached.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "no-store"
-                  ]
-                }
-              },
-              "Retry-After": {
-                "schema": {
-                  "type": "integer",
-                  "minimum": 1
-                },
-                "description": "Seconds before retry."
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "INTERNAL_ERROR; details are not exposed.",
-            "headers": {
-              "X-Request-ID": {
-                "description": "Trace UUID.",
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "X-Contract-Version": {
-                "description": "Protocol version.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "1.0.0"
-                  ]
-                }
-              },
-              "Cache-Control": {
-                "description": "Private responses are not cached.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "no-store"
-                  ]
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "GENERATION_DISABLED or SERVICE_UNAVAILABLE.",
-            "headers": {
-              "X-Request-ID": {
-                "description": "Trace UUID.",
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              },
-              "X-Contract-Version": {
-                "description": "Protocol version.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "1.0.0"
-                  ]
-                }
-              },
-              "Cache-Control": {
-                "description": "Private responses are not cached.",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "no-store"
-                  ]
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/edit": {
       "post": {
         "operationId": "createEdit",
@@ -6413,7 +7883,7 @@
             }
           },
           "403": {
-            "description": "ACCOUNT_RESTRICTED.",
+            "description": "ACCOUNT_RESTRICTED or FORBIDDEN (no current administrator permission).",
             "headers": {
               "X-Request-ID": {
                 "description": "Trace UUID.",
@@ -8589,7 +10059,7 @@
             }
           },
           "403": {
-            "description": "ACCOUNT_RESTRICTED.",
+            "description": "ACCOUNT_RESTRICTED or FORBIDDEN (no current administrator permission).",
             "headers": {
               "X-Request-ID": {
                 "description": "Trace UUID.",

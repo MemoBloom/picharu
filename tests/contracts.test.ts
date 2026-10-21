@@ -181,11 +181,12 @@ describe('generated OpenAPI document', () => {
     const expected: Record<string, string[]> = {
       '/api/health': ['get'], '/api/tools': ['get'], '/api/me': ['get'],
       '/api/images/upload-url': ['post'], '/api/images/complete': ['post'],
-      '/api/images/{id}': ['get', 'delete'], '/api/images/{id}/download': ['get'],
+      '/api/images/{id}': ['get', 'delete'], '/api/images/{id}/download': ['get', 'post'],
       '/api/edit': ['post'], '/api/jobs': ['get'], '/api/jobs/{id}': ['get'],
       '/api/jobs/{id}/cancel': ['post'], '/api/recommend': ['post'], '/api/credits': ['get'],
       '/api/credit-packages': ['get'], '/api/checkout': ['post'], '/api/orders': ['get'],
       '/api/stripe/webhook': ['post'],
+      '/api/admin/session': ['get'], '/api/analytics/events': ['post'],
     };
     for (const [path, methods] of Object.entries(expected)) {
       for (const method of methods) expect(generated.paths?.[path]).toHaveProperty(method);
@@ -221,7 +222,7 @@ describe('generated OpenAPI document', () => {
     }
     visit(generated);
     expect(new Set(operationIds).size).toBe(operationIds.length);
-    expect(operationIds).toHaveLength(23);
+    expect(operationIds).toHaveLength(26);
   });
 
   it('documents real body-limit, media-type and unavailable responses plus versioned health', () => {

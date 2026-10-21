@@ -4,7 +4,7 @@ import { CONTRACT_VERSION,type ErrorCode } from '@picjp/contracts';
 export class ApiError extends Error{
  constructor(public code:z.infer<typeof ErrorCode>,public status=400,public retryable=false,public retryAfter?:number){super(code);}
 }
-export const errorStatus:Record<string,number>={INVALID_REQUEST:400,NOT_FOUND:404,IMAGE_NOT_READY:409,IMAGE_IN_USE:409,INSUFFICIENT_CREDITS:402,IDEMPOTENCY_CONFLICT:409,JOB_NOT_CANCELLABLE:409,UNSUPPORTED_CAPABILITY:409,ACCOUNT_RESTRICTED:403,PAYMENT_MISMATCH:409};
+export const errorStatus:Record<string,number>={INVALID_REQUEST:400,FORBIDDEN:403,NOT_FOUND:404,IMAGE_NOT_READY:409,IMAGE_IN_USE:409,INSUFFICIENT_CREDITS:402,IDEMPOTENCY_CONFLICT:409,JOB_NOT_CANCELLABLE:409,UNSUPPORTED_CAPABILITY:409,ACCOUNT_RESTRICTED:403,PAYMENT_MISMATCH:409};
 export function requestId(request:Request){const v=request.headers.get('X-Request-ID');return v&&z.string().uuid().safeParse(v).success?v:randomUUID();}
 export function response(data:unknown,id:string,status=200){return Response.json(data,{status,headers:{'Cache-Control':'no-store','X-Request-ID':id,'X-Contract-Version':CONTRACT_VERSION}});}
 export function failure(err:unknown,id:string){

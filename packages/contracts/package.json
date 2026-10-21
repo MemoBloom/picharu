@@ -1,1 +1,1 @@
-{"name":"@picjp/contracts","version":"1.1.0","private":true,"exports":"./src/index.ts","files":["src"],"dependencies":{"zod":"^3.25.0"}}
+{"name":"@picjp/contracts","version":"1.2.0","private":true,"exports":"./src/index.ts","files":["src"],"dependencies":{"zod":"^3.25.0"}}

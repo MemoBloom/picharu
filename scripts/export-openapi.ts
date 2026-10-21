@@ -57,7 +57,7 @@ export function createOpenApiDocument() {
     400: 'INVALID_REQUEST or INVALID_PROMPT; webhook signature failures also return 400.',
     401: 'UNAUTHORIZED or internal INVALID_SIGNATURE.',
     402: 'INSUFFICIENT_CREDITS.',
-    403: 'ACCOUNT_RESTRICTED.',
+    403: 'ACCOUNT_RESTRICTED or FORBIDDEN (no current administrator permission).',
     404: 'NOT_FOUND, including resources owned by another user.',
     409: 'IMAGE_NOT_READY, IMAGE_IN_USE, IDEMPOTENCY_CONFLICT, JOB_NOT_CANCELLABLE or UNSUPPORTED_CAPABILITY.',
     413: 'INVALID_REQUEST: request stream, uploaded media, or normalized asset exceeds the configured byte limit.',
@@ -113,6 +113,9 @@ export function createOpenApiDocument() {
   publicRoute({ method: 'get', path: '/api/health', operationId: 'health', summary: 'BFF health without configuration details', output: Health, public: true });
   publicRoute({ method: 'get', path: '/api/tools', operationId: 'listTools', summary: 'All 20 tool definitions and current availability', output: ToolList, public: true });
   publicRoute({ method: 'get', path: '/api/me', operationId: 'getMe', summary: 'Verified current user', output: Me });
+  publicRoute({ method: 'get', path: '/api/admin/session', operationId: 'getConsoleSession', summary: 'Current server-controlled administrator permissions; audited and checked on every request', output: schemas.ConsoleSession, errors: [400,401,403,429,500] });
+  publicRoute({ method: 'post', path: '/api/analytics/events', operationId: 'recordConsoleEvent', summary: 'Bounded lower-trust browser observation; owner and versions resolved server-side', input: schemas.ConsoleBrowserEvent, output: schemas.ConsoleEventReceipt, errors: [400,401,404,409,429,500], description: 'Never submit secrets, photographs, prompts or arbitrary properties. Only enabled catalog tools may be exposed/selected. Client observations do not prove device filesystem saves. Duplicate event/action keys do not inflate reports. Collection defaults disabled; old periods are never backfilled with zero.' });
+  publicRoute({ method: 'post', path: '/api/images/{id}/download', operationId: 'recordedResultDownload', summary: 'Explicit owned successful-result download, with durable save-behavior receipt', input: schemas.ConsoleDownloadRequest, output: schemas.ConsoleDownloadResponse, errors: [400,401,404,409,429,500], description: 'action_id is stable across retries. Records only after URL signing; does not prove local filesystem save. A post-sign telemetry failure returns recording=unavailable and leaves a durable pending intent. GET remains compatible and excluded from save metrics.' });
   publicRoute({ method: 'post', path: '/api/images/upload-url', operationId: 'createUpload', summary: 'Create private staging upload', input: schemas.UploadRequest, output: schemas.UploadResponse, status: 201, description: 'JPEG/PNG/WebP <=20MiB. Upload bytes directly to the signed private PUT URL with required_headers; PUT expires in five minutes.' });
   publicRoute({ method: 'post', path: '/api/images/complete', operationId: 'completeUpload', summary: 'Validate and freeze the uploaded asset', input: schemas.ImageCompleteRequest, output: schemas.ImageView, errors: [400, 401, 404, 409, 429, 500], description: 'Decode <=24M pixels, normalize EXIF/sRGB, freeze a private server-written PNG and <=768px/1MiB JPEG analysis image. Repeated completion reuses the first fixed version. HEIC/animation unsupported in v1.' });
   publicRoute({ method: 'get', path: '/api/images/{id}', operationId: 'getImage', summary: 'Owned fixed image and short-lived preview', output: schemas.ImageView });

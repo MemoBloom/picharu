@@ -1,6 +1,6 @@
 import { getBrowserAuth } from './auth';
 import { z } from 'zod';
-import { ToolView,ImageView,JobView,CreditView,PublicRecommendation,OrderView,CreditPackage,CheckoutResponse,EditAccepted,UploadResponse,ErrorEnvelope,DeleteImageResponse,DownloadResponse } from '@picjp/contracts';
+import { ToolView,ImageView,JobView,CreditView,PublicRecommendation,OrderView,CreditPackage,CheckoutResponse,EditAccepted,UploadResponse,ErrorEnvelope,DeleteImageResponse,DownloadResponse,ConsoleSession,ConsoleEventReceipt,ConsoleDownloadResponse } from '@picjp/contracts';
 export class UserFacingError extends Error{}
 export class ApiError extends Error{constructor(public status:number,public code:string,public retryable=false,public requestId?:string,public retryAfter?:number){super(code);}}
 const messages:Record<string,string>={UNAUTHORIZED:'ログインの有効期限が切れました。もう一度ログインしてください。',NOT_FOUND:'見つからないか、有効期限が切れています。',INVALID_REQUEST:'入力内容と写真の形式を確認してください。',INVALID_PROMPT:'編集内容を選び直してください。',IMAGE_NOT_READY:'写真を確認しています。アップロード完了後にお試しください。',IMAGE_IN_USE:'処理中の写真です。編集が終わってから削除してください。',INSUFFICIENT_CREDITS:'クレジットが足りません。残高をご確認ください。',IDEMPOTENCY_CONFLICT:'編集内容が変わっています。内容を確認して、あらためて操作してください。',JOB_NOT_CANCELLABLE:'すでに処理が始まっているため、キャンセルできません。',UNSUPPORTED_CAPABILITY:'この写真の枚数や設定にはまだ対応していません。設定をご確認ください。',GENERATION_DISABLED:'ただいま編集機能を準備中です。公開までお待ちください。',RATE_LIMITED:'操作が続いています。少し時間をおいてお試しください。',SERVICE_UNAVAILABLE:'ただいま接続できません。時間をおいてお試しください。',ACCOUNT_RESTRICTED:'アカウントの利用が制限されています。お支払い状況をご確認ください。',INTERNAL_ERROR:'処理を完了できませんでした。時間をおいてお試しください。',PAYMENT_MISMATCH:'お支払い状況を確認できませんでした。注文履歴をご確認ください。',INVALID_RESPONSE:'情報を読み込めませんでした。再読み込みしてください。'};
@@ -11,7 +11,9 @@ function responseSchema(path:string,method:string):z.ZodTypeAny|undefined{
  if(p==='/api/tools')return z.object({tools:z.array(ToolView)});
  if(p==='/api/images/upload-url')return UploadResponse;
  if(p==='/api/images/complete')return ImageView;
- if(/^\/api\/images\/[^/]+\/download$/.test(p))return DownloadResponse;
+ if(/^\/api\/images\/[^/]+\/download$/.test(p))return method==='POST'?ConsoleDownloadResponse:DownloadResponse;
+ if(p==='/api/admin/session')return ConsoleSession;
+ if(p==='/api/analytics/events')return ConsoleEventReceipt;
  if(/^\/api\/images\/[^/]+$/.test(p))return method==='DELETE'?DeleteImageResponse:ImageView;
  if(p==='/api/edit')return EditAccepted;
  if(p==='/api/jobs')return z.object({items:z.array(JobView),next_cursor:z.string().nullable()});

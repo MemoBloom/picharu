@@ -88,6 +88,7 @@ async function main(){
    grant execute on function auth.uid() to anon,authenticated,service_role;`);
   await db.query(await readFile('supabase/migrations/202610190001_web_backend.sql','utf8'));
   await db.query(await readFile('supabase/migrations/202610200400_worker.sql','utf8'));
+  await db.query(await readFile('supabase/migrations/202610210100_console_foundation.sql','utf8'));
   await db.query('insert into auth.users(id) values($1)',[owner]);await seedImage(image);
   const cs=await clients(20);
   await db.query('update credit_accounts set available=100 where owner_id=$1',[owner]);
@@ -191,6 +192,48 @@ async function main(){
   check((await account()).available,0,'later concurrent partial refund does not reverse dispute entitlement withdrawal');
   check(Number((await db.query("select count(*) as n from credit_ledger where reference_id=$1 and kind='revoke'",[earlyCases.disputed.id])).rows[0].n),1,'dispute and later partial refunds revoke once');
   await closeClients(earlyClients);
+  // Console v1: independent sessions genuinely overlap behind the exact locks
+  // taken by ingestion/finalization. Attempts/polls/retries must not inflate use.
+  await db.query("update console_settings set environment='test',collection_enabled=true");
+  const cc=await clients(20);
+  const exposure={event_id:randomUUID(),name:'tool_exposed',page_view_id:randomUUID(),exposure_id:randomUUID(),tool_id:'remove_person',device:'desktop',occurred_at:new Date().toISOString(),visible_ms:1000,visible_ratio:0.5};
+  await db.query('select pg_advisory_lock(hashtextextended($1::text,37))',[exposure.event_id]);
+  const eventPending=Promise.allSettled(cc.map(c=>rpc(c,'app_console_record_event',[owner,JSON.stringify(exposure)])));
+  const eventDeadline=Date.now()+5000;let eventWaiting=0;
+  try {
+   while(Date.now()<eventDeadline){
+    eventWaiting=Number((await db.query("select count(*) n from pg_stat_activity where datname=$1 and application_name='picjp-concurrency-test' and wait_event='advisory'",[database])).rows[0].n);
+    if(eventWaiting===cc.length)break;await new Promise(resolve=>setTimeout(resolve,20));
+   }
+   check(eventWaiting,20,'20 exact event replays overlap on their ingestion lock');
+  }finally{await db.query('select pg_advisory_unlock(hashtextextended($1::text,37))',[exposure.event_id]);}
+  const eventOutcomes=await eventPending;
+  check(eventOutcomes.every(r=>r.status==='fulfilled'),true,'all exact event replays succeed');
+  check(eventOutcomes.filter(r=>r.status==='fulfilled'&&r.value.recording==='recorded').length,1,'only one event replay is recorded');
+  const semantic=await Promise.all(cc.map(c=>rpc(c,'app_console_record_event',[owner,JSON.stringify({...exposure,event_id:randomUUID()})])));
+  check(semantic.every(r=>r.recording==='duplicate'),true,'new event IDs cannot duplicate the same page/tool exposure');
+  const consoleJob=randomUUID(),consoleImage=randomUUID(),actionId=randomUUID();
+  await db.query(`insert into edit_jobs(id,owner_id,tool_id,idempotency_key,request_hash,inputs,snapshot,credits_reserved) values($1,$2,'remove_person',$3,$4,'[]','{}',3)`,[consoleJob,owner,randomUUID(),hash]);
+  await db.query(`insert into images(id,owner_id,status,source_kind,source_job_id,storage_key,preview_key,sha256,mime_type,bytes,width,height,expires_at) values($1,$2,'ready','generated',$3,$4,$5,$6,'image/png',10,2,2,now()+interval '7 days')`,[consoleImage,owner,consoleJob,`results/${consoleImage}.png`,`results/${consoleImage}.jpg`,hash]);
+  await db.query("update edit_jobs set status='completed',result_image_id=$2,completed_at=now() where id=$1",[consoleJob,consoleImage]);
+  const beginActions=await Promise.all(cc.map(c=>rpc(c,'app_console_begin_download',[owner,consoleImage,actionId,'desktop'])));
+  check(beginActions.every(r=>r.capture),true,'20 concurrent download intents succeed');
+  check(Number((await db.query('select count(*) n from console_download_actions where action_id=$1',[actionId])).rows[0].n),1,'concurrent intents share one durable action');
+  await db.query('begin');await db.query('select * from console_download_actions where action_id=$1 for update',[actionId]);
+  const downloadPending=Promise.allSettled(cc.map(c=>rpc(c,'app_console_finish_download',[owner,actionId,true])));
+  const downloadDeadline=Date.now()+5000;let downloadWaiting=0;
+  try{
+   while(Date.now()<downloadDeadline){
+    downloadWaiting=Number((await db.query("select count(*) n from pg_stat_activity where datname=$1 and application_name='picjp-concurrency-test' and wait_event_type='Lock'",[database])).rows[0].n);
+    if(downloadWaiting===cc.length)break;await new Promise(resolve=>setTimeout(resolve,20));
+   }
+   check(downloadWaiting,20,'20 signed-link confirmations overlap on the action row');
+  }finally{await db.query('commit');}
+  const downloadOutcomes=await downloadPending;
+  check(downloadOutcomes.every(r=>r.status==='fulfilled'),true,'all signed-link replays succeed');
+  check(downloadOutcomes.filter(r=>r.status==='fulfilled'&&r.value.recording==='recorded').length,1,'one save-behavior event for 20 signed-link replays');
+  check(Number((await db.query("select count(*) n from analytics_events where name='download_url_issued' and job_id=$1",[consoleJob])).rows[0].n),1,'only one durable save event after concurrency');
+  await closeClients(cc);
   console.log(`Native PostgreSQL independent-session concurrency passed: ${assertions} assertions; 20 same-key creates, 20 competing balances, 20 cancellations, 20 paid events, 30 delete/create races (${createdFirst} creation wins / ${deletedFirst} deletion wins); full/partial/disputed known-Charge facts and later reversal races.`);
  }finally{
   if(db)await db.query('rollback').catch(()=>{});
