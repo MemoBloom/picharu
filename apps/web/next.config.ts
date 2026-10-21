@@ -3,6 +3,7 @@ const config:NextConfig={
  transpilePackages:['@picjp/contracts','@picjp/tool-config','@picjp/prompts'],
  poweredByHeader:false,
  devIndicators:false,
+ outputFileTracingExcludes:{'/*':['./.local/**/*']},
  headers:async()=>[
   {source:'/email-assets/v1/:asset*',headers:[
    {key:'Access-Control-Allow-Origin',value:'*'},
