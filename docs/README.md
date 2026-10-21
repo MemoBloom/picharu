@@ -26,3 +26,5 @@
 - [双看板 Supabase / Vercel 部署步骤](backend/CONSOLE_DEPLOYMENT.md)：迁移顺序、只读盘点、管理员授权与采集启用边界。
 
 - [双看板合入main验证](verification/CONSOLE_MAIN_MERGE.md)：实际合并、前端WIP保护、认证/邮件及跨模块回归。
+- [picmoko品牌UI合并验证](verification/PICMOKO_UI_MAIN_MERGE.md)：云朵/A1字标、日文字体、移动编辑、Google图标与main看板的整合。
+- 网页字体来源/OFL/摘要：apps/web/public/fonts/picmoko/README.md；Google图标来源：apps/web/public/auth/README.md。
