@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { PersonalOverview, PersonalLedger, PersonalWorks } from './personal-console';
 import consoleStyles from './personal-console.module.css';
+import { LogoutButton } from './logout-button';
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../lib/api';
 import { useAuth } from '../lib/auth';
@@ -35,7 +36,7 @@ const accountTabs = [['overview', 'ご利用状況'], ['works', '私の作品'],
 type AccountTab = typeof accountTabs[number][0];
 export function AccountPage() { const { user } = useAuth(); return <AuthGate><AccountContent key={user?.id ?? 'anonymous'} /></AuthGate>; }
 function AccountContent() {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const query = useSearchParams();
   const requestedTab = query.get('tab');
   const [tab, setTab] = useState<AccountTab>(() => accountTabs.some(([value]) => value === requestedTab) ? requestedTab as AccountTab : 'overview');
@@ -43,7 +44,7 @@ function AccountContent() {
   const [orders, setOrders] = useState<Order[]>([]); const [cursor, setCursor] = useState<string | null>(null);
   const [loadedOrders, setLoadedOrders] = useState(false); const [loadingOrders, setLoadingOrders] = useState(false);
   const [error, setError] = useState<unknown>(null); const [orderError, setOrderError] = useState<unknown>(null);
-  const [refresh, setRefresh] = useState(0); const [signingOut, setSigningOut] = useState(false);
+  const [refresh, setRefresh] = useState(0);
   const orderController = useRef<AbortController | null>(null);
   useEffect(() => { setTab(accountTabs.some(([value]) => value === requestedTab) ? requestedTab as AccountTab : 'overview'); }, [requestedTab]);
   useEffect(() => {
@@ -60,14 +61,13 @@ function AccountContent() {
   }
   useEffect(() => { if (tab === 'orders' && !loadedOrders && !loadingOrders) void loadOrders(); }, [tab, user?.id]);
   function chooseTab(value: typeof tab) { setTab(value); window.history.replaceState(null, '', `/ja/account?tab=${value}`); }
-  async function logout() { setSigningOut(true); setError(null); try { await signOut(); window.location.assign('/ja/'); } catch (value) { setError(value); setSigningOut(false); } }
-  return <div className={`container page-stack stack account-page ${consoleStyles.accountShell}`}><PageHeading title="マイアカウント" description="クレジットとお支払いの状況を確認できます。" />
+  return <div className={`container page-stack stack account-page ${consoleStyles.accountShell}`}><div className="account-page-heading"><PageHeading title="マイアカウント" description="クレジットとお支払いの状況を確認できます。" /><LogoutButton/></div>
     <div className={`tabs ${consoleStyles.tabs}`} role="tablist" aria-label="アカウントメニュー">{accountTabs.map(([value, label]) => <button key={value} id={`tab-${value}`} className={tab === value ? 'tab active' : 'tab'} type="button" role="tab" tabIndex={tab === value ? 0 : -1} aria-selected={tab === value} aria-controls={`panel-${value}`} onClick={() => chooseTab(value)} onKeyDown={event => { const values = accountTabs.map(([value]) => value); const current = values.indexOf(tab); const index = event.key === 'ArrowRight' ? (current + 1) % values.length : event.key === 'ArrowLeft' ? (current + values.length - 1) % values.length : event.key === 'Home' ? 0 : event.key === 'End' ? values.length - 1 : -1; if (index >= 0) { event.preventDefault(); chooseTab(values[index]); const button = document.getElementById(`tab-${values[index]}`); button?.focus(); button?.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } }}>{label}</button>)}</div>
     {!!error && <ErrorNotice error={error} onRetry={() => setRefresh(value => value + 1)} />}
     <section className="surface stack" role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>
       {tab === 'overview' && <PersonalOverview />}
       {tab === 'works' && <PersonalWorks />}
-      {tab === 'profile' && <><h2>ログイン情報</h2>{me ? <dl className="profile-details"><div><dt>メールアドレス</dt><dd className="break-anywhere">{me.email ?? 'メールアドレスの登録なし'}</dd></div><div><dt>表示言語</dt><dd>日本語</dd></div></dl> : !error && <Loading />}<p className="muted">メールアドレスの変更・アカウント削除については、ヘルプをご確認ください。</p><div className="button-row"><button type="button" className="button button-secondary" disabled={signingOut} onClick={logout}>{signingOut ? 'ログアウトしています…' : 'ログアウト'}</button><Link href="/ja/help" className="text-link">ヘルプを見る</Link></div></>}
+      {tab === 'profile' && <><h2>ログイン情報</h2>{me ? <dl className="profile-details"><div><dt>メールアドレス</dt><dd className="break-anywhere">{me.email ?? 'メールアドレスの登録なし'}</dd></div><div><dt>表示言語</dt><dd>日本語</dd></div></dl> : !error && <Loading />}<p className="muted">メールアドレスの変更・アカウント削除については、ヘルプをご確認ください。</p><Link href="/ja/help" className="text-link">ヘルプを見る</Link></>}
       {tab === 'credits' && <><h2>現在のクレジット</h2>{credits ? <><div className="credit-grid"><div><span className="muted">利用可能</span><strong className="credit-number">{credits.available.toLocaleString('ja-JP')}</strong></div><div><span className="muted">処理中の予約分</span><strong className="credit-number">{credits.reserved.toLocaleString('ja-JP')}</strong></div></div>{credits.status === 'restricted' && <Notice tone="error">現在、このアカウントでは新しい編集を開始できません。購入履歴をご確認のうえ、ヘルプをご覧ください。</Notice>}<p className="muted">処理中の予約分は、新しい編集に利用できません。表示は直近に確認した残高です。</p><div className="button-row"><Link href="/ja/pricing?return_to=%2Fja%2Faccount%3Ftab%3Dcredits" className="button">クレジットを追加する</Link><button type="button" className="button button-secondary" onClick={() => setRefresh(value => value + 1)}>残高を更新</button></div></> : !error && <Loading />}</>}
       {tab === 'credits' && <PersonalLedger />}
       {tab === 'orders' && <><div className="section-row"><h2>購入履歴</h2><button type="button" className="text-button" onClick={() => void loadOrders()} disabled={loadingOrders}>更新</button></div>{!!orderError && <ErrorNotice error={orderError} onRetry={() => void loadOrders(orders.length > 0)} />}{orders.length ? <OrderList orders={orders} /> : loadedOrders ? <div className="empty-state"><h3>購入履歴はまだありません</h3><p>購入したクレジットとお支払いの状況がここに表示されます。</p><Link href="/ja/pricing" className="button button-secondary">料金を見る</Link></div> : null}{loadingOrders && <Loading label="購入履歴を読み込んでいます" />}{cursor && !loadingOrders && <button className="button button-secondary" type="button" onClick={() => void loadOrders(true)}>もっと見る</button>}</>}

@@ -16,6 +16,7 @@ export function getBrowserAuth(){
 type AuthState={user:User|null;ready:boolean;configured:boolean;signOut:()=>Promise<void>};
 const AuthContext=createContext<AuthState>({user:null,ready:false,configured:false,signOut:async()=>{}});
 export function AuthProvider({children}:{children:ReactNode}){
+ const signOutFlight=useRef<{owner:string|null;promise:Promise<void>}|null>(null);
  const [user,setUser]=useState<User|null>(null);const [ready,setReady]=useState(false);const previous=useRef<string|null>(null);const [configured,setConfigured]=useState(false);
  useEffect(()=>{let alive=true;const client=getBrowserAuth();setConfigured(!!client);let revision=0;let reauthRequired:string|null=null;
  const apply=(next:User|null)=>{if(!alive)return;if(previous.current&&previous.current!==next?.id)clearUserState(previous.current);previous.current=next?.id??null;setUser(next);setReady(true);};
@@ -29,7 +30,12 @@ export function AuthProvider({children}:{children:ReactNode}){
  client.auth.getSession().then(({data,error})=>{if(alive&&revision===initialRevision)apply(error?null:data.session?.user??null);}).catch(()=>{if(revision===initialRevision)apply(null);});
  return()=>{alive=false;subscription.unsubscribe();window.removeEventListener('picjp:auth-required',reauthenticate);window.removeEventListener('picjp:auth-complete',completed);};
  },[]);
- async function signOut(){const client=getBrowserAuth();if(user)clearUserState(user.id);if(client){const {error}=await client.auth.signOut();if(error)throw new Error('ログアウトできませんでした。もう一度お試しください。');}previous.current=null;setUser(null);}
+ function signOut(){
+  const owner=user?.id??previous.current;
+  if(signOutFlight.current?.owner===owner)return signOutFlight.current.promise;
+  const task=(async()=>{const client=getBrowserAuth();if(client){const {error}=await client.auth.signOut();if(error)throw new Error('ログアウトできませんでした。もう一度お試しください。');}if(owner)clearUserState(owner);if(!previous.current||previous.current===owner){previous.current=null;setUser(null);}})().finally(()=>{if(signOutFlight.current?.promise===task)signOutFlight.current=null;});
+  signOutFlight.current={owner,promise:task};return task;
+ }
  return <AuthContext.Provider value={{user,ready,configured,signOut}}>{children}</AuthContext.Provider>;
 }
 const subscribeToHydration=()=>()=>{};

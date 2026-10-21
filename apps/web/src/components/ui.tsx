@@ -13,6 +13,7 @@ export function Icon({name='image',size=24}:{name?:string;size?:number}){
  home:<><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-8h6v8"/></>,
  tools:<><rect x="3" y="7" width="18" height="14" rx="3"/><path d="M8 7V4h8v3M3 12h18M10 12v3h4v-3"/></>,
  person:<><circle cx="12" cy="7" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></>,
+ logout:<><path d="M9 4H4v16h5M9 12h12m-4-4 4 4-4 4"/></>,
  sparkle:<><path d="m12 3 2.7 6.3L21 12l-6.3 2.7L12 21l-2.7-6.3L3 12l6.3-2.7zM20 2v4M18 4h4"/></>,
  palette:<><path d="M12 3a9 9 0 0 0 0 18h1a2 2 0 0 0 1.6-3.2 1.7 1.7 0 0 1 1.4-2.7h2a4 4 0 0 0 4-4A10 10 0 0 0 12 3z"/><circle cx="7" cy="10" r=".7"/><circle cx="10" cy="6.5" r=".7"/><circle cx="15" cy="7" r=".7"/></>,
  paw:<><ellipse cx="12" cy="16" rx="5" ry="4"/><ellipse cx="5" cy="9" rx="2" ry="3"/><ellipse cx="10" cy="5" rx="2" ry="3"/><ellipse cx="16" cy="5" rx="2" ry="3"/><ellipse cx="21" cy="10" rx="2" ry="3"/></>,
