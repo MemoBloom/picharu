@@ -8,7 +8,7 @@ import { api, errorMessage } from '../lib/api';
 import type { Tool } from '../lib/types';
 import { findPublicToolContent, publicToolContent, toolCategories, type PublicToolContent } from '../lib/tool-content';
 import { Icon, Loading, Notice, PageHeading } from './ui';
-import { EffectComparison, ExampleNote, StyleCards } from './effect-showcase';
+import { ExampleNote, StyleCards } from './effect-showcase';
 import { styleOf, type EffectExample } from '../lib/effect-examples';
 
 function useToolCatalog() {
@@ -64,13 +64,13 @@ export function HomePage({ examples = [] }: { examples?: EffectExample[] }) {
   const { tools, error } = useToolCatalog();
   return <>
     <section className="hero container effect-home-hero">
-      <div className="hero-copy"><h1>いつもの写真に、<br />新しいわたしらしさ。</h1><p>仕上がりを見比べて、<br className="mobile-break" />好きなスタイルを見つけよう。</p>
+      <div className="hero-copy"><h1>いつもの写真に、<br />新しいわたしらしさ。</h1><p><span className="hero-copy-phrase">仕上がりを見比べて、</span><span className="hero-copy-phrase">好きなスタイルを見つけよう。</span></p>
         <div className="hero-actions"><Link className="button" href={examples.length ? '#style-inspiration' : '/ja/tools/ai_avatar'}>スタイルを見てみる<Icon name="arrow-right" size={18} /></Link><Link className="text-link" href="/ja/tools">すべてのツール<Icon name="arrow-right" size={18} /></Link></div>
         <p className="hero-footnote">説明や作例は、ログインせずにご覧いただけます。</p>
       </div>
-      <div className="hero-effect-preview">{examples.length ? <><EffectComparison example={examples[0]} priority initialMode="compare" /><ExampleNote examples={examples} /></> : <figure className="hero-figure"><Image src="/images/editorial-cat.png" alt="窓辺のやわらかな光を浴びる猫" width={1200} height={900} preload sizes="(max-width: 760px) calc(100vw - 40px), 50vw" /><figcaption>イメージ写真 · 公開用の仕上がり例を準備しています。</figcaption></figure>}</div>
+      <div className="hero-effect-preview"><figure className="hero-figure hero-source-figure"><Image src="/images/samples/cafe-woman-v1.webp" alt="カフェで頬に手を添える女性のサンプル原画像" width={1000} height={1000} preload sizes="(max-width: 700px) calc(100vw - 40px), 480px" /><figcaption><strong>サンプル原画像</strong><span>AIで作成した写真です。編集後の作例ではありません。</span></figcaption></figure></div>
     </section>
-    {examples.length > 0 && <section className="container style-inspiration" id="style-inspiration"><div className="section-heading"><div><h2>一枚の写真から、いろんな表情。</h2><p>同じ写真の試作例から、好きな雰囲気を探してみて。</p></div><Link className="text-link" href="/ja/tools/ai_avatar">すべてのスタイルを見る<Icon name="arrow-right" size={18} /></Link></div><StyleCards examples={examples.slice(0, 4)} /><ExampleNote examples={examples} /></section>}
+    {examples.length > 0 && <section className="container style-inspiration" id="style-inspiration"><div className="section-heading"><div><h2>スタイルの違いを、見比べて。</h2><p>こちらは別の原画像を使った試作例です。カードの小さな写真が元の画像です。</p></div><Link className="text-link" href="/ja/tools/ai_avatar">すべてのスタイルを見る<Icon name="arrow-right" size={18} /></Link></div><StyleCards examples={examples.slice(0, 4)} /><ExampleNote examples={examples} /></section>}
     <section className="container home-tools" aria-labelledby="tools-heading"><div className="section-heading"><h2 id="tools-heading">写真で、こんなことも。</h2><Link className="text-link" href="/ja/tools">すべてのツール<Icon name="arrow-right" size={18} /></Link></div>
       <CategoryTabs selected={category} onChange={setCategory} />
       <div className="tool-grid visual-tool-grid">{publicToolContent.filter(tool => tool.category_ja === category).map(tool => <ToolRow key={tool.tool_id} tool={tool} live={tools?.find(item => item.tool_id === tool.tool_id)} checked={tools !== null} examples={examples} />)}</div>

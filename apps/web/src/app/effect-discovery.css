@@ -4,7 +4,12 @@
 .effect-home-hero .hero-copy>p{font-size:17px;line-height:1.9;margin-top:20px}
 .effect-home-hero .hero-copy>p:not(.hero-footnote){text-wrap:balance}
 .effect-home-hero .hero-copy .hero-footnote{font-size:12px;color:var(--muted);margin-top:20px}
+.hero-copy-phrase{display:inline-block}
 .hero-effect-preview{min-width:0}
+.hero-source-figure{max-width:480px;margin:0 auto}
+.hero-source-figure img{width:100%;height:auto;aspect-ratio:1;object-fit:contain;border-radius:12px}
+.hero-source-figure figcaption{display:flex;flex-direction:column;gap:4px;font-size:12px;line-height:1.8;margin-top:12px;color:var(--muted)}
+.hero-source-figure figcaption strong{font-weight:700;color:var(--ink)}
 .effect-compare-media{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .effect-compare-media.mode-compare{grid-template-columns:repeat(2,minmax(0,1fr))}
 .effect-compare-media figure{min-width:0;position:relative;margin:0;height:370px}
