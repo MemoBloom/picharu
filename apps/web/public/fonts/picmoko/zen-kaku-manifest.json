@@ -1,0 +1,1706 @@
+{
+  "date": "2026-10-20",
+  "source": "https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New%3Awght%40400%3B700&display=swap",
+  "family": "Zen Kaku Gothic New",
+  "weights": [
+    400,
+    700
+  ],
+  "fontDisplay": "swap",
+  "files": [
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.2.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-aa81f03f5904.woff2",
+      "sha256": "aa81f03f5904c2124aea512923ef1705475f993b54839c5ad6274a3cdc73d792",
+      "bytes": 932
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.3.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-c2640685c0e4.woff2",
+      "sha256": "c2640685c0e4e6d50c0b3b3e365c874e8b3e4bc5fc4a80da757bd8509f81ded4",
+      "bytes": 7652
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.4.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-bb52a3f8a3be.woff2",
+      "sha256": "bb52a3f8a3beef7b3f5be60251b2a6beffdbb911e2692e52f727d40a85d79704",
+      "bytes": 1644
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.5.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-e7b22f077cab.woff2",
+      "sha256": "e7b22f077cabbb12e128173e3d4079b2f05540cfb38a40bf854604a59f457a6a",
+      "bytes": 16172
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.6.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-6be20473dcef.woff2",
+      "sha256": "6be20473dcefeb1aeba81d1a93fee6a1e0b331fbecc29ee3aa534d6502c5935f",
+      "bytes": 18228
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.7.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-1029e67c0e1f.woff2",
+      "sha256": "1029e67c0e1f8c6fcefb329ac1df73f69d564c54646c5a9800c4bab457d39a1d",
+      "bytes": 20332
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.8.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-264856e042c1.woff2",
+      "sha256": "264856e042c152b960c3095c3293b1a9dadce6c200027f37f24d13f78bb362ae",
+      "bytes": 18224
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.9.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-ae954b9a1f70.woff2",
+      "sha256": "ae954b9a1f70a81d6080116d8c21963e892490e388c6e05842abb8f657fc1246",
+      "bytes": 17568
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.10.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-6700a5f8e6d6.woff2",
+      "sha256": "6700a5f8e6d69a4162523b145b46df087a2f0af51c45f03a974e74a1c4d1c1e6",
+      "bytes": 19564
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.11.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-8c2cad560554.woff2",
+      "sha256": "8c2cad560554fba20762134b5cf4278faef17f52ad90409df458a8fe148fab96",
+      "bytes": 19640
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.12.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-3c97eade5803.woff2",
+      "sha256": "3c97eade5803f99ee5e1c4a20a765db7698bba5db9469bd1a308934085afdd9f",
+      "bytes": 16692
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.13.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-815c3274c3e1.woff2",
+      "sha256": "815c3274c3e17b99c5edb35b19647e54bc979ff1cea2672d3a582725a273212b",
+      "bytes": 15728
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.14.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-3addd90a5dc6.woff2",
+      "sha256": "3addd90a5dc63d87c6a99b1d72048c0af5ced33145fcc39e63f6b73c38ded1b6",
+      "bytes": 17016
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.15.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-3498b91d7f8b.woff2",
+      "sha256": "3498b91d7f8b4565d9cfe0dcbdf7bf1c453f124adb511f33296835f90f2fcfa5",
+      "bytes": 20040
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.16.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-95dd77a98087.woff2",
+      "sha256": "95dd77a980877683b266aada13e2edd4b0755d80250526616dedb648f14e11d2",
+      "bytes": 15904
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.17.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-efc858d0155b.woff2",
+      "sha256": "efc858d0155b998791749d102bf6267a0fdb1eda7c2e14642899ef22324446ff",
+      "bytes": 18364
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.18.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-cea37849d47b.woff2",
+      "sha256": "cea37849d47b83aecc982c465516674a128c31de355033e606793e4aa3810f33",
+      "bytes": 16740
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.19.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-2cdbbc575ef2.woff2",
+      "sha256": "2cdbbc575ef275269a01f59d01be5c73e6e9ebd0bfa327ca536c8ed9450e4810",
+      "bytes": 18432
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.20.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-3cba8044dec5.woff2",
+      "sha256": "3cba8044dec5500863bc2d6606041149cfbbf912cedabe4cf37c19997e3ea889",
+      "bytes": 14820
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.21.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-41de9dcc1ac0.woff2",
+      "sha256": "41de9dcc1ac012845d59e5077be6bce38015449bfa086401ac969b573c56ed10",
+      "bytes": 17436
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.22.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-4a957dec6bac.woff2",
+      "sha256": "4a957dec6bace6f8d44aa5523a2f994bdc2423940aa94318a8756224f3b0a135",
+      "bytes": 17132
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.23.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-ffae317e948d.woff2",
+      "sha256": "ffae317e948d263dc176755363b532a155b0957a8f69a6aba3415254e7c55a0b",
+      "bytes": 23548
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.24.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-d50dc6def08c.woff2",
+      "sha256": "d50dc6def08c0e92f67241c2d4bef66e65e3c9175edf433106fb6bf010617bf1",
+      "bytes": 20132
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.25.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-bfe13bc631d2.woff2",
+      "sha256": "bfe13bc631d28942cd485c31a87fb7ce94f1138d348efebb9770b560feb53804",
+      "bytes": 19124
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.26.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-230110aedc15.woff2",
+      "sha256": "230110aedc15cfa9382968c29fc02b07d1632dbe4ad12ff7819d4f653b364962",
+      "bytes": 14456
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.27.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-e51a808ee694.woff2",
+      "sha256": "e51a808ee69446c605f8f2e7d043b53ef3dc1ecacb4f09d713b6a846cfc1c921",
+      "bytes": 13812
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.28.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-edb2de9da42d.woff2",
+      "sha256": "edb2de9da42ddb3f2423a738e5669cb36860e00b1e401cdbf1d17b2c314a6284",
+      "bytes": 17612
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.29.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-5458c3e42488.woff2",
+      "sha256": "5458c3e42488f105baa4f9d75afba941a8c65fac655c66d1f77222f91e4e83a2",
+      "bytes": 15016
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.30.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-c7316a734e78.woff2",
+      "sha256": "c7316a734e78fc9901c78d5fd441413b043ed87a627ae3812e547cd7acac71f7",
+      "bytes": 19160
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.31.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-17976c1b5d5f.woff2",
+      "sha256": "17976c1b5d5f5851296f6c920aac360a3c93c55aee9ceb7189bef568ff43aadc",
+      "bytes": 19988
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.32.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-6454f827013c.woff2",
+      "sha256": "6454f827013cdb506676a80dd86ceca30cd4a4f16748d4f9e39f0d5bd1412eff",
+      "bytes": 18104
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.33.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-11d1a4c24f4b.woff2",
+      "sha256": "11d1a4c24f4b54d7e9822dc767982342b3ab0befe5acc0a889562b24d93db4e5",
+      "bytes": 13980
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.34.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-3eafa1b63a83.woff2",
+      "sha256": "3eafa1b63a838fd0772a297293abf98c06dc8f9efbbe0cd4107b347192724e45",
+      "bytes": 19896
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.35.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-b397418a2fb2.woff2",
+      "sha256": "b397418a2fb2a10956b84cf7813acbf4499e593c5d667cb6099004d1c654d5d3",
+      "bytes": 17040
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.36.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-21ce7b5d2a6c.woff2",
+      "sha256": "21ce7b5d2a6cefbc101499cf88e9ada2164ecd058604d5acc11eae8b5c2dc707",
+      "bytes": 14188
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.37.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-34228b07ca47.woff2",
+      "sha256": "34228b07ca47622089a5d897c973c3800b20198ddd2336e7bf3055927b2ddefb",
+      "bytes": 17884
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.38.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-021de7b25978.woff2",
+      "sha256": "021de7b25978ee8566adec051919f5e6bf84308c138bb5a2ff164773564b0474",
+      "bytes": 13732
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.39.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-1dcfe35477e1.woff2",
+      "sha256": "1dcfe35477e1268061442f24194f42bedcca95ef3a9e82e07c542043157218eb",
+      "bytes": 20664
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.40.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-e7a620e56ee4.woff2",
+      "sha256": "e7a620e56ee44e2f9704c936ad9bead85ae03689a31c65cf042c5e711bc9461a",
+      "bytes": 16748
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.41.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-1a8d4f4c17e2.woff2",
+      "sha256": "1a8d4f4c17e200c2fc047948cf2e762462fd31f4ac3df2e7f7150c291501d0c8",
+      "bytes": 18580
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.42.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-4dc27197e3c7.woff2",
+      "sha256": "4dc27197e3c78b9165cf721f052b112fbbbe9ee9d35f0c6297d3d71625e4ce14",
+      "bytes": 15148
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.43.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-9da2b29d271e.woff2",
+      "sha256": "9da2b29d271e05ba418435a1180fdbb729d4e617f760b2476ef325a600dc84fe",
+      "bytes": 14836
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.44.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-325f2637b72e.woff2",
+      "sha256": "325f2637b72e8508cf86f4448aedb012c3bac25191aaa38f966e533f0969ec0e",
+      "bytes": 16088
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.45.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-8978f1b59a58.woff2",
+      "sha256": "8978f1b59a580434ef079359c884bf28fc1c86935fd5017546512135abb5360c",
+      "bytes": 12360
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.46.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-49d7bbdfab9d.woff2",
+      "sha256": "49d7bbdfab9d92d66c1508db6fffecca296c926dba698eea853d8c0ee6fadd51",
+      "bytes": 12224
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.47.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-440cef8c3fcb.woff2",
+      "sha256": "440cef8c3fcb409c3a700a0c3be361846fbc48f07a0067dbedced325acc150b1",
+      "bytes": 14416
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.48.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-a41b0c42ace6.woff2",
+      "sha256": "a41b0c42ace64a87fe8f29a635fc04f3c40fce1e1e028750bd936b84b820e99c",
+      "bytes": 15384
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.49.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-25796bed2a26.woff2",
+      "sha256": "25796bed2a26534fd752040e688b2f411ec55c414bc8047ff19d737d07c69e68",
+      "bytes": 14304
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.50.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-623f4df19b26.woff2",
+      "sha256": "623f4df19b268736d7c8b543aaf6b29fb5151faa49b78419ad7c51f1a643b431",
+      "bytes": 6792
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.51.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-e3d02767597e.woff2",
+      "sha256": "e3d02767597e721364ce0ae6d8250abc9d4e7330d6a539e62eb1167d1001d741",
+      "bytes": 2676
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.52.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-736ef793ae55.woff2",
+      "sha256": "736ef793ae550de05b3ffadbc3ca711adbb8ed68652ab40180160fa0b3cb7369",
+      "bytes": 9448
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.53.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-649286a6d0f1.woff2",
+      "sha256": "649286a6d0f1855d6135934e5d0d406e33202bb4b19d46798831643effede7b2",
+      "bytes": 5492
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.54.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-479534d99c42.woff2",
+      "sha256": "479534d99c428de1138350eb85f38ce4172212c67164deae9bd1e0c92ef7630c",
+      "bytes": 1732
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.55.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-4471f5ba31f6.woff2",
+      "sha256": "4471f5ba31f6adc7eab6d4cc55eb2cffa75a013bc6ce33b1e04a7c0b5517584c",
+      "bytes": 1604
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.56.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-e57ec4c5127a.woff2",
+      "sha256": "e57ec4c5127af8324e36423382b6c7a110b790843ccc9e8410588a26f4edf043",
+      "bytes": 4196
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.57.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-3f81e3b90daf.woff2",
+      "sha256": "3f81e3b90daf33f8733b923284e2a44dfcf3e121e2219276376c5f61c4a73b0a",
+      "bytes": 1260
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.58.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-d58859ec3f7d.woff2",
+      "sha256": "d58859ec3f7dae8cc5cf5889c8e25281f18f462bb231b7cc27da249526c2c2da",
+      "bytes": 6780
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.59.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-9588495b7cbf.woff2",
+      "sha256": "9588495b7cbf3e2e32f5d85e176ee4aa1fb20888d47135e0b6330225394148d8",
+      "bytes": 4716
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.60.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-c96fe1408f6b.woff2",
+      "sha256": "c96fe1408f6b207953c94b0d720e4f0974ff91d52b54e52327f3fa8771128314",
+      "bytes": 10800
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.61.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-6cce19b6873d.woff2",
+      "sha256": "6cce19b6873dc1905ec74fc57d73d187769bf57dd6911fe6ec5bbdc0d440ace9",
+      "bytes": 10692
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.62.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-8ba37cf33d0b.woff2",
+      "sha256": "8ba37cf33d0b35aca86a6b890ea8cf695d00922ea3a1d428b4d638e4a3d92aa3",
+      "bytes": 9832
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.63.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-fe18f6a8697d.woff2",
+      "sha256": "fe18f6a8697dc96c6ad32c948ae1b650dd161332761ad62b039762212a9ec7ba",
+      "bytes": 8960
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.64.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-21bf3eb58942.woff2",
+      "sha256": "21bf3eb589425c411f667ca068470b0d5393de5fc10614bd06e5c2e3d01e10ef",
+      "bytes": 11384
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.65.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-c7da598b1ed7.woff2",
+      "sha256": "c7da598b1ed765fced92a6448cc40f83d6cd6995f2316afec6b579b2bab18128",
+      "bytes": 10668
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.66.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-57635e0c5155.woff2",
+      "sha256": "57635e0c515568c7ed24976d72bb7ad1029c4f0f58bd34c56b497a73753f42fb",
+      "bytes": 9504
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.67.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-e7e5e2b35470.woff2",
+      "sha256": "e7e5e2b354703ac2b10d5acd9368d79588c765b0a5db30123b86e0634025218c",
+      "bytes": 9272
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.68.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-b69a9d938f93.woff2",
+      "sha256": "b69a9d938f936213aa44dcd8e6de98b07cfe7cefb621ec52e55c970615c240ab",
+      "bytes": 10476
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.69.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-92c0a48192c3.woff2",
+      "sha256": "92c0a48192c3e7a4404d58e2a0e0c803dfdc178887019b384ce559945d7867de",
+      "bytes": 10004
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.70.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-660fc93fcedf.woff2",
+      "sha256": "660fc93fcedf07943c52ffb3df9ba004de76be754b3e55c39e6e1d4577176af8",
+      "bytes": 9852
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.71.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-3f10f035237f.woff2",
+      "sha256": "3f10f035237fe613d7b6340c876d21b43104a01a4b0d60fbb38aacfd3d5ebef2",
+      "bytes": 9300
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.72.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-f051a8889486.woff2",
+      "sha256": "f051a88894860088b5ca61e29282da59e209c5c1558430d7a4933d9a7f1f142e",
+      "bytes": 11112
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.73.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-e46ee93365f6.woff2",
+      "sha256": "e46ee93365f690bb4b8fee58ddf3a2e6edd8f0e525ae19acb61b342846c0e595",
+      "bytes": 9964
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.74.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-6d878b2d1f44.woff2",
+      "sha256": "6d878b2d1f446eb637fd73b369912d789140bf2d447c4552507831ec5b47f890",
+      "bytes": 9124
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.75.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-46625ec247b9.woff2",
+      "sha256": "46625ec247b9950c6d8a412fc58842f29dcfd3a99c67c464cbeccb944d81e618",
+      "bytes": 9412
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.76.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-a6aaf22ac5f4.woff2",
+      "sha256": "a6aaf22ac5f4793810bf327681afc4e50340f51bf584e47427b8ead9057965a5",
+      "bytes": 9368
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.77.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-388deb0449e8.woff2",
+      "sha256": "388deb0449e8b0a4de73cfed7142b13ac9d70430d31816d99003ab55a5feaecb",
+      "bytes": 10080
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.78.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-27ca05e661a0.woff2",
+      "sha256": "27ca05e661a0c77492d12d7977f612d01efdbf5d91d14a052b4fa72de4b9e3bb",
+      "bytes": 10384
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.79.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-f8be283e16b9.woff2",
+      "sha256": "f8be283e16b98e412aa001db509157a9ac74d1a83b16b5fa92b42bc43b04a728",
+      "bytes": 10060
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.80.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-77e66968658f.woff2",
+      "sha256": "77e66968658f8a7c2f6d9885ba1f1d0c954a92a82c67d8c47721e916fb37284e",
+      "bytes": 9524
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.81.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-24e4c993556c.woff2",
+      "sha256": "24e4c993556c921a3d52bfeabadd7fe437321918c58483e84dcce0ba1ec55096",
+      "bytes": 9136
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.82.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-c947def14bf4.woff2",
+      "sha256": "c947def14bf40273d6e794c612e877e41628cd6e112c1735152c2e53f040e020",
+      "bytes": 9752
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.83.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-db7438fe5d75.woff2",
+      "sha256": "db7438fe5d75454c9a6b59dbd94a02aa7c06c13ec134c751425b49a5d803da9d",
+      "bytes": 9764
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.84.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-9872198e874f.woff2",
+      "sha256": "9872198e874f89cb2b50a367163a8c47bd46ec7e9d9e25ae389591eba89d46a8",
+      "bytes": 9172
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.85.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-75b079e1436c.woff2",
+      "sha256": "75b079e1436c64e8234867cf3c97a0e8c0b4cb027d73a3ae5f6ec727887ddaf1",
+      "bytes": 8704
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.86.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-318c8bafc80b.woff2",
+      "sha256": "318c8bafc80bca63e73482a8c19752461222c50232bba3317b78a828de6d8a35",
+      "bytes": 8744
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.87.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-b4f73c0665cf.woff2",
+      "sha256": "b4f73c0665cfba91c3451ce0a2c8cf866e9148fe48bb30b312c6fa7468469eeb",
+      "bytes": 9720
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.88.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-43a4241c2d29.woff2",
+      "sha256": "43a4241c2d2972dd4a091e041a03d3bb77d6c6feb592b7af1e2cd857c7ad2ab8",
+      "bytes": 9008
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.89.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-3054b39b249f.woff2",
+      "sha256": "3054b39b249f410bf2bf57e70a971b434619969c9f1405bc5579930078b06c7d",
+      "bytes": 9300
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.90.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-3baab8768a6b.woff2",
+      "sha256": "3baab8768a6b30fd1cf54f60ff4f2872f5e9f02889d3518ad9949e5118cdc8a2",
+      "bytes": 9768
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.91.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-98c3a32bf063.woff2",
+      "sha256": "98c3a32bf0636833fab907c4f574baf1dd4ea306005e869e1d82356eff5e432a",
+      "bytes": 9684
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.92.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-d91910d2a298.woff2",
+      "sha256": "d91910d2a298c136188a40310676bf9554b430952c220f58d59c42608002b31d",
+      "bytes": 9040
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.93.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-ba6e145334f7.woff2",
+      "sha256": "ba6e145334f730a7498874d4d72ba9436e40cca0c0e3e84efd0682761c1fa12f",
+      "bytes": 9264
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.94.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-bd20dab1dae5.woff2",
+      "sha256": "bd20dab1dae573f8f00f55d51addf6b2b46b07c53665f8e8a200a51ab1ea64f3",
+      "bytes": 9792
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.95.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-06e66a6ecbe0.woff2",
+      "sha256": "06e66a6ecbe04a517bbe9ea9287ebee580f90eead4e2abbb122b88a6d4661056",
+      "bytes": 8992
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.96.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-5f1a4909a0e6.woff2",
+      "sha256": "5f1a4909a0e6ffb292c7d2edfb55e6a737da9553bc68bdf48097e13b1fb5d4b8",
+      "bytes": 9208
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.97.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-9e766109aed9.woff2",
+      "sha256": "9e766109aed92d3bba9f1ef049e4feabf55b3769c9824c50ce4c9ad6b722dec7",
+      "bytes": 8804
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.98.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-a6ee9ffce50c.woff2",
+      "sha256": "a6ee9ffce50c7d9b3a985ec04d00c1f79832309835e14d96816e4b3ae38ee5f6",
+      "bytes": 9672
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.99.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-0a91c7538e5f.woff2",
+      "sha256": "0a91c7538e5ff4c8b1decc6e1412d13403a986561b3b608bf1de7a73dea6325c",
+      "bytes": 9808
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.100.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-bbfbbd703ca5.woff2",
+      "sha256": "bbfbbd703ca5e5303ecc08b171204c4ed0a127eaa4e39eb245233f5a0ae2bbe4",
+      "bytes": 10004
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.101.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-e577285d8ed3.woff2",
+      "sha256": "e577285d8ed3bee240898fd46b0951f5a11ed5ce183f129ac60afccb9fe8d609",
+      "bytes": 8344
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.102.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-5bb5c78af10c.woff2",
+      "sha256": "5bb5c78af10cd3d77c7862a2300692f851da42e0d9d02e7981b3d042ad03fd65",
+      "bytes": 9040
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.103.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-a6c6efb80a88.woff2",
+      "sha256": "a6c6efb80a881bd67a693e0a6e21b316cfea2f1b233c18ceff9583c0a17bc14c",
+      "bytes": 9232
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.104.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-25748d6dd7af.woff2",
+      "sha256": "25748d6dd7af3ad04335a15fcd35444508825d3534a721ec471d710ae17cf252",
+      "bytes": 9252
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.105.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-007b6d2de947.woff2",
+      "sha256": "007b6d2de9478eb2c83250f9c841d78a6ad55f15ab15870a81a63d6995452ced",
+      "bytes": 9268
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.106.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-50759623c666.woff2",
+      "sha256": "50759623c666f967fb6044cf65b6e88f324ab1436b8baadcf2a2a3524ed1d60e",
+      "bytes": 10044
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.107.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-95b0ee303b9c.woff2",
+      "sha256": "95b0ee303b9cad3598be29fc879195bcee87a267a682ff72c6f05ad29d235c38",
+      "bytes": 8808
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.108.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-5002f12b145c.woff2",
+      "sha256": "5002f12b145cc773090630dfa13453533b870eade11d75a445a3c88a5f872459",
+      "bytes": 9928
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.109.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-84cdc3bb61b1.woff2",
+      "sha256": "84cdc3bb61b1903a7e869027011aab482d5901795973a5108c4a447b431f24bf",
+      "bytes": 8312
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.110.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-2b7e58665a66.woff2",
+      "sha256": "2b7e58665a66bce2b0eb39f11502cfa2386867727398d8dbcc0e27c0effef96b",
+      "bytes": 8088
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.111.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-5d613101159b.woff2",
+      "sha256": "5d613101159bda7542cf6a79be1a926dd3cf4e48dde3fea8e93001d570a7ae4d",
+      "bytes": 9028
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.112.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-3456d1083aee.woff2",
+      "sha256": "3456d1083aeea11d12f7a288973aeb1e744fc1559d3cf9387eadc43bf0a4dc39",
+      "bytes": 8396
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.113.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-8f255ecef965.woff2",
+      "sha256": "8f255ecef96593191fb868f41d91da15ec4ee128809b6c6d9c601d14bc6891e6",
+      "bytes": 7728
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.114.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-a237a90d912a.woff2",
+      "sha256": "a237a90d912acbd1df2fbe1c818dbe4e91fd775dbbc203f9f0a4483e7afc4f2e",
+      "bytes": 7724
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.115.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-07dce3b11de3.woff2",
+      "sha256": "07dce3b11de39cf643d51a0d8483809ff4ff950f00c89153b783846437b299e5",
+      "bytes": 8240
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.116.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-ebb7391d7611.woff2",
+      "sha256": "ebb7391d7611257cdb8051b2375e6f27c4a0d4f07d4ef036b25ef5b499922fc8",
+      "bytes": 8308
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.117.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-76fb2779ca07.woff2",
+      "sha256": "76fb2779ca071ff245c13b604c4758b171c93bca4e4ba19f649d683e177bf691",
+      "bytes": 6128
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.118.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-de16dedba1f1.woff2",
+      "sha256": "de16dedba1f180f5772ad7f4a449385a6d7de98826b8052b2646f960b437e78f",
+      "bytes": 6860
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOkj5iS2z4CnVHwbSaNYf6hPiImB7BfkJ3ZpFRYQ.119.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-646b3fec0a70.woff2",
+      "sha256": "646b3fec0a706cbc3b0e1fa2adb3bf18e5117e895c6ae928fc1cabff96628c09",
+      "bytes": 18240
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOojhoTE76QGF10A.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-7ecc5c8bc4c6.woff2",
+      "sha256": "7ecc5c8bc4c6b354ba725e3a58193f8b042e75ad756062d41c6036b6b40524a1",
+      "bytes": 4704
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOojJoTE76QGF10A.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-960fdc9411c5.woff2",
+      "sha256": "960fdc9411c5b40f1f8270b857278c1c8cddd6e4cd70efb4d0e8f3b27a419f4c",
+      "bytes": 1676
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMYW2drQpDw0GjzrVNFf_valaDBcznOojxoTE76QGE.woff2",
+      "weight": 400,
+      "file": "zen-kaku-gothic-new-400-5b1bfc34d603.woff2",
+      "sha256": "5b1bfc34d603aef66d247bd22b8344f19de165da7ea07d114d87fe7ff4cdc770",
+      "bytes": 9752
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.2.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-031a908c8a03.woff2",
+      "sha256": "031a908c8a0387b2b5b31984cfbad4980d0f7fd17852caf91c5d3684a844ba65",
+      "bytes": 928
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.3.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-fa0e966e858b.woff2",
+      "sha256": "fa0e966e858bcb848456d8bd5584e5d6bc9e8546e118bfd599c11029f9de0df0",
+      "bytes": 7596
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.4.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-75ef8f14ae3f.woff2",
+      "sha256": "75ef8f14ae3f3a0a4c11f3e2c92cd4bcfa7fdd796bc3337bde536df64511cbc2",
+      "bytes": 1680
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.5.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-ec6d5289508e.woff2",
+      "sha256": "ec6d5289508e5f4fa42a01e6746312112d9ab149d48caa570a68d7d718d12a33",
+      "bytes": 16176
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.6.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-043c6095527e.woff2",
+      "sha256": "043c6095527ed5a138bc22e20c5183efcfc6a2105b1df2b1863ce3800d88b18a",
+      "bytes": 19252
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.7.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-911f7d628eab.woff2",
+      "sha256": "911f7d628eab712d2c4006495474ffa09c55c9c7e258b1e3cedb1f7638538fa3",
+      "bytes": 20880
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.8.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-c7cf494272ee.woff2",
+      "sha256": "c7cf494272eea1655697412060f68ea69fd2dae69f9c4fbf0fd32a76f571c3dd",
+      "bytes": 18808
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.9.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-c684a348fa7d.woff2",
+      "sha256": "c684a348fa7dde318971d6950eb1fdc22d631786a8ab6cb2664bb4c4bc584747",
+      "bytes": 17464
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.10.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-00a5f2b6fb35.woff2",
+      "sha256": "00a5f2b6fb35fc1c97540ebea339ef93d99f07038cb4e0cca5802f3954f42b2f",
+      "bytes": 19732
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.11.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-b3e93cb670cb.woff2",
+      "sha256": "b3e93cb670cb3e80e1fc5a69dc9ca03d53b7b900e1f1d4d8ddc54e44886a7c94",
+      "bytes": 20444
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.12.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-473d5cf540ea.woff2",
+      "sha256": "473d5cf540ea5387a16a60fbe17bf0efa51794c393fd03e24a2a1dcca39927c2",
+      "bytes": 17076
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.13.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-2fa1ad0d28e6.woff2",
+      "sha256": "2fa1ad0d28e670b57a464eba9c44210cc6c9fd05e32eada96571bbe806537749",
+      "bytes": 16088
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.14.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-e0a1c992ec18.woff2",
+      "sha256": "e0a1c992ec1829bdd5e8a41304dbfdb3398f57a25368a8a67b9eb46942fbc7b1",
+      "bytes": 17152
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.15.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-34e1c0277359.woff2",
+      "sha256": "34e1c0277359c48ab6fe14addde7e8ac56429cefdee8d9635b2f185de33549c9",
+      "bytes": 20048
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.16.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-8ad7ddd7a4d9.woff2",
+      "sha256": "8ad7ddd7a4d9e6c3f367f42167fa5c0be4208e599c774451ce39c0236a26637d",
+      "bytes": 16012
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.17.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-3e5f05484dca.woff2",
+      "sha256": "3e5f05484dcac66146231ba4bb6da5e708bc6cc9e2d0501148baeec2dc409fb5",
+      "bytes": 18660
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.18.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-f57d5cf1490d.woff2",
+      "sha256": "f57d5cf1490da09aee278568920fd8520d30379e0d729293900c0f14986040f4",
+      "bytes": 16816
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.19.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-f4782d44e39c.woff2",
+      "sha256": "f4782d44e39c20f55585d027dc30133fa1bf26a5d8d6f57dc310c39565725adb",
+      "bytes": 18836
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.20.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-45b7da2fb40c.woff2",
+      "sha256": "45b7da2fb40cb25020a98d0b3fb19c2bf5deb94e2871c5cdfe57b0e167b2a0ad",
+      "bytes": 15076
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.21.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-369aaa861f17.woff2",
+      "sha256": "369aaa861f176853ed3ca15431beebcf1d846bbc4853af4605921a2b44e1566c",
+      "bytes": 17348
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.22.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-4859f27866ad.woff2",
+      "sha256": "4859f27866ad8c204ed1d5f26776b99bf8aa2bae578bd8300c1467b877ed5164",
+      "bytes": 17328
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.23.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-5554933fe3d4.woff2",
+      "sha256": "5554933fe3d47074599cbdc5acd568f0052de1a2bbb989f7edc55684eb5771de",
+      "bytes": 23916
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.24.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-26774739349a.woff2",
+      "sha256": "26774739349a23f8fcab5a24c2cd72611e06c576c9c4b92e91d6851bfc9c9e14",
+      "bytes": 20944
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.25.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-10e7e8806b27.woff2",
+      "sha256": "10e7e8806b276e1dc73f50a7b250ad5e7e32cd39d517369b9fd553132d8a25b3",
+      "bytes": 20020
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.26.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-ea06ba2921e5.woff2",
+      "sha256": "ea06ba2921e500c36828e8577958c826b30e15f36cadcbbbc0fc4b9dbf606a07",
+      "bytes": 14648
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.27.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-bac911cdc828.woff2",
+      "sha256": "bac911cdc828d440ae3a13ea64a113c772eb81ad6abcab599f2af5eda27297c3",
+      "bytes": 13856
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.28.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-6e01fc6f7d39.woff2",
+      "sha256": "6e01fc6f7d3960bc900c114843d4a441bb863c5de40f55f87a271bdd5597ca7c",
+      "bytes": 17632
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.29.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-7301d4d8bbc8.woff2",
+      "sha256": "7301d4d8bbc813ecfd68e4e99237a8d613475aa6a91cdfe7951a67d20ad344ed",
+      "bytes": 15056
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.30.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-592f4f930f89.woff2",
+      "sha256": "592f4f930f8919e541cde49d24ecc6f0263c9e3124b11aba2a0340b62e40ab61",
+      "bytes": 19432
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.31.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-98f865175662.woff2",
+      "sha256": "98f8651756623805130e03f89fe903c65f558b6ea0ca1c43830d65fd9956fef3",
+      "bytes": 20300
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.32.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-1fff78724487.woff2",
+      "sha256": "1fff7872448785256583c670611f59373dfde2f40fe1a00422c84e6bbd5b8861",
+      "bytes": 18248
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.33.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-95cc72d0031a.woff2",
+      "sha256": "95cc72d0031a7140b578d6b8e66c3808d2876ea1d88af917504f8f094807c585",
+      "bytes": 14268
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.34.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-f0eda18a4740.woff2",
+      "sha256": "f0eda18a4740b2a1b98db86866bc97496d4f251f2f3f3f46cdf1dd75c2c5eb6a",
+      "bytes": 20000
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.35.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-2cf759fecf64.woff2",
+      "sha256": "2cf759fecf641542b4c34f28d61af28176824c7437635f20203a8174f597392a",
+      "bytes": 17748
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.36.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-b3f999e27af8.woff2",
+      "sha256": "b3f999e27af8433cc07fbc973c9fb6db241ef0c7bf18128af56bae8a5f959df1",
+      "bytes": 14416
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.37.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-4119d1da5d8e.woff2",
+      "sha256": "4119d1da5d8e8638a4139469e4c15c9d306fdf45d02c2669cec9a57d40d338e7",
+      "bytes": 17932
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.38.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-cb5e57587cf5.woff2",
+      "sha256": "cb5e57587cf59dad5f874bf716b0beb101d4f0c599cc2986b371fc95542a20d4",
+      "bytes": 13988
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.39.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-37cb351c62d3.woff2",
+      "sha256": "37cb351c62d3b8fe17eb3839ef1d07bb0ac369c5c56b78bfa4723da275bdc401",
+      "bytes": 20748
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.40.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-c0409c286dcf.woff2",
+      "sha256": "c0409c286dcfa8d6b3c4b4d5f5ce14c146e1addaee9cf1bc97921dd79584e391",
+      "bytes": 17180
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.41.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-5b0e9b35bea9.woff2",
+      "sha256": "5b0e9b35bea9bb7160eddbc97a6fadbf07927a6aa03c8586ec2635f2c478b24c",
+      "bytes": 18668
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.42.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-a3f7d2b7269a.woff2",
+      "sha256": "a3f7d2b7269abdb09bdbfa55992f79c0dd64a502a168672063bc0932bc90515b",
+      "bytes": 15304
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.43.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-26fe9cefd8ec.woff2",
+      "sha256": "26fe9cefd8ec884ab042b02c7362a164c31435fd2e2145709a8796f090852139",
+      "bytes": 14936
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.44.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-68b2e9b7426a.woff2",
+      "sha256": "68b2e9b7426a549e98d3805ffe5f43290be0690c549c3a8e4a080e55097f3f14",
+      "bytes": 16232
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.45.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-b4f277f7d7f6.woff2",
+      "sha256": "b4f277f7d7f697db59a310c879214c7c249cdb0fb450c8fbc5288d5543a8b19e",
+      "bytes": 12464
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.46.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-bd48f630c299.woff2",
+      "sha256": "bd48f630c2994a7415a1542c372cc3a2e8fae908e201c13df6056ee600765e8b",
+      "bytes": 12200
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.47.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-1816fe470102.woff2",
+      "sha256": "1816fe470102b844872636cf64e873957985a1e2598d8be0af419f944dea926d",
+      "bytes": 14500
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.48.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-066d52c021e4.woff2",
+      "sha256": "066d52c021e4abf09dd8972b52d6df6198f52a95e481f48f413e77bf9f5a2521",
+      "bytes": 15476
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.49.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-0cc6653d5920.woff2",
+      "sha256": "0cc6653d5920abeb1ed27a82d581f0134ad87fdd66da72fb56597ff8d0a4d089",
+      "bytes": 14488
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.50.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-c30129fe19c4.woff2",
+      "sha256": "c30129fe19c45bdcd3912b12301361ada72cbc0cedc270f82d7626c237d23c44",
+      "bytes": 6792
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.51.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-2a59fecf8784.woff2",
+      "sha256": "2a59fecf87843cc9fe15b301a09b8ff934d0d48bf36c8b7a554e1eef5046666c",
+      "bytes": 2616
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.52.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-e92ee4ce68c9.woff2",
+      "sha256": "e92ee4ce68c9bc5eff968f7e445d3a9980126a337de9f4135889171d1c843f08",
+      "bytes": 9396
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.53.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-cc7a497ee57a.woff2",
+      "sha256": "cc7a497ee57aec1062b4779abf7dcdc7b60dc4ef0ba8cfcce8a7720cbd6cd829",
+      "bytes": 5616
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.54.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-7ca0b20b6e07.woff2",
+      "sha256": "7ca0b20b6e078f6c470d2adb46d9867ed42eb217ef49e1d7cce1ca47a1a7904c",
+      "bytes": 1720
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.55.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-a8a9febc3833.woff2",
+      "sha256": "a8a9febc38336624d9ea3f108bc831c985863ae14e87ed56dc054f5ce15d1fc3",
+      "bytes": 1608
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.56.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-c06570138487.woff2",
+      "sha256": "c065701384876e64da86158d1eef714dc1e657779f040f11b29a5a6623f36205",
+      "bytes": 4164
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.57.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-f3f3e69ec304.woff2",
+      "sha256": "f3f3e69ec304244081343711986caab85e598a13d0128c188873d73da678ae30",
+      "bytes": 1264
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.58.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-7d647662ba1a.woff2",
+      "sha256": "7d647662ba1a8de4877bbf00a41d32a7dc9c0983b39fa1b0c3e1979cf5302ee7",
+      "bytes": 6824
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.59.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-8d37829fce10.woff2",
+      "sha256": "8d37829fce101523357c530e686b492ef8a101f1ad57637e811c4afd68a0a2c9",
+      "bytes": 4636
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.60.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-5c9ddb82f194.woff2",
+      "sha256": "5c9ddb82f1948604ae626c9a335735e5475339ae1bc70a8be195c76007e942f4",
+      "bytes": 10748
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.61.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-0c02a3224aa9.woff2",
+      "sha256": "0c02a3224aa97e9cd1bbf815d0604c7330fba8a6606c617bb62946de62201500",
+      "bytes": 10716
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.62.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-4630b73e46e4.woff2",
+      "sha256": "4630b73e46e4d26f5dd5d47b80c54afba5ab2504d1de3330e02010121176a901",
+      "bytes": 9880
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.63.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-752c5167b52b.woff2",
+      "sha256": "752c5167b52b03fbf272ba758c3f672289bca864125baf13502d5b3f0c5cc118",
+      "bytes": 9000
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.64.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-c5702d8b1615.woff2",
+      "sha256": "c5702d8b1615b8e41d0fba80007a6e654477b9b1bd65656c93b8bfb70795f5a0",
+      "bytes": 11436
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.65.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-0da27ae06158.woff2",
+      "sha256": "0da27ae06158a6df47357b19040ab86b87c222ab99ab15e86b46cc28edce1c24",
+      "bytes": 10656
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.66.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-4d8c8d21b495.woff2",
+      "sha256": "4d8c8d21b495799f819d913439611c5094a8a9666599d3db63f377b2efafdc1b",
+      "bytes": 9396
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.67.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-52e7c810a755.woff2",
+      "sha256": "52e7c810a75520feac016dff66a87ee9fa883608d579a1dfca4a5f1bfbcea351",
+      "bytes": 9324
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.68.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-372fd1cf8e00.woff2",
+      "sha256": "372fd1cf8e00eb48656e4fd086907289ff10f3d1098739953b96745aadb43484",
+      "bytes": 10524
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.69.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-5ba127a0e745.woff2",
+      "sha256": "5ba127a0e7450bb57cd20fff4c691bfe1681975b17b61de0cb54bb0f20208caf",
+      "bytes": 10024
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.70.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-91e99f6e2371.woff2",
+      "sha256": "91e99f6e237115ccbea126826f3e784a463d36b71533336f5092088480dfa192",
+      "bytes": 9864
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.71.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-9e4aaf846256.woff2",
+      "sha256": "9e4aaf8462560816ab5e79425a7d3e29a346e559f089e8097df7c97dd3aa6394",
+      "bytes": 9308
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.72.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-f2f58994c948.woff2",
+      "sha256": "f2f58994c948a44add3bc70a753775c44c7ae06e40a2c923f5523856e2d6c634",
+      "bytes": 10940
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.73.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-f2de911e9ce5.woff2",
+      "sha256": "f2de911e9ce5314af77caf3bb9aadc34a5998c6aaf018778280dad55473c2f62",
+      "bytes": 9900
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.74.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-e343815784c6.woff2",
+      "sha256": "e343815784c6b5aa4b1397c26184b4eecc7c7f815d067c1c238ae2b0174eb8a8",
+      "bytes": 9168
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.75.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-ee9c70b39cb5.woff2",
+      "sha256": "ee9c70b39cb53a4caf794692b1a50d6eed71bc03f83ad602e4c7128ea395c269",
+      "bytes": 9476
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.76.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-a78e1a028f7e.woff2",
+      "sha256": "a78e1a028f7ec613fac960f676a6b3b919f431fd0a2399195565b9a0d44e6462",
+      "bytes": 9364
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.77.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-c9432a130035.woff2",
+      "sha256": "c9432a130035686afc5703e8b0f595a2c13f045dd6359836e7a21fd00c1cb6e5",
+      "bytes": 10096
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.78.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-75282a8041f9.woff2",
+      "sha256": "75282a8041f9ecdd2f76dbc004172eb75b4a978c6f5fcacda16ed9e34701b4e0",
+      "bytes": 10368
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.79.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-5ea0b9726b2e.woff2",
+      "sha256": "5ea0b9726b2e144b381bc210d4c2324ae41191fb957ce1fb3be190be218fb77a",
+      "bytes": 9936
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.80.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-459ac6045dd3.woff2",
+      "sha256": "459ac6045dd336c9d378abb9d4b5115f80bba9bd9c6ed933432c6839f0055ce0",
+      "bytes": 9476
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.81.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-77bb065aa02a.woff2",
+      "sha256": "77bb065aa02adfabe24c02f82ac9338298ea82cffec2c46f973c7fea61a31c30",
+      "bytes": 9084
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.82.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-57972efc6bc3.woff2",
+      "sha256": "57972efc6bc373ce7404f0310c42aa86f66cc09eaf067db3165178beed5323a8",
+      "bytes": 9900
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.83.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-c96cb038784a.woff2",
+      "sha256": "c96cb038784a106852a1752747633069f6f272788338c5ec72686cd7411076b6",
+      "bytes": 9876
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.84.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-c17c45051fcd.woff2",
+      "sha256": "c17c45051fcd60e187d186db84fae3f5249cb354f47e1acc1a10773f9b996267",
+      "bytes": 9224
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.85.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-bc2954acdb6c.woff2",
+      "sha256": "bc2954acdb6cbdc05bf8957f2b84e79bceda3a3a6eaa9798631fb76c8cd288e6",
+      "bytes": 8704
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.86.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-618a0aab0f94.woff2",
+      "sha256": "618a0aab0f947c7f7aee461711a838db345749c3adea190112440c9540ac6f76",
+      "bytes": 8756
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.87.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-803480143b51.woff2",
+      "sha256": "803480143b51874996fb4cbc23bf38cde2616011b7bffd54695f9fef1ad06e1d",
+      "bytes": 9924
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.88.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-cc32ba0ffde4.woff2",
+      "sha256": "cc32ba0ffde4e980e75ed702356308bf56df75b77d13e295826d5661f9557aba",
+      "bytes": 8964
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.89.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-7829ff87c38d.woff2",
+      "sha256": "7829ff87c38d109b891abd57d084e5ab265dd4b20871b7b92e7ccccd26ba6702",
+      "bytes": 9292
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.90.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-802c2ee50dcf.woff2",
+      "sha256": "802c2ee50dcf5f4408bbea10b97248b07546e4311154bf5e923ad02f5cba6f8f",
+      "bytes": 9856
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.91.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-c09d0844c3f4.woff2",
+      "sha256": "c09d0844c3f4af72bc23ff72335a69867f157ea140d1d6229115a684cd2504e6",
+      "bytes": 9672
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.92.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-5530a78e26c1.woff2",
+      "sha256": "5530a78e26c189a1804b181cb8a4b67f657b687d5ea87ac4e099d6c791faf062",
+      "bytes": 9080
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.93.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-7e850fabcacd.woff2",
+      "sha256": "7e850fabcacd42329db0297be84c9b2c95e81da58edbd512f47095575badb8c2",
+      "bytes": 9360
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.94.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-76f2a4da44de.woff2",
+      "sha256": "76f2a4da44dec02ba762ac060d53341b4603d35b1d056e9763f2734750b9b7e3",
+      "bytes": 9836
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.95.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-ec2616b4d84a.woff2",
+      "sha256": "ec2616b4d84a9e79b128fd49281e97acda96437d2770b4af62c8e8948bd44623",
+      "bytes": 8972
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.96.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-4e2fa592371e.woff2",
+      "sha256": "4e2fa592371e9a011609c98d62280010f168d9060879a48b9fab42c1d60d369c",
+      "bytes": 9152
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.97.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-05518ecda133.woff2",
+      "sha256": "05518ecda133695ae7cfd226aba82fa696bc1cbd259ed47525f61021ab99db29",
+      "bytes": 8780
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.98.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-01f1f5066c68.woff2",
+      "sha256": "01f1f5066c68f4a8bc342bf833c25510baddc5676de3f4d91c37ae9bb535cac5",
+      "bytes": 9820
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.99.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-349279155967.woff2",
+      "sha256": "34927915596758ecc0415734c2f92fab36fe863fb64d78c3a7c20d2120467f9f",
+      "bytes": 9832
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.100.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-c9de633619c5.woff2",
+      "sha256": "c9de633619c565c5234126248b0e6a03d2500c1e7d2998facc41015964e22af6",
+      "bytes": 10072
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.101.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-0b41b7d58843.woff2",
+      "sha256": "0b41b7d58843c03871726a2a631b79c53ae887b843d695b820e33877342adce3",
+      "bytes": 8316
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.102.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-55710c338221.woff2",
+      "sha256": "55710c338221b3b7256513d32a2a54380c942ea1210dda0945ec7c21ff3deca3",
+      "bytes": 9084
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.103.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-51e4b76387bc.woff2",
+      "sha256": "51e4b76387bcd11b73876bed6d266145dfe07eacc91971e315aeb5839cc36714",
+      "bytes": 9292
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.104.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-0ccad4a8ab09.woff2",
+      "sha256": "0ccad4a8ab09f8206ac49f9cde0c4c782a0d15ee5bbcce8311251b2119227aa9",
+      "bytes": 9284
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.105.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-939d0fa4c7d0.woff2",
+      "sha256": "939d0fa4c7d020c8428dc0ca8242c050702d97ff20bbdbe71d264a9fbcd1fb90",
+      "bytes": 9464
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.106.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-55aa9d2250a7.woff2",
+      "sha256": "55aa9d2250a7ae25bb1a29e637fac4954e804b5ac5f94455bf5e2ef85a208cb2",
+      "bytes": 10064
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.107.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-82b7d39bfe20.woff2",
+      "sha256": "82b7d39bfe2020cadcfc40ad8f56fca1a37eb95ce3354709279f3617d2b8ccd8",
+      "bytes": 8900
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.108.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-3c8a76c15371.woff2",
+      "sha256": "3c8a76c153716201f3bf9a28cd25818ad798aab2cb8234d5f01cbfc00617e2d1",
+      "bytes": 9900
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.109.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-eadcbe6ac270.woff2",
+      "sha256": "eadcbe6ac2701cdb5a488803c35b9796a6ae653df530b476ce8237fb3fa3014f",
+      "bytes": 8436
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.110.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-0a41b8161aa5.woff2",
+      "sha256": "0a41b8161aa5a288ad3563bd7f58734bea83fece86e8fbde89c28002f4f7c89e",
+      "bytes": 8152
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.111.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-03ec750120a4.woff2",
+      "sha256": "03ec750120a4f4ec86707074becd9b30066f2f320cb36567d2a080d431ec7a15",
+      "bytes": 9076
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.112.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-5aac9a93060b.woff2",
+      "sha256": "5aac9a93060b4182f4141caaa6b36c742f87f6247cb5ac910166eec999b677a1",
+      "bytes": 8428
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.113.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-ab6a9844abea.woff2",
+      "sha256": "ab6a9844abea2076cd882f9cbd56ef1e31533bfd5f0d09befaf78f850d651c87",
+      "bytes": 7688
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.114.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-a3c3e3dc3274.woff2",
+      "sha256": "a3c3e3dc32742e97bc0bd216ece969bbb4b47249b57f62cd05e34d6655a7d2de",
+      "bytes": 7792
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.115.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-c36ef6d976d3.woff2",
+      "sha256": "c36ef6d976d3b3fcecdfa18785133b4edae235e175fcf4a8dd36d2e42c190f0e",
+      "bytes": 8216
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.116.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-4328acb4e201.woff2",
+      "sha256": "4328acb4e201004ac4784de1d004b33334219722903edc5476f177d222eb2c84",
+      "bytes": 8328
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.117.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-8119e46f81c6.woff2",
+      "sha256": "8119e46f81c662963c5232a1970a2fb3fd9b3ebd076bd1166fad52d44e4fc856",
+      "bytes": 6236
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.118.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-ae751fe4fce5.woff2",
+      "sha256": "ae751fe4fce5974a79edb7900ae5754d3c0e3c14d0415c230d2d873741a3c504",
+      "bytes": 6812
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNaWHSSmlNk8rxVYz1keqDognBR0dnbIQ0DZlb2g.119.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-003939e82597.woff2",
+      "sha256": "003939e8259764f8c2fc662b496a08f8810c5682deb8e1cf7a04bb00dcd16d85",
+      "bytes": 18000
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNWWfYTUtP2d7DRA.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-73d0ced59b7e.woff2",
+      "sha256": "73d0ced59b7ea8c86d0aa4121d9d971b29ff29409fdf4ea7f6b793b707e0a7c4",
+      "bytes": 4672
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNWW3YTUtP2d7DRA.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-ea76ea6cf1a6.woff2",
+      "sha256": "ea76ea6cf1a6d4ddd89bd0466f6ee610a9428506e118525f90264237c8745a15",
+      "bytes": 1660
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/zenkakugothicnew/v19/gNMVW2drQpDw0GjzrVNFf_valaDBcznOqodNWWPYTUtP2d4.woff2",
+      "weight": 700,
+      "file": "zen-kaku-gothic-new-700-3be1f5635670.woff2",
+      "sha256": "3be1f563567099c0b7350440246e5861621da99e68900890978d5824dead5f4c",
+      "bytes": 9680
+    }
+  ]
+}
