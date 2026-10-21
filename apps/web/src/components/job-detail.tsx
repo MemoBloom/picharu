@@ -3,16 +3,19 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ApiError, UserFacingError, api } from '../lib/api';
-import { findToolContent } from '../lib/tool-content';
+import { useAuth } from '../lib/auth';
+import { findHistoricalToolContent as findToolContent } from '../lib/tool-content';
 import { jobStageMessage } from '../lib/job-state';
 import type { ImageAsset, Job } from '../lib/types';
+import { ImageViewer } from './image-viewer';
 import { AuthGate, ErrorNotice, Loading, Notice, PageHeading } from './ui';
 
 const terminal = new Set(['completed', 'failed', 'cancelled']);
 const statusText: Record<string, string> = { queued: '順番を待っています', processing: '写真を編集しています', completed: '仕上がりを確認しましょう', failed: '編集を完了できませんでした', cancelled: '編集をキャンセルしました' };
 
 export function JobDetail({ jobId }: { jobId: string }) {
-  return <AuthGate><JobContent jobId={jobId} /></AuthGate>;
+  const { user } = useAuth();
+  return <AuthGate><JobContent key={`${user?.id || 'signed-out'}:${jobId}`} jobId={jobId} /></AuthGate>;
 }
 
 function JobContent({ jobId }: { jobId: string }) {
@@ -33,6 +36,12 @@ function JobContent({ jobId }: { jobId: string }) {
   const [retryNotBefore, setRetryNotBefore] = useState(0);
   const dialog = useRef<HTMLDialogElement>(null);
   const latestStatus = useRef<string | undefined>(undefined);
+  const active = useRef(true);
+
+  useEffect(() => {
+    active.current = true;
+    return () => { active.current = false; };
+  }, []);
 
   useEffect(() => {
     if (!retryNotBefore) return;
@@ -116,12 +125,13 @@ function JobContent({ jobId }: { jobId: string }) {
     setActionError(null);
     try {
       const updated = await api<Job>(`/api/jobs/${encodeURIComponent(jobId)}/cancel`, { method: 'POST' });
+      if (!active.current) return;
       setJob(updated);
       latestStatus.current = updated.status;
       setConfirm(null);
       window.dispatchEvent(new Event('picjp:credits-changed'));
-    } catch (cause) { setActionError(cause); setConfirm(null); setPollVersion((value) => value + 1); }
-    finally { setBusy(false); }
+    } catch (cause) { if (active.current) { setActionError(cause); setConfirm(null); setPollVersion((value) => value + 1); } }
+    finally { if (active.current) setBusy(false); }
   }
 
   async function download() {
@@ -130,14 +140,15 @@ function JobContent({ jobId }: { jobId: string }) {
     setActionError(null);
     try {
       const response = await api<{ download_url: string }>(`/api/images/${encodeURIComponent(job.result_image_id)}/download`);
+      if (!active.current) return;
       // Signed URLs are read fresh for every download and never saved in a draft.
       const anchor = document.createElement('a');
       anchor.href = response.download_url;
       anchor.rel = 'noopener noreferrer';
       anchor.target = '_blank';
       anchor.click();
-    } catch (cause) { setActionError(cause); }
-    finally { setBusy(false); }
+    } catch (cause) { if (active.current) setActionError(cause); }
+    finally { if (active.current) setBusy(false); }
   }
 
   async function deleteResult() {
@@ -146,11 +157,12 @@ function JobContent({ jobId }: { jobId: string }) {
     setActionError(null);
     try {
       await api(`/api/images/${encodeURIComponent(job.result_image_id)}`, { method: 'DELETE' });
+      if (!active.current) return;
       setResult(null);
       setDeleted(true);
       setConfirm(null);
-    } catch (cause) { setActionError(cause); setConfirm(null); }
-    finally { setDeleting(false); }
+    } catch (cause) { if (active.current) { setActionError(cause); setConfirm(null); } }
+    finally { if (active.current) setDeleting(false); }
   }
 
   useEffect(() => {
@@ -168,7 +180,7 @@ function JobContent({ jobId }: { jobId: string }) {
         {job.status === 'completed' ? <>
           <div className="segmented" role="group" aria-label="写真を比較"><button className={!showOriginal ? 'active' : ''} aria-pressed={!showOriginal} onClick={() => setShowOriginal(false)}>仕上がり</button><button className={showOriginal ? 'active' : ''} aria-pressed={showOriginal} onClick={() => setShowOriginal(true)}>元の写真</button></div>
           {image?.preview_url ? <figure className="editor-photo"><img src={image.preview_url} alt={showOriginal ? '編集に使用した元の写真' : '編集した仕上がりのプレビュー'} onError={() => setImageError(new UserFacingError('プレビューの有効期限が切れた可能性があります。画像を再読み込みしてください。'))} /><figcaption className="photo-caption">{showOriginal ? '元の写真' : '仕上がりのプレビュー'}</figcaption></figure> : <div className="empty-state panel"><h2>{deleted && !showOriginal ? '仕上がりの画像は削除されました' : 'プレビューを表示できません'}</h2><p>画像が期限切れ、削除済み、または読み込み中の可能性があります。編集履歴は残ります。</p>{!deleted && <button className="button button-secondary" onClick={refreshAssets}>画像を再読み込み</button>}</div>}
-          <p className="small muted">プレビューは確認用の縮小画像です。保存するときは「ダウンロード」を選んでください。</p>
+          {image?.preview_url && <ImageViewer src={image.preview_url} alt={showOriginal ? '元の写真' : '仕上がり'} />}<p className="small muted">プレビューは確認用の縮小画像です。保存するときは「画像を保存」を選んでください。</p>
         </> : <div className="job-preview panel stack">
           {original?.preview_url && <img src={original.preview_url} alt="編集に使用した写真" className="job-original-preview" />}
           <div role="status" aria-live="polite"><h2>{statusText[job.status]}</h2><p>{job.status === 'queued' || job.status === 'processing' ? jobStageMessage(job.stage) : job.status === 'cancelled' ? 'この依頼の処理をキャンセルしました。クレジットの残高はアカウントで確認できます。' : '残高と編集内容を確認してから、もう一度お試しください。'}</p></div>
@@ -184,7 +196,7 @@ function JobContent({ jobId }: { jobId: string }) {
         {(job.status === 'queued' || job.status === 'processing') && <Notice>この画面を閉じても依頼は取り消されません。仕上がりはこのページか編集履歴で確認できます。</Notice>}
         {job.status === 'queued' && <button className="button button-secondary" disabled={busy} onClick={() => setConfirm('cancel')}>この編集をキャンセル</button>}
         {job.status === 'processing' && <p className="small muted">処理が始まった編集はキャンセルできません。</p>}
-        {job.status === 'completed' && !deleted && <><button className="button" disabled={busy || !result} onClick={() => void download()}>{busy ? 'ダウンロードを準備中…' : 'ダウンロード'}</button><Link className={`button button-secondary${!result ? ' disabled' : ''}`} aria-disabled={!result} href={result ? `/ja/edit?parent_job_id=${job.job_id}` : '#'} onClick={(event) => { if (!result) event.preventDefault(); }}>この仕上がりを続けて編集</Link><p className="small muted">続けて編集する場合は、新しい内容と料金を確認します。</p></>}
+        {job.status === 'completed' && !deleted && <><button className="button" disabled={busy || !result} onClick={() => void download()}>{busy ? '保存を準備中…' : '画像を保存'}</button>{result ? <Link className="button button-secondary" href={`/ja/edit?parent_job_id=${job.job_id}`}>この仕上がりを続けて編集</Link> : <button className="button button-secondary" disabled>この仕上がりを続けて編集</button>}<p className="small muted">続けて編集する場合は、新しい内容と料金を確認します。</p></>}
         {terminal.has(job.status) && <Link className="button button-secondary" href={`/ja/edit?retry_job_id=${job.job_id}`}>元の入力から編集し直す</Link>}
         {job.status === 'failed' && <Notice tone="error">編集を完了できませんでした。<Link href="/ja/help">ヘルプ</Link>をご確認ください。{job.error_code && <span className="small error-reference">確認用コード：{job.error_code}</span>}</Notice>}
         {job.parent_job_id && <Link className="text-link" href={`/ja/jobs/${job.parent_job_id}`}>前の編集を見る</Link>}
@@ -193,6 +205,6 @@ function JobContent({ jobId }: { jobId: string }) {
         <p className="small muted break-word">依頼番号：{job.job_id}</p>
       </aside>
     </div>}
-    <dialog ref={dialog} className="confirm-dialog" onCancel={(event) => { if (busy || deleting) event.preventDefault(); else setConfirm(null); }} onClose={() => setConfirm(null)}><div className="stack"><h2>{confirm === 'delete' ? '仕上がりの画像を削除しますか？' : 'この編集をキャンセルしますか？'}</h2><p>{confirm === 'delete' ? '削除した画像は、ダウンロードや続きの編集に使えなくなります。編集の履歴は残ります。元の入力写真は削除されません。' : 'まだ処理が始まっていない場合にキャンセルできます。処理が始まった場合は、最新の状態をお知らせします。'}</p><div className="button-row"><button className="button button-secondary" disabled={busy || deleting} onClick={() => setConfirm(null)}>戻る</button><button className="button" disabled={busy || deleting} onClick={() => void (confirm === 'delete' ? deleteResult() : cancel())}>{busy || deleting ? '処理中…' : confirm === 'delete' ? '画像を削除する' : 'キャンセルする'}</button></div></div></dialog>
+    <dialog ref={dialog} className="confirm-dialog" aria-labelledby="job-confirm-title" onCancel={(event) => { if (busy || deleting) event.preventDefault(); else setConfirm(null); }} onClose={() => setConfirm(null)}><div className="stack"><h2 id="job-confirm-title">{confirm === 'delete' ? '仕上がりの画像を削除しますか？' : 'この編集をキャンセルしますか？'}</h2><p>{confirm === 'delete' ? '削除した画像は、ダウンロードや続きの編集に使えなくなります。編集の履歴は残ります。元の入力写真は削除されません。' : 'まだ処理が始まっていない場合にキャンセルできます。処理が始まった場合は、最新の状態をお知らせします。'}</p><div className="button-row"><button className="button button-secondary" disabled={busy || deleting} onClick={() => setConfirm(null)}>戻る</button><button className="button" disabled={busy || deleting} onClick={() => void (confirm === 'delete' ? deleteResult() : cancel())}>{busy || deleting ? '処理中…' : confirm === 'delete' ? '画像を削除する' : 'キャンセルする'}</button></div></div></dialog>
   </div>;
 }

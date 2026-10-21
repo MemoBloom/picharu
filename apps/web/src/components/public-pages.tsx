@@ -57,7 +57,7 @@ export function HomePage() {
   const { tools, error } = useToolCatalog();
   return <>
     <section className="hero container">
-      <div className="hero-copy"><h1>いつもの写真に、<br />新しい表情を。</h1><p>むずかしい操作はいりません。<br className="mobile-break" />写真を選んで、好きな仕上がりへ。</p>
+      <div className="hero-copy"><h1>AIで写真を、<br />もっと自由に。</h1><p>むずかしい操作はいりません。<br className="mobile-break" />写真を選んで、好きな仕上がりへ。</p>
         <div className="hero-actions"><Link className="button" href="/ja/edit">写真を編集する<Icon name="arrow-right" size={18} /></Link><Link className="text-link" href="/ja/tools">ツールを見てみる<Icon name="arrow-right" size={18} /></Link></div>
       </div>
       <figure className="hero-figure"><Image src="/images/editorial-cat.png" alt="窓辺のやわらかな光を浴びる猫" width={1200} height={900} priority sizes="(max-width: 760px) calc(100vw - 40px), 50vw" /><figcaption>イメージ写真 · 編集結果の比較ではありません</figcaption></figure>
