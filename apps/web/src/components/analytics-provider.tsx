@@ -1,5 +1,5 @@
 'use client';
-import {createContext,useCallback,useContext,useEffect,useMemo,useRef,useState,type ReactNode,type RefObject} from 'react';
+import {Fragment,createContext,useCallback,useContext,useEffect,useMemo,useRef,useState,type ReactNode,type RefObject} from 'react';
 import {usePathname} from 'next/navigation';
 import type {ConsoleBrowserEvent,ConsoleTelemetryConfig,ConsoleEventReceipt} from '@picjp/contracts';
 import {useAuth} from '../lib/auth';
@@ -12,28 +12,32 @@ const disabled:Telemetry={enabled:false,expose:()=>undefined,select:()=>{},view:
 const Context=createContext<Telemetry>(disabled);
 const accepted=(r:Receipt)=>r.recording==='recorded'||r.recording==='duplicate';
 export function AnalyticsProvider({children}:{children:ReactNode}){
- const {user}=useAuth();return <OwnedTelemetry key={user?.id??'anonymous'} owner={user?.id??null}>{children}</OwnedTelemetry>;
+ // A sign-in must not remount the callback page after it consumes its one-time code.
+ const {user}=useAuth();return <OwnedTelemetry owner={user?.id??null}>{children}</OwnedTelemetry>;
 }
 function OwnedTelemetry({owner,children}:{owner:string|null;children:ReactNode}){
- const pathname=usePathname();const [config,setConfig]=useState<ConsoleTelemetryConfig|null>(null);
- const scope=useRef<AbortController|null>(null);
- const page=useMemo(()=>({id:crypto.randomUUID(),exposures:new Map<string,{id:string;promise:Promise<Receipt>;selected:boolean}>(),views:new Set<string>()}),[pathname]);
- useEffect(()=>{if(!owner)return;const controller=new AbortController();scope.current=controller;
-  void api<ConsoleTelemetryConfig>('/api/analytics/config',{signal:controller.signal,expectedOwnerId:owner}).then(setConfig).catch(()=>{});
+ const pathname=usePathname();
+ // Each owner change creates a new cancellation/configuration scope without replacing children.
+ const scope=useMemo(()=>({controller:null as AbortController|null}),[owner]);
+ const [config,setConfig]=useState<{scope:typeof scope;value:ConsoleTelemetryConfig}|null>(null);
+ const page=useMemo(()=>({id:crypto.randomUUID(),exposures:new Map<string,{id:string;promise:Promise<Receipt>;selected:boolean}>(),views:new Set<string>()}),[owner,pathname]);
+ useEffect(()=>{if(!owner)return;const controller=new AbortController();scope.controller=controller;
+  void api<ConsoleTelemetryConfig>('/api/analytics/config',{signal:controller.signal,expectedOwnerId:owner}).then(value=>{if(!controller.signal.aborted)setConfig({scope,value});}).catch(()=>{});
   return()=>controller.abort();
- },[owner]);
- const enabled=!!owner&&config?.collection_enabled===true&&!pathname.startsWith('/admin');
+ },[owner,scope]);
+ const enabled=!!owner&&config?.scope===scope&&config.value.collection_enabled===true&&!pathname.startsWith('/admin');
  const send=useCallback(async(event:ConsoleBrowserEvent):Promise<Receipt>=>{
-  const signal=scope.current?.signal;
+  const signal=scope.controller?.signal;
   if(!enabled||!owner||!signal||signal.aborted)return {event_id:event.event_id,recording:'disabled'};
   for(let attempt=0;attempt<3;attempt++){
+   if(signal.aborted)return {event_id:event.event_id,recording:'disabled'};
    try{return await api<ConsoleEventReceipt>('/api/analytics/events',{method:'POST',body:event,signal,expectedOwnerId:owner,keepalive:true});}
    catch(error){if(signal.aborted||attempt===2||!(error instanceof ApiError)||!error.retryable)throw error;
     await new Promise<void>(resolve=>{const done=()=>{clearTimeout(timer);signal.removeEventListener('abort',done);resolve();};const timer=setTimeout(done,Math.min(4000,(error.retryAfter??(attempt+1))*1000));signal.addEventListener('abort',done,{once:true});});
    }
   }
   return {event_id:event.event_id,recording:'disabled'};
- },[enabled,owner]);
+ },[enabled,owner,scope]);
  const expose=useCallback((tool:string)=>{
   if(!enabled)return;
   const previous=page.exposures.get(tool);if(previous)return previous.promise;
@@ -53,7 +57,10 @@ function OwnedTelemetry({owner,children}:{owner:string|null;children:ReactNode})
  },[enabled,page,send]);
  const feedback=useCallback((job:string,rating:'positive'|'negative')=>send({event_id:crypto.randomUUID(),name:'feedback_submitted',occurred_at:new Date().toISOString(),device:coarseDevice(),page_view_id:page.id,job_id:job,rating}),[page,send]);
  const value=useMemo(()=>({enabled,expose,select,view,feedback}),[enabled,expose,select,view,feedback]);
- return <Context.Provider value={value}>{children}</Context.Provider>;
+ // Keep the original owner reset for product/account pages; credential completion
+ // alone stays mounted while AuthProvider adopts the newly verified session.
+ const contentOwner=pathname==='/auth/callback'||pathname==='/ja/login'?'authentication':owner??'anonymous';
+ return <Context.Provider value={value}><Fragment key={contentOwner}>{children}</Fragment></Context.Provider>;
 }
 /** At least half visible continuously for one second in the foreground. */
 function useVisible<T extends HTMLElement>(enabled:boolean,onVisible:()=>void):RefObject<T|null>{
