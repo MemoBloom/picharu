@@ -83,9 +83,22 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
 .header-login { color: #fff; background: var(--accent); border-color: var(--accent); }
 .header-login:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
 .auth-method-note { color: var(--muted); font-size: 14px; line-height: 1.9; }
+.header-account-menu { position: relative; margin-left: auto; flex-shrink: 0; }
+.header-account-menu > .header-account { background: #fff; color: var(--ink); }
+.header-account-menu > .header-account[aria-expanded=true] { border-color: var(--accent); }
+.account-menu-panel { position: absolute; right: 0; top: calc(100% + 8px); z-index: 50; width: min(300px, calc(100vw - 40px)); padding: 8px; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 8px 24px #4b38321a; }
+.account-menu-panel > a, .account-menu-logout { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 48px; padding: 10px 14px; font-size: 14px; text-align: left; border: 0; border-radius: 6px; background: #fff; }
+.account-menu-panel > a:hover, .account-menu-logout:hover:not(:disabled) { background: var(--surface); }
+.account-menu-logout { color: var(--accent); font-weight: 700; }
+.logout-action { min-width: 0; }
+.logout-error { max-width: 320px; color: var(--error); font-size: 13px; margin-top: 8px; }
+.account-page-heading { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
 @media (max-width: 1000px) { .header-signup { display: none; } }
 @media (max-width: 700px) {
   .site-header { position: sticky; top: 0; z-index: 30; }
+  .header-account-menu > .header-account { gap: 4px; padding-inline: 8px; font-size: 13px; }
+  .header-account-menu > .header-account > svg:first-child { display: none; }
+  .editing-header:has(.header-account-menu) .header-context-link { display: none; }
   .mobile-nav { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .mobile-account { color: var(--accent); font-weight: 700; }
   .mobile-account svg { background: var(--accent-soft); border-radius: 8px; box-sizing: content-box; padding: 3px; }
