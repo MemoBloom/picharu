@@ -105,6 +105,35 @@ NEXT_PUBLIC_ANALYTICS_ENABLED=false
 
 数据库顺序：现有 Web 基础迁移 → 现有 Worker 迁移（若已使用）→ `20261020153000_seo.sql` → `20261020160000_seo_analytics.sql` → `20261020163245_seo_health.sql` → `20261020164700_seo_observation.sql`。不要重复运行已应用迁移；先检查迁移历史，在测试环境演练。SEO 表和 RPC 不直接授权给普通用户，BFF 验证 Supabase JWT 后再执行角色检查。
 
+### 4.1 本次盘点后执行顺序
+
+2026-10-21 用户返回`NO_SEO_OBJECTS`：base 6/6，core 0/20、analytics 0/17、health 0/1、observation 0/9。见[盘点摘要与源文件SHA256](../verification/SEO_SCHEMA_PREFLIGHT_2026-10-21.json)。随后用户已回传`SEO_STRUCTURE_PRESENT`、所有53项齐全，见[迁移后结构记录](../verification/SEO_SCHEMA_AFTER_2026-10-21.json)。四份迁移预期结构已落库，不再重跑本节；下面执行顺序仅作本次操作记录。
+
+沿用该项目此前的SQL Editor手动部署方式，每份文件单独新建一个查询，完整复制并依次执行，前一份成功再进行下一份：
+
+| 顺序 | 源文件 | 内容 |
+|---|---|---|
+| 1 | [20261020153000_seo.sql](../../supabase/migrations/20261020153000_seo.sql) | 内容版本、审核发布、指标导入 |
+| 2 | [20261020160000_seo_analytics.sql](../../supabase/migrations/20261020160000_seo_analytics.sql) | 同意会话、事件、业务关联；向已有任务/订单表添加统计触发器 |
+| 3 | [20261020163245_seo_health.sql](../../supabase/migrations/20261020163245_seo_health.sql) | 采集健康检查、看板聚合更新 |
+| 4 | [20261020164700_seo_observation.sql](../../supabase/migrations/20261020164700_seo_observation.sql) | 优化计划、基线与观察复盘 |
+
+每份文件自带BEGIN/COMMIT事务；正常可显示Success/No rows returned。若某一步报错，保留完整错误，先不要继续后续文件或重跑已成功文件。基础Web/Worker迁移已经有先前执行反馈，本次不重新执行。执行成功本身不打开网站生成、索引或采集开关。
+
+四份成功后，重新运行[只读盘点](../../scripts/seo/inspect-schema.sql)，预期`SEO_STRUCTURE_PRESENT`、base 6/6、core 20/20、analytics 17/17、health 1/1、observation 9/9；将新结果返回，再验运行身份/权限和真实导入。
+
+SQL Editor手动执行不会自动写入Supabase CLI迁移历史。本次保留源文件和执行结果记录；以后改用CLI部署前，先核对`supabase_migrations.schema_migrations`并对齐已实际应用的版本，不能直接db push重放基础或SEO建表文件，也不能把本次盘点当成已完成历史修复。参考[官方迁移历史说明](https://supabase.com/docs/guides/deployment/database-migrations)。
+
+### 4.2 迁移后只读权限和函数检查
+
+在同一项目SQL Editor新建查询，完整执行 [verify-database-read.sql](../../scripts/seo/verify-database-read.sql)，返回`seo_db_readiness`。该脚本使用只读事务和SET LOCAL ROLE service_role，仅检查系统权限并调用seo_get_published、seo_ingestion_health，最后ROLLBACK恢复身份。没有创建或修改业务数据、角色授权、照片或Prompt。
+
+预期execution_role为service_role，transaction_read_only及五项权限布尔值均为true；rls_disabled_tables、browser_table_exposure、browser_function_exposure应为空。当前迁移对应13张SEO表、29个函数，health_window_entries为4（一天的GSC三粒度加GA4一粒度）。新库published_page_count和successful_import_windows可为0，不是读取失败，也不能伪装为数据已导入。
+
+若SQL报错或布尔值不符合，保留原错误/摘要，先定位；不用重新运行迁移。这个SQL测试不证明HTTP运行身份、真实数据导入或所有函数逻辑均已验收。若事务中途失败，需先ROLLBACK后再执行新查询。
+
+### 4.3 SEO操作身份
+
 负责人需要给至少两个独立身份分配 SEO 角色（例如自动化编辑身份和你的审核账号，或先用两个测试账号演练），在 Supabase SQL Editor 执行以下结构，替换成已核实的 Auth 用户 UUID：
 
 ```sql
