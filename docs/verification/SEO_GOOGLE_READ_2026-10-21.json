@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-21",
+  "evidence_source": "User-returned Cloud Shell output; not independently queried by the local agent",
+  "service_account": "picmoko-seo-reader@picjp-staging.iam.gserviceaccount.com",
+  "identity_path": "Cloud Shell user -> IAM generateAccessToken -> service account read-only scopes",
+  "reports": [
+    {
+      "source": "gsc",
+      "day": "2026-10-17",
+      "http_status": 200,
+      "ok": true,
+      "data_state": "empty"
+    },
+    {
+      "source": "ga4",
+      "day": "2026-10-18",
+      "http_status": 200,
+      "ok": true,
+      "data_state": "empty"
+    }
+  ],
+  "proves": [
+    "service account can read the specified GSC and GA4 reports",
+    "successful empty result for the reported dates"
+  ],
+  "does_not_prove": [
+    "production GA4 tag event reception",
+    "database ingestion or migration",
+    "Cloud Run identity and scheduler",
+    "SEO deployment or indexing",
+    "traffic growth"
+  ]
+}

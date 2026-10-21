@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-21",
+  "evidence_source": "User-returned Cloud Shell build script completion lines; no direct Cloud Build or Artifact Registry query by local agent",
+  "reported_success": true,
+  "source_revision": "ed0b30305583d378d06b015fa41925f1b6701189",
+  "image": "asia-northeast1-docker.pkg.dev/picjp-staging/picjp/seo-collector:seo-ed0b30305583",
+  "reported_lines": [
+    "SEO_BUILD_OK source=ed0b30305583d378d06b015fa41925f1b6701189",
+    "image=asia-northeast1-docker.pkg.dev/picjp-staging/picjp/seo-collector:seo-ed0b30305583"
+  ],
+  "scope": "reported_collector_image_build_and_push_only_not_runtime_or_ingestion",
+  "cloud_build_id": null,
+  "image_digest": null,
+  "pending": [
+    "Cloud Run Job deployment and dedicated service identity",
+    "runtime Secret Manager access and Supabase HTTP RPC access",
+    "full GSC and GA4 report imports plus database readback",
+    "scheduling, tag reception, authorized content evaluation and website deployment"
+  ]
+}

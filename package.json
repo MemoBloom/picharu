@@ -19,19 +19,27 @@
     "test:concurrency": "node --import tsx scripts/test-concurrency.ts",
     "contracts:check": "node --import tsx scripts/export-openapi.ts --check",
     "hooks:install": "node scripts/setup-git-hooks.mjs",
-    "verify": "npm run contracts:check && npm run typecheck && npm test && npm run test:db && npm run build"
+    "verify": "npm run seo:review:check && npm run contracts:check && npm run typecheck && npm test && npm run test:db && npm run build",
+    "seo:collect": "node --import tsx scripts/seo/collect.ts",
+    "test:seo:http": "node --import tsx scripts/test-seo-http.ts",
+    "test:seo:production": "node --import tsx scripts/test-seo-production.ts",
+    "test:seo:publishing": "node --import tsx scripts/test-seo-publishing.ts",
+    "seo:review:export": "node --import tsx scripts/seo/review-pack.ts",
+    "seo:review:check": "node --import tsx scripts/seo/review-pack.ts --check"
   },
   "devDependencies": {
+    "@asteasolutions/zod-to-openapi": "^7.3.0",
+    "@electric-sql/pglite": "^0.3.14",
     "@types/node": "^22.0.0",
+    "@types/pg": "^8.15.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "typescript": "^5.9.0",
-    "vitest": "^3.2.0",
-    "tsx": "^4.20.0",
+    "csv-parse": "^7.0.3",
+    "google-auth-library": "^10.9.1",
     "pg": "^8.16.0",
-    "@types/pg": "^8.15.0",
-    "@electric-sql/pglite": "^0.3.14",
-    "@asteasolutions/zod-to-openapi": "^7.3.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "vitest": "^4.1.12",
     "jsdom": "26.1.0"
   }
 }

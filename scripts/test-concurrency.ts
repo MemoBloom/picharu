@@ -5,6 +5,7 @@ import { realpathSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname } from 'node:path';
 import assert from 'node:assert/strict';
+import { baselineContent } from '../apps/web/src/server/seo/content';
 
 /** Destructive only to its own freshly created, random test database. Never reads .env. */
 const host = process.env.PGHOST ?? '';
@@ -195,6 +196,60 @@ async function main(){
   check((await account()).available,0,'later concurrent partial refund does not reverse dispute entitlement withdrawal');
   check(Number((await db.query("select count(*) as n from credit_ledger where reference_id=$1 and kind='revoke'",[earlyCases.disputed.id])).rows[0].n),1,'dispute and later partial refunds revoke once');
   await closeClients(earlyClients);
+  // SEO migrations are applied to this same isolated database, never to a configured cloud project.
+  await db.query(await readFile('supabase/migrations/20261020153000_seo.sql','utf8'));
+  await db.query(await readFile('supabase/migrations/20261020160000_seo_analytics.sql','utf8'));
+  await db.query(await readFile('supabase/migrations/20261020163245_seo_health.sql','utf8'));
+  await db.query(await readFile('supabase/migrations/20261020164700_seo_observation.sql','utf8'));
+  const reviewer=randomUUID();await db.query('insert into auth.users values($1)',[reviewer]);
+  await db.query("insert into seo_members values($1,'editor'),($2,'reviewer')",[owner,reviewer]);
+  const seoClients=await clients(10),content=baselineContent('/ja/tools/change_background')!.content;
+  const drafts:string[]=[];
+  for(let i=0;i<10;i++){
+   const revision=(await rpc(db,'seo_save_draft',[owner,JSON.stringify({...content,title:content.title+' '+i}),null])).id;
+   for(const [action,actor] of [['submit',owner],['approve',reviewer]])await rpc(db,'seo_transition',[actor,revision,action,null,randomUUID()]);
+   drafts.push(revision);
+  }
+  await db.query('begin');await db.query('select * from seo_pages where path=$1 for update',[content.path]);
+  const operations=drafts.map(()=>randomUUID());
+  const competing=Promise.allSettled(seoClients.map((c,i)=>rpc(c,'seo_transition',[reviewer,drafts[i],'publish',null,operations[i]])));
+  const waitUntil=Date.now()+5000;let blocked=0;
+  while(Date.now()<waitUntil){blocked=Number((await db.query("select count(*) n from pg_stat_activity where datname=$1 and application_name='picjp-concurrency-test' and wait_event_type='Lock'",[database])).rows[0].n);if(blocked===10)break;await new Promise(resolve=>setTimeout(resolve,20));}
+  check(blocked,10,'10 SEO publishers genuinely overlap waiting on the same page row');await db.query('commit');
+  const publishResults=await competing;
+  check(publishResults.filter(r=>r.status==='fulfilled').length,1,'exactly one CAS publisher wins');
+  check(publishResults.filter(r=>r.status==='rejected'&&/SEO_REVISION_CONFLICT/.test(String(r.reason))).length,9,'nine stale SEO publications reject without overwriting');
+  const winner=publishResults.findIndex(r=>r.status==='fulfilled');
+  const replays=await Promise.all(seoClients.map(c=>rpc(c,'seo_transition',[reviewer,drafts[winner],'publish',null,operations[winner]])));
+  check(new Set(replays.map(r=>r.revision_id)).size,1,'concurrent identical publication operation replays one result');
+  check(Number((await db.query("select count(*) n from seo_changes where action='publish'")).rows[0].n),1,'publication audit is exactly once');
+  const ptToday=(await db.query("select ((now() at time zone 'America/Los_Angeles')::date)::text v")).rows[0].v as string;
+  const seoDay=(n:number)=>new Date(Date.parse(ptToday+'T00:00:00Z')+n*86400000).toISOString().slice(0,10);
+  const plan={hypothesis:'Explicit concurrency fixture for observational evidence.',change_summary:'Keep title and public body on the same immutable revision.',target_queries:['写真から人を消す'],risk_notes:'The fixture contains no real Google data or growth evidence.',rollback_conditions:'Roll back incorrect claims or technical rendering regressions.',source_property:'sc-domain:picmoko.com',baseline_from:seoDay(-38),baseline_to:seoDay(-25),observation_days:14,minimum_impressions:300,is_fixture:true};
+  const planned=(await rpc(db,'seo_save_planned_draft',[owner,JSON.stringify(content),drafts[winner],JSON.stringify(plan)])).id;
+  const publishOperation=randomUUID();
+  for(const [action,actor] of [['submit',owner],['approve',reviewer],['publish',reviewer]])await rpc(db,'seo_transition',[actor,planned,action,drafts[winner],action==='publish'?publishOperation:randomUUID()]);
+  await db.query("update seo_changes set created_at=($2::date::timestamp+interval '12 hours') at time zone 'America/Los_Angeles' where operation_id=$1",[publishOperation,seoDay(-24)]);
+  const observationId=randomUUID(),observationArgs=[reviewer,planned,publishOperation,observationId,seoDay(-10),'insufficient','Historical concurrency fixture only; no fabricated data or causal conclusion.'];
+  await db.query('begin');await db.query('select pg_advisory_xact_lock(hashtextextended($1::text,0))',[observationId]);
+  const observations=Promise.all(seoClients.map(c=>rpc(c,'seo_capture_observation',observationArgs)));
+  const observeWaitUntil=Date.now()+5000;let observerBlocked=0;
+  while(Date.now()<observeWaitUntil){observerBlocked=Number((await db.query("select count(*) n from pg_stat_activity where datname=$1 and application_name='picjp-concurrency-test' and wait_event_type='Lock'",[database])).rows[0].n);if(observerBlocked===10)break;await new Promise(resolve=>setTimeout(resolve,20));}
+  check(observerBlocked,10,'ten observation retries genuinely overlap on the same operation lock');await db.query('commit');
+  const observed=await observations;check(new Set(observed.map(r=>r.id)).size,1,'concurrent observation retries replay the same snapshot');
+  check(Number((await db.query('select count(*) n from seo_observations where id=$1',[observationId])).rows[0].n),1,'observation evidence is recorded exactly once');
+  check(observed[0].report.comparison_ready,false,'concurrent no-data observations remain explicitly incomplete');
+  const changed=await Promise.allSettled([rpc(db,'seo_capture_observation',[...observationArgs.slice(0,6),'Different review note must never overwrite immutable evidence.'])]);
+  check(changed.filter(r=>r.status==='rejected'&&/SEO_IDEMPOTENCY_CONFLICT/.test(String(r.reason))).length,1,'same operation with changed observation input conflicts');
+  const consent=randomUUID();await rpc(db,'seo_start_session',[consent,'/ja','direct','a'.repeat(64)]);
+  await rpc(db,'seo_set_ga4_session',[consent,'123.456',Math.floor(Date.now()/1000)]);
+  await db.query("insert into seo_events(id,session_id,name,path,entity_kind,entity_id) select gen_random_uuid(),$1,'generate_success','/ja','job',gen_random_uuid() from generate_series(1,20)",[consent]);
+  const claims=await Promise.all(seoClients.map(c=>rpc(c,'seo_claim_delivery',[randomUUID(),2])));
+  check(claims.flat().length,20,'concurrent bounded outbox claims claim all twenty test events');
+  check(new Set(claims.flat().map(row=>row.id)).size,20,'SKIP LOCKED prevents duplicate Google submissions');
+  await rpc(db,'seo_revoke_session',[consent]);
+  check(await rpc(db,'seo_delivery_allowed',[claims[0][0].id,claims[0][0].delivery_token]),false,'revocation cancels delivery even after a claim');
+  await closeClients(seoClients);
   // Console v1: independent sessions genuinely overlap behind the exact locks
   // taken by ingestion/finalization. Attempts/polls/retries must not inflate use.
   await db.query("update console_settings set environment='test',collection_enabled=true");
@@ -333,7 +388,7 @@ async function main(){
   check(terminalConflicts.every(r=>r.status==='rejected'&&/IDEMPOTENCY_CONFLICT/.test(String(r.reason))),true,'concurrent terminal conflicts cannot rewrite a successful refund');
   check((await db.query('select amount_minor::int,status from console_refunds where id=$1',[refundId])).rows[0],{amount_minor:100,status:'succeeded'},'rejected refund transitions preserve immutable chronology');
   await closeClients(ac);
-  console.log(`Native PostgreSQL independent-session concurrency passed: ${assertions} assertions; 20 same-key creates, 20 competing balances, 20 cancellations, 20 paid events, 30 delete/create races (${createdFirst} creation wins / ${deletedFirst} deletion wins); full/partial/disputed known-Charge facts and later reversal races; stage 3 cross-device idempotency, stable reports/current roles and refund identity transitions.`);
+  console.log(`Native PostgreSQL core + consoles + SEO independent-session concurrency passed: ${assertions} assertions; 20 same-key creates, 20 competing balances, 20 cancellations, 20 paid events, 30 delete/create races (${createdFirst} creation wins / ${deletedFirst} deletion wins); full/partial/disputed known-Charge facts and later reversal races; stage 3 cross-device idempotency, stable reports/current roles and refund identity transitions.`);
  }finally{
   if(db)await db.query('rollback').catch(()=>{});
   await Promise.allSettled([...sessions].map(c=>c.end()));

@@ -1,0 +1,95 @@
+import { beforeAll, afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { PGlite } from '@electric-sql/pglite';
+import { readFile } from 'node:fs/promises';
+import { createHmac, randomUUID } from 'node:crypto';
+import { createSeoHandler } from '../apps/web/src/server/seo/http';
+import { baselineContent } from '../apps/web/src/server/seo/content';
+import { SeoError, type SeoRpc } from '../apps/web/src/server/seo/repository';
+import { matureWindow } from '../apps/web/src/server/seo/calendar';
+
+let db: PGlite;
+const author = randomUUID(), reviewer = randomUUID(), outsider = randomUUID(), secret = 'offline-fixture-signing-secret-long-enough';
+const invalidate = vi.fn(async () => {});
+const rpc: SeoRpc = async <T>(name: string, args: Record<string, unknown>) => {
+  const entries = Object.entries(args);
+  try { return (await db.query<{ v: T }>(`select ${name}(${entries.map(([key], i) => `${key}=>$${i + 1}`).join(',')}) v`, entries.map(([key, value]) => key==='p_roles' ? '{'+(value as string[]).join(',')+'}' : value && typeof value === 'object' ? JSON.stringify(value) : value))).rows[0].v; }
+  catch (error) { const code = String((error as Error).message).match(/SEO_[A-Z_]+/)?.[0] || 'SEO_UNAVAILABLE'; throw new SeoError(code, ['SEO_FORBIDDEN', 'SEO_SELF_REVIEW'].includes(code) ? 403 : code === 'SEO_NOT_FOUND' ? 404 : 409); }
+};
+const deps = { rpc, invalidate, now: () => Date.now(), secret: () => secret, databaseContentEnabled: () => true, authenticate: async (r: Request) => { const actor = r.headers.get('authorization')?.slice(7); if (!actor || !([author, reviewer, outsider] as string[]).includes(actor)) throw new SeoError('SEO_UNAUTHORIZED', 401); return actor; } };
+const request = (route: string, body?: unknown, actor: string = author) => new Request('https://picmoko.com/api/seo/' + route, { method: body ? 'POST' : 'GET', headers: { Authorization: 'Bearer ' + actor, 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
+beforeAll(async () => {
+  db = new PGlite(); await db.exec('create schema auth;create table auth.users(id uuid primary key);create role anon;create role authenticated;create role service_role bypassrls;grant usage on schema public to anon,authenticated,service_role;');
+  await db.exec(await readFile('supabase/migrations/20261020153000_seo.sql', 'utf8'));
+  await db.exec(await readFile('supabase/migrations/20261020163245_seo_health.sql', 'utf8'));
+ await db.exec(await readFile('supabase/migrations/20261020164700_seo_observation.sql','utf8'));
+  await db.query('insert into auth.users values($1),($2),($3)', [author, reviewer, outsider]);
+  await db.query("insert into seo_members values($1,'editor'),($2,'reviewer')", [author, reviewer]);
+});
+afterAll(() => db.close());
+beforeEach(async () => { invalidate.mockClear(); await db.exec('truncate seo_observations,seo_plans,seo_changes,seo_revisions,seo_pages,seo_webhook_nonces cascade'); });
+describe('SEO HTTP integrates the real migration, authorization and publish boundaries', () => {
+  it('rejects retired drafts and old approved publish/rollback targets while preserving SQL history',async()=>{
+    const handle=createSeoHandler(deps),active=baselineContent('/ja/tools/change_background')!.content;
+    for(const path of ['/ja/tools/remove_person','/ja/tools/remove_object','/ja/guides/remove-unwanted-people']){
+      const content={...active,path,kind:path.includes('/guides/')?'guide':'tool'};
+      expect((await handle(request('admin/drafts',{content,expected_revision:null}))).status).toBe(404);
+      const revision=(await rpc<any>('seo_save_draft',{p_actor:author,p_content:content,p_expected_revision:null})).id;
+      for(const [action,actor]of [['submit',author],['approve',reviewer]])await rpc('seo_transition',{p_actor:actor,p_revision:revision,p_action:action,p_expected_revision:null,p_operation:randomUUID()});
+      for(const action of ['publish','rollback'])expect((await handle(request('admin/transitions',{revision_id:revision,action,expected_revision:null,operation_id:randomUUID()},reviewer))).status).toBe(404);
+      expect((await rpc<any>('seo_get_revision',{p_actor:reviewer,p_revision:revision})).content.path).toBe(path);
+    }
+    expect((await handle(request('admin/drafts',{content:{...active,related_tools:['remove_person']},expected_revision:null}))).status).toBe(400);
+    expect(invalidate).not.toHaveBeenCalled();
+  });
+  it('persists optional private plans and validates observation input before calling SQL',async()=>{
+    const handle=createSeoHandler(deps),to=matureWindow('America/Los_Angeles').to,from=new Date(Date.parse(to+'T00:00:00Z')-13*86400000).toISOString().slice(0,10);
+    const plan={hypothesis:'Improve page intent with consistent title and body.',change_summary:'Review visible copy and preserve real product constraints.',target_queries:['写真から人を消す'],risk_notes:'Search recrawling and seasonal demand can change metrics.',rollback_conditions:'Restore the prior revision if a claim is incorrect.',source_property:'sc-domain:picmoko.com',baseline_from:from,baseline_to:to,observation_days:14,minimum_impressions:300,is_fixture:true};
+    const saved=await handle(request('admin/drafts',{content:baselineContent('/ja/tools/change_background')!.content,expected_revision:null,plan}));expect(saved.status).toBe(201);const revision=(await saved.json()).id;
+    const overview=await handle(request('admin/overview?fixture=true'));const data=await overview.json();expect(data.plans.find((p:any)=>p.revision_id===revision)).toMatchObject({plan:{is_fixture:true},baseline_snapshot:{ready:false}});
+    const body={revision_id:revision,publish_operation_id:randomUUID(),operation_id:randomUUID(),observation_to:to,decision:'insufficient',notes:'No fabricated data or causal conclusion.'};
+    expect((await handle(request('admin/observations',body))).status).toBe(404);
+    expect((await handle(request('admin/observations',{...body,observation_to:'2026-02-30'}))).status).toBe(400);
+    expect((await handle(request('admin/observations',body,outsider))).status).toBe(403);
+    expect((await handle(request('admin/observations',body,'invalid'))).status).toBe(401);
+  });
+  it('reports missing collection through the authorized overview without suggesting changes',async()=>{
+    const handle=createSeoHandler(deps);
+    const response=await handle(request('admin/overview?fixture=true'));expect(response.status).toBe(200);
+    expect(response.headers.get('cache-control')).toBe('no-store');
+    const body=await response.json();expect(body.health).toMatchObject({is_fixture:true,healthy:false,can_suggest_search_changes:false});expect(body.opportunities).toEqual([]);
+    expect(body.health.sources[0].missing_days).toHaveLength(7);
+    expect((await handle(request('admin/overview?fixture=true',undefined,outsider))).status).toBe(403);
+  });
+  it('rejects unverified and non-member callers, invalid input and unexpected routes', async () => {
+    const handle = createSeoHandler(deps);
+    expect((await handle(request('admin/baseline?path=/ja/tools/change_background', undefined, 'invalid'))).status).toBe(401);
+    expect((await handle(request('admin/baseline?path=/ja/tools/change_background', undefined, outsider))).status).toBe(403);
+    expect((await handle(request('admin/drafts', { content: { path: '/ja/edit' }, expected_revision: null }))).status).toBe(400);
+    expect((await handle(request('admin/missing'))).status).toBe(404);
+    const wrongType = new Request('https://picmoko.com/api/seo/admin/drafts', { method: 'POST', headers: { Authorization: 'Bearer ' + author, 'Content-Type': 'text/plain' }, body: '{}' });
+    expect((await handle(wrongType)).status).toBe(415);
+  });
+  it('requires independent approval, publishes a single revision and replays the same operation safely', async () => {
+    const handle = createSeoHandler(deps), content = baselineContent('/ja/tools/change_background')!.content;
+    const saved = await handle(request('admin/drafts', { content, expected_revision: null })); expect(saved.status).toBe(201); const revision = (await saved.json()).id;
+    const read=await handle(request('admin/revision?revision_id='+revision));expect(read.status).toBe(200);expect((await read.json()).base_revision).toBeNull();
+    const action = (name: string, actor: string, expected: string | null = null, op = randomUUID()) => handle(request('admin/transitions', { revision_id: revision, action: name, expected_revision: expected, operation_id: op }, actor));
+    expect((await action('publish', reviewer)).status).toBe(409);
+    expect((await action('submit', author)).status).toBe(200); expect((await action('approve', author)).status).toBe(403);
+    expect((await action('approve', reviewer)).status).toBe(200);
+    expect((await createSeoHandler({ ...deps, databaseContentEnabled: () => false })(request('admin/transitions', { revision_id: revision, action: 'publish', expected_revision: null, operation_id: randomUUID() }, reviewer))).status).toBe(409);
+    const op = randomUUID(); expect((await action('publish', reviewer, null, op)).status).toBe(200); expect((await action('publish', reviewer, null, op)).status).toBe(200);
+    expect(invalidate).toHaveBeenCalledTimes(2); expect((await rpc<any[]>('seo_get_published', { p_path: content.path }))[0].revision).toBe(revision);
+  });
+  it('validates exact signed bytes, current revision, timestamp and single-use nonce', async () => {
+    const content = baselineContent('/ja/tools/change_background')!.content;
+    const revision = (await rpc<any>('seo_save_draft', { p_actor: author, p_content: content, p_expected_revision: null })).id;
+    for (const [action, actor] of [['submit', author], ['approve', reviewer], ['publish', reviewer]]) await rpc('seo_transition', { p_actor: actor, p_revision: revision, p_action: action, p_expected_revision: null, p_operation: randomUUID() });
+    const handle = createSeoHandler(deps);
+    const signed = (changes = {}, bad = false) => { const body = JSON.stringify({ path: content.path, revision_id: revision, nonce: randomUUID(), timestamp: Math.floor(Date.now() / 1000), ...changes }); return new Request('https://picmoko.com/api/seo/revalidate', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Seo-Signature': bad ? '0'.repeat(64) : createHmac('sha256', secret).update(body).digest('hex') }, body }); };
+    expect((await handle(signed({}, true))).status).toBe(401); expect((await handle(signed({ timestamp: 1 }))).status).toBe(401);
+    expect((await handle(signed({ revision_id: randomUUID() }))).status).toBe(409);
+    const req = signed(), clone = req.clone(); expect((await handle(req)).status).toBe(200); expect((await handle(clone)).status).toBe(409);
+    expect(invalidate).toHaveBeenCalledTimes(1);
+  });
+});

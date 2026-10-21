@@ -8,7 +8,7 @@ export const dynamicParams = false;
 export function generateStaticParams() { return Object.keys(legalTitles).map((document) => ({ document })); }
 export async function generateMetadata({ params }: { params: Promise<{ document: string }> }) {
   const { document } = await params;
-  return { title: isDocument(document) ? legalTitles[document] : 'ページが見つかりません' };
+  return { title: isDocument(document) ? legalTitles[document] : 'ページが見つかりません', robots: { index: false, follow: true } };
 }
 export default async function Page({ params }: { params: Promise<{ document: string }> }) {
   const { document } = await params;

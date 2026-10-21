@@ -2,7 +2,8 @@ import {describe,it,expect,vi} from 'vitest';
 import {ToolId} from '@picjp/contracts';
 import {activeTools} from '@picjp/tool-config';
 import {findToolContent,findHistoricalToolContent,findPublicToolContent,publicToolContent} from '../apps/web/src/lib/tool-content';
-vi.mock('../apps/web/src/components/public-pages',()=>({ToolDetail:()=>null}));
+vi.mock('../apps/web/src/components/seo-content-page',()=>({SeoContentPage:()=>null}));
+import {baselineContent} from '../apps/web/src/server/seo/content';
 import Page,{dynamicParams,generateStaticParams,generateMetadata} from '../apps/web/src/app/ja/tools/[toolId]/page';
 
 describe('current public scope and immutable historical tool names',()=>{
@@ -31,6 +32,9 @@ describe('current public scope and immutable historical tool names',()=>{
   await expect(generateMetadata(args)).rejects.toThrow('NEXT_HTTP_ERROR_FALLBACK;404');
  });
  it('retains valid metadata for every current direction',async()=>{
-  for(const t of publicToolContent)await expect(generateMetadata({params:Promise.resolve({toolId:t.tool_id})})).resolves.toEqual({title:t.name_ja,description:t.description});
+  for(const t of publicToolContent){
+   const snapshot=baselineContent(`/ja/tools/${t.tool_id}`)!;
+   await expect(generateMetadata({params:Promise.resolve({toolId:t.tool_id})})).resolves.toMatchObject({title:{absolute:`${snapshot.content.title} | picmoko`},description:snapshot.content.description,alternates:{canonical:`https://picmoko.com/ja/tools/${t.tool_id}`},robots:{index:false},other:{'seo-revision':snapshot.revision}});
+  }
  });
 });

@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-21",
+  "evidence_source": "User-returned seo_inventory summary from Supabase SQL Editor; local agent has no direct DB connection",
+  "scope": "catalog_presence_only_not_runtime_or_security_acceptance",
+  "schema_state": "NO_SEO_OBJECTS",
+  "stages": {
+    "base": {
+      "found": 6,
+      "expected": 6,
+      "missing_count": 0
+    },
+    "core": {
+      "found": 0,
+      "expected": 20,
+      "missing_count": 20
+    },
+    "analytics": {
+      "found": 0,
+      "expected": 17,
+      "missing_count": 17
+    },
+    "health": {
+      "found": 0,
+      "expected": 1,
+      "missing_count": 1
+    },
+    "observation": {
+      "found": 0,
+      "expected": 9,
+      "missing_count": 9
+    }
+  },
+  "next_action": "Apply the four reviewed SEO migrations in the established manual SQL Editor workflow, in order, then re-run inspect-schema.sql. No migration has yet been confirmed applied.",
+  "migration_sources": [
+    {
+      "file": "20261020153000_seo.sql",
+      "sha256": "b50a96f919a30efaa4ba8278cb8e281c669c40b5225aa4eff3edd6f005515ef7"
+    },
+    {
+      "file": "20261020160000_seo_analytics.sql",
+      "sha256": "ffcda8a3aac80601c92a93fbd018ee0ce24b6be2df40ffcc8c4f80294da3b9e2"
+    },
+    {
+      "file": "20261020163245_seo_health.sql",
+      "sha256": "3884f208744afb84eb1121ac1c137cb2b9469012d1af28114790ebc6c8e41ad5"
+    },
+    {
+      "file": "20261020164700_seo_observation.sql",
+      "sha256": "eb06cb9a00ef51d826a88edeec55cda68d4d6a3c7013de5623454e5f2cf8808a"
+    }
+  ],
+  "cli_migration_history": "Manual SQL Editor execution does not itself synchronize Supabase CLI migration history; reconcile before future CLI db push."
+}

@@ -13,6 +13,9 @@
   ],
   "tags": [
     {
+      "name": "SEO"
+    },
+    {
       "name": "Vercel BFF"
     },
     {
@@ -47,6 +50,18 @@
         "scheme": "bearer",
         "bearerFormat": "Google-signed OIDC ID token",
         "description": "Cloud Run IAM authentication; not cloud-verified yet. Token audience is the Cloud Run service URL; grant invoker only to approved Scheduler/dispatcher identities. Separate from end-user Supabase authentication."
+      },
+      "SeoConsentCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "picmoko_seo",
+        "description": "HttpOnly signed consent session, max 30 minutes. Same-origin Origin header is additionally required. This cookie is not user authentication."
+      },
+      "SeoHmac": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Seo-Signature",
+        "description": "Hex HMAC-SHA256(secret, exact raw JSON body). Signed Unix timestamp within 300s and one-time nonce. Server-side secret at least 32 characters."
       }
     },
     "schemas": {
@@ -4959,6 +4974,1173 @@
           "status",
           "stage",
           "next_attempt_at"
+        ],
+        "additionalProperties": false
+      },
+      "SeoConsentRequest": {
+        "type": "object",
+        "properties": {
+          "consent": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "landing_path": {
+            "type": "string",
+            "maxLength": 180,
+            "pattern": "^\\/ja(?:\\/tools(?:\\/[a-z_]+)?|\\/guides(?:\\/[a-z0-9-]+)?|\\/help)?$"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "organic_search",
+              "paid_search",
+              "x",
+              "tiktok",
+              "creator_referral",
+              "direct",
+              "other"
+            ]
+          }
+        },
+        "required": [
+          "consent",
+          "landing_path",
+          "source"
+        ],
+        "additionalProperties": false
+      },
+      "SeoContent": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 180,
+            "pattern": "^\\/ja(?:\\/tools(?:\\/[a-z_]+)?|\\/guides(?:\\/[a-z0-9-]+)?|\\/help)?$"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "tool",
+              "guide"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 240
+          },
+          "h1": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "lead": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 2000
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "heading": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 100
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 10,
+                  "maxLength": 3000
+                }
+              },
+              "required": [
+                "heading",
+                "text"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "maxItems": 15
+          },
+          "faq": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "question": {
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 200
+                },
+                "answer": {
+                  "type": "string",
+                  "minLength": 10,
+                  "maxLength": 1500
+                }
+              },
+              "required": [
+                "question",
+                "answer"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 10
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "maxItems": 10
+          },
+          "related_tools": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z_]+$"
+            },
+            "maxItems": 6
+          },
+          "indexable": {
+            "type": "boolean"
+          },
+          "examples": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "before": {
+                  "type": "string",
+                  "pattern": "^\\/seo-examples\\/[a-zA-Z0-9_/-]+-[a-f0-9]{64}\\.(png|jpg|webp)$"
+                },
+                "after": {
+                  "type": "string",
+                  "pattern": "^\\/seo-examples\\/[a-zA-Z0-9_/-]+-[a-f0-9]{64}\\.(png|jpg|webp)$"
+                },
+                "model_profile_version": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "rights_review": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "evaluated_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "evaluation_reference": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                }
+              },
+              "required": [
+                "before",
+                "after",
+                "model_profile_version",
+                "rights_review",
+                "evaluated_at",
+                "evaluation_reference"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 6
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "path",
+          "kind",
+          "title",
+          "description",
+          "h1",
+          "lead",
+          "sections",
+          "faq",
+          "keywords",
+          "related_tools",
+          "indexable",
+          "examples",
+          "updated_at"
+        ],
+        "additionalProperties": false
+      },
+      "SeoDraftRequest": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "maxLength": 180,
+                "pattern": "^\\/ja(?:\\/tools(?:\\/[a-z_]+)?|\\/guides(?:\\/[a-z0-9-]+)?|\\/help)?$"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "tool",
+                  "guide"
+                ]
+              },
+              "title": {
+                "type": "string",
+                "minLength": 3,
+                "maxLength": 100
+              },
+              "description": {
+                "type": "string",
+                "minLength": 20,
+                "maxLength": 240
+              },
+              "h1": {
+                "type": "string",
+                "minLength": 3,
+                "maxLength": 100
+              },
+              "lead": {
+                "type": "string",
+                "minLength": 20,
+                "maxLength": 2000
+              },
+              "sections": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "heading": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 100
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 10,
+                      "maxLength": 3000
+                    }
+                  },
+                  "required": [
+                    "heading",
+                    "text"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1,
+                "maxItems": 15
+              },
+              "faq": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "question": {
+                      "type": "string",
+                      "minLength": 3,
+                      "maxLength": 200
+                    },
+                    "answer": {
+                      "type": "string",
+                      "minLength": 10,
+                      "maxLength": 1500
+                    }
+                  },
+                  "required": [
+                    "question",
+                    "answer"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 10
+              },
+              "keywords": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "maxItems": 10
+              },
+              "related_tools": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z_]+$"
+                },
+                "maxItems": 6
+              },
+              "indexable": {
+                "type": "boolean"
+              },
+              "examples": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "before": {
+                      "type": "string",
+                      "pattern": "^\\/seo-examples\\/[a-zA-Z0-9_/-]+-[a-f0-9]{64}\\.(png|jpg|webp)$"
+                    },
+                    "after": {
+                      "type": "string",
+                      "pattern": "^\\/seo-examples\\/[a-zA-Z0-9_/-]+-[a-f0-9]{64}\\.(png|jpg|webp)$"
+                    },
+                    "model_profile_version": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100
+                    },
+                    "rights_review": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    },
+                    "evaluated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "evaluation_reference": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    }
+                  },
+                  "required": [
+                    "before",
+                    "after",
+                    "model_profile_version",
+                    "rights_review",
+                    "evaluated_at",
+                    "evaluation_reference"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 6
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "path",
+              "kind",
+              "title",
+              "description",
+              "h1",
+              "lead",
+              "sections",
+              "faq",
+              "keywords",
+              "related_tools",
+              "indexable",
+              "examples",
+              "updated_at"
+            ],
+            "additionalProperties": false
+          },
+          "expected_revision": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "plan": {
+            "type": "object",
+            "properties": {
+              "hypothesis": {
+                "type": "string",
+                "minLength": 10,
+                "maxLength": 1000
+              },
+              "change_summary": {
+                "type": "string",
+                "minLength": 10,
+                "maxLength": 1000
+              },
+              "target_queries": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "minItems": 1,
+                "maxItems": 10
+              },
+              "risk_notes": {
+                "type": "string",
+                "minLength": 10,
+                "maxLength": 1000
+              },
+              "rollback_conditions": {
+                "type": "string",
+                "minLength": 10,
+                "maxLength": 1000
+              },
+              "source_property": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              },
+              "baseline_from": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "baseline_to": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "observation_days": {
+                "type": "integer",
+                "minimum": 14,
+                "maximum": 56
+              },
+              "minimum_impressions": {
+                "type": "integer",
+                "minimum": 300,
+                "maximum": 1000000
+              },
+              "is_fixture": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "hypothesis",
+              "change_summary",
+              "target_queries",
+              "risk_notes",
+              "rollback_conditions",
+              "source_property",
+              "baseline_from",
+              "baseline_to",
+              "observation_days",
+              "minimum_impressions",
+              "is_fixture"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "content",
+          "expected_revision"
+        ],
+        "additionalProperties": false
+      },
+      "SeoErrorEnvelope": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "pattern": "^SEO_[A-Z_]+$"
+              }
+            },
+            "required": [
+              "code"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "additionalProperties": false
+      },
+      "SeoEventRequest": {
+        "type": "object",
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event": {
+            "type": "string",
+            "enum": [
+              "page_view",
+              "tool_view",
+              "editor_open",
+              "upload_start",
+              "login_start",
+              "login_complete",
+              "result_download"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "maxLength": 180,
+            "pattern": "^\\/ja(?:\\/tools(?:\\/[a-z_]+)?|\\/guides(?:\\/[a-z0-9-]+)?|\\/help)?$"
+          },
+          "tool_id": {
+            "type": "string",
+            "pattern": "^[a-z_]+$"
+          }
+        },
+        "required": [
+          "event_id",
+          "event",
+          "path"
+        ],
+        "additionalProperties": false
+      },
+      "SeoExampleEvidence": {
+        "type": "object",
+        "properties": {
+          "before": {
+            "type": "string",
+            "pattern": "^\\/seo-examples\\/[a-zA-Z0-9_/-]+-[a-f0-9]{64}\\.(png|jpg|webp)$"
+          },
+          "after": {
+            "type": "string",
+            "pattern": "^\\/seo-examples\\/[a-zA-Z0-9_/-]+-[a-f0-9]{64}\\.(png|jpg|webp)$"
+          },
+          "model_profile_version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "rights_review": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "evaluated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "evaluation_reference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "before",
+          "after",
+          "model_profile_version",
+          "rights_review",
+          "evaluated_at",
+          "evaluation_reference"
+        ],
+        "additionalProperties": false
+      },
+      "SeoGa4SessionRequest": {
+        "type": "object",
+        "properties": {
+          "client_id": {
+            "type": "string",
+            "pattern": "^\\d{1,20}\\.\\d{1,20}$"
+          },
+          "session_id": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "client_id",
+          "session_id"
+        ],
+        "additionalProperties": false
+      },
+      "SeoObservationRequest": {
+        "type": "object",
+        "properties": {
+          "revision_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "publish_operation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "observation_to": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "keep",
+              "extend",
+              "rollback",
+              "insufficient"
+            ]
+          },
+          "notes": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "revision_id",
+          "publish_operation_id",
+          "operation_id",
+          "observation_to",
+          "decision",
+          "notes"
+        ],
+        "additionalProperties": false
+      },
+      "SeoObservationView": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "revision_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "publish_operation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "actor_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "report": {
+            "type": "object",
+            "additionalProperties": {
+              "nullable": true
+            }
+          }
+        },
+        "required": [
+          "id",
+          "revision_id",
+          "publish_operation_id",
+          "actor_id",
+          "created_at",
+          "report"
+        ]
+      },
+      "SeoOptimizationPlan": {
+        "type": "object",
+        "properties": {
+          "hypothesis": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 1000
+          },
+          "change_summary": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 1000
+          },
+          "target_queries": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "minItems": 1,
+            "maxItems": 10
+          },
+          "risk_notes": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 1000
+          },
+          "rollback_conditions": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 1000
+          },
+          "source_property": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "baseline_from": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "baseline_to": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "observation_days": {
+            "type": "integer",
+            "minimum": 14,
+            "maximum": 56
+          },
+          "minimum_impressions": {
+            "type": "integer",
+            "minimum": 300,
+            "maximum": 1000000
+          },
+          "is_fixture": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "hypothesis",
+          "change_summary",
+          "target_queries",
+          "risk_notes",
+          "rollback_conditions",
+          "source_property",
+          "baseline_from",
+          "baseline_to",
+          "observation_days",
+          "minimum_impressions",
+          "is_fixture"
+        ],
+        "additionalProperties": false
+      },
+      "SeoPath": {
+        "type": "string",
+        "maxLength": 180,
+        "pattern": "^\\/ja(?:\\/tools(?:\\/[a-z_]+)?|\\/guides(?:\\/[a-z0-9-]+)?|\\/help)?$"
+      },
+      "SeoPipelineHealth": {
+        "type": "object",
+        "properties": {
+          "checked_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "is_fixture": {
+            "type": "boolean"
+          },
+          "healthy": {
+            "type": "boolean"
+          },
+          "can_suggest_search_changes": {
+            "type": "boolean"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "gsc",
+                    "ga4"
+                  ]
+                },
+                "property": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "grain": {
+                  "type": "string",
+                  "enum": [
+                    "property",
+                    "page",
+                    "query_page",
+                    "landing_event"
+                  ]
+                },
+                "from": {
+                  "type": "string"
+                },
+                "to": {
+                  "type": "string"
+                },
+                "timezone": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "ready",
+                    "empty",
+                    "not_configured",
+                    "missing",
+                    "failed",
+                    "stalled",
+                    "waiting",
+                    "stale",
+                    "limited"
+                  ]
+                },
+                "expected_days": {
+                  "type": "integer"
+                },
+                "successful_days": {
+                  "type": "integer"
+                },
+                "missing_days": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "alerts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string",
+                        "enum": [
+                          "CONFIGURATION_REQUIRED",
+                          "NO_SUCCESSFUL_IMPORT",
+                          "MISSING_DAYS",
+                          "LATEST_IMPORT_FAILED",
+                          "IMPORT_STALLED",
+                          "IMPORT_PENDING",
+                          "STALE_IMPORT",
+                          "PARTIAL_RESULTS",
+                          "THRESHOLDED",
+                          "OTHER_ROW_LOSS"
+                        ]
+                      },
+                      "severity": {
+                        "type": "string",
+                        "enum": [
+                          "error",
+                          "warning",
+                          "info"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "severity"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "source",
+                "property",
+                "grain",
+                "from",
+                "to",
+                "timezone",
+                "status",
+                "expected_days",
+                "successful_days",
+                "missing_days",
+                "alerts"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "checked_at",
+          "is_fixture",
+          "healthy",
+          "can_suggest_search_changes",
+          "sources"
+        ],
+        "additionalProperties": false
+      },
+      "SeoRevalidationRequest": {
+        "type": "object",
+        "properties": {
+          "nonce": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "timestamp": {
+            "type": "integer"
+          },
+          "path": {
+            "type": "string",
+            "maxLength": 180,
+            "pattern": "^\\/ja(?:\\/tools(?:\\/[a-z_]+)?|\\/guides(?:\\/[a-z0-9-]+)?|\\/help)?$"
+          },
+          "revision_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "nonce",
+          "timestamp",
+          "path",
+          "revision_id"
+        ],
+        "additionalProperties": false
+      },
+      "SeoRevisionView": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "path": {
+            "type": "string",
+            "maxLength": 180,
+            "pattern": "^\\/ja(?:\\/tools(?:\\/[a-z_]+)?|\\/guides(?:\\/[a-z0-9-]+)?|\\/help)?$"
+          },
+          "base_revision": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "content": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "maxLength": 180,
+                "pattern": "^\\/ja(?:\\/tools(?:\\/[a-z_]+)?|\\/guides(?:\\/[a-z0-9-]+)?|\\/help)?$"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "tool",
+                  "guide"
+                ]
+              },
+              "title": {
+                "type": "string",
+                "minLength": 3,
+                "maxLength": 100
+              },
+              "description": {
+                "type": "string",
+                "minLength": 20,
+                "maxLength": 240
+              },
+              "h1": {
+                "type": "string",
+                "minLength": 3,
+                "maxLength": 100
+              },
+              "lead": {
+                "type": "string",
+                "minLength": 20,
+                "maxLength": 2000
+              },
+              "sections": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "heading": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 100
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 10,
+                      "maxLength": 3000
+                    }
+                  },
+                  "required": [
+                    "heading",
+                    "text"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1,
+                "maxItems": 15
+              },
+              "faq": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "question": {
+                      "type": "string",
+                      "minLength": 3,
+                      "maxLength": 200
+                    },
+                    "answer": {
+                      "type": "string",
+                      "minLength": 10,
+                      "maxLength": 1500
+                    }
+                  },
+                  "required": [
+                    "question",
+                    "answer"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 10
+              },
+              "keywords": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "maxItems": 10
+              },
+              "related_tools": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z_]+$"
+                },
+                "maxItems": 6
+              },
+              "indexable": {
+                "type": "boolean"
+              },
+              "examples": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "before": {
+                      "type": "string",
+                      "pattern": "^\\/seo-examples\\/[a-zA-Z0-9_/-]+-[a-f0-9]{64}\\.(png|jpg|webp)$"
+                    },
+                    "after": {
+                      "type": "string",
+                      "pattern": "^\\/seo-examples\\/[a-zA-Z0-9_/-]+-[a-f0-9]{64}\\.(png|jpg|webp)$"
+                    },
+                    "model_profile_version": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100
+                    },
+                    "rights_review": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    },
+                    "evaluated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "evaluation_reference": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    }
+                  },
+                  "required": [
+                    "before",
+                    "after",
+                    "model_profile_version",
+                    "rights_review",
+                    "evaluated_at",
+                    "evaluation_reference"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 6
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "path",
+              "kind",
+              "title",
+              "description",
+              "h1",
+              "lead",
+              "sections",
+              "faq",
+              "keywords",
+              "related_tools",
+              "indexable",
+              "examples",
+              "updated_at"
+            ],
+            "additionalProperties": false
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "submitted",
+              "approved",
+              "published"
+            ]
+          },
+          "author_id": {
+            "type": "string"
+          },
+          "reviewer_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "base_revision",
+          "content",
+          "state",
+          "author_id",
+          "reviewer_id",
+          "created_at"
+        ]
+      },
+      "SeoTransitionRequest": {
+        "type": "object",
+        "properties": {
+          "revision_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "submit",
+              "approve",
+              "publish",
+              "rollback"
+            ]
+          },
+          "expected_revision": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "revision_id",
+          "action",
+          "expected_revision",
+          "operation_id"
         ],
         "additionalProperties": false
       },
@@ -25806,6 +26988,3489 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/seo/consent": {
+      "post": {
+        "operationId": "seoConsent",
+        "summary": "Opt in to bounded first-party measurement; same-origin only",
+        "tags": [
+          "SEO"
+        ],
+        "security": [],
+        "x-implementation-status": "local-implementation-requires-configured-services",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SeoConsentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "SEO response",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "consent": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "expires_in": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "consent",
+                    "expires_in"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "seoRevokeConsent",
+        "summary": "Revoke consent and clear HttpOnly cookie; same-origin only",
+        "tags": [
+          "SEO"
+        ],
+        "security": [],
+        "x-implementation-status": "local-implementation-requires-configured-services",
+        "responses": {
+          "200": {
+            "description": "SEO response",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "revoked": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    }
+                  },
+                  "required": [
+                    "revoked"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/seo/events": {
+      "post": {
+        "operationId": "seoEvent",
+        "summary": "Record an allowlisted browser event; no private URLs, photos or business facts",
+        "tags": [
+          "SEO"
+        ],
+        "security": [
+          {
+            "SeoConsentCookie": []
+          }
+        ],
+        "x-implementation-status": "local-implementation-requires-configured-services",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SeoEventRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SEO response",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "received": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "inserted": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "received",
+                    "inserted"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/seo/ga4-session": {
+      "post": {
+        "operationId": "seoGa4Session",
+        "summary": "Bind the tag-generated client/session IDs to a consent session; never accept a user ID",
+        "tags": [
+          "SEO"
+        ],
+        "security": [
+          {
+            "SeoConsentCookie": []
+          }
+        ],
+        "x-implementation-status": "local-implementation-requires-configured-services",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SeoGa4SessionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SEO response",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "received": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    }
+                  },
+                  "required": [
+                    "received"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/seo/admin/overview": {
+      "get": {
+        "operationId": "seoOverview",
+        "summary": "Member-only content, imports, distinct source metrics and consented business report; fixture=true excludes real business data",
+        "tags": [
+          "SEO"
+        ],
+        "security": [
+          {
+            "SupabaseBearer": []
+          }
+        ],
+        "x-implementation-status": "local-implementation-requires-configured-services",
+        "responses": {
+          "200": {
+            "description": "SEO response",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/seo/admin/baseline": {
+      "get": {
+        "operationId": "seoBaseline",
+        "summary": "Member-only baseline for an existing tool or guide",
+        "tags": [
+          "SEO"
+        ],
+        "security": [
+          {
+            "SupabaseBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/components/schemas/SeoPath"
+            },
+            "required": true,
+            "name": "path",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SEO response",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "revision": {
+                      "type": "string"
+                    },
+                    "source": {
+                      "type": "string",
+                      "enum": [
+                        "git"
+                      ]
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/SeoContent"
+                    }
+                  },
+                  "required": [
+                    "revision",
+                    "source",
+                    "content"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/seo/admin/revision": {
+      "get": {
+        "operationId": "seoRevision",
+        "summary": "Member-only immutable revision for comparison and editing",
+        "tags": [
+          "SEO"
+        ],
+        "security": [
+          {
+            "SupabaseBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "revision_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SEO response",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoRevisionView"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/seo/admin/drafts": {
+      "post": {
+        "operationId": "seoDraft",
+        "summary": "Create an immutable draft after comparing current published revision",
+        "tags": [
+          "SEO"
+        ],
+        "security": [
+          {
+            "SupabaseBearer": []
+          }
+        ],
+        "x-implementation-status": "local-implementation-requires-configured-services",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SeoDraftRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "SEO response",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "state": {
+                      "type": "string",
+                      "enum": [
+                        "draft"
+                      ]
+                    },
+                    "path": {
+                      "$ref": "#/components/schemas/SeoPath"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "state",
+                    "path"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/seo/admin/observations": {
+      "post": {
+        "operationId": "seoObservation",
+        "summary": "Freeze a page-level before/after observation tied to a published revision; observational, not causal",
+        "tags": [
+          "SEO"
+        ],
+        "security": [
+          {
+            "SupabaseBearer": []
+          }
+        ],
+        "x-implementation-status": "local-implementation-requires-configured-services",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SeoObservationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "SEO response",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoObservationView"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/seo/admin/transitions": {
+      "post": {
+        "operationId": "seoTransition",
+        "summary": "Submit, independent approval, CAS publication or rollback. Publishing requires database content mode; operation UUID is idempotent.",
+        "tags": [
+          "SEO"
+        ],
+        "security": [
+          {
+            "SupabaseBearer": []
+          }
+        ],
+        "x-implementation-status": "local-implementation-requires-configured-services",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SeoTransitionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SEO response",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "revision_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "path": {
+                      "$ref": "#/components/schemas/SeoPath"
+                    },
+                    "action": {
+                      "type": "string"
+                    },
+                    "previous_revision": {
+                      "type": "string",
+                      "nullable": true,
+                      "format": "uuid"
+                    }
+                  },
+                  "required": [
+                    "revision_id",
+                    "path",
+                    "action",
+                    "previous_revision"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/seo/revalidate": {
+      "post": {
+        "operationId": "seoRevalidate",
+        "summary": "Invalidate only the exact current published revision; signed timestamp and single-use nonce",
+        "tags": [
+          "SEO"
+        ],
+        "security": [
+          {
+            "SeoHmac": []
+          }
+        ],
+        "x-implementation-status": "local-implementation-requires-configured-services",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SeoRevalidationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SEO response",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "invalidated": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "path": {
+                      "$ref": "#/components/schemas/SeoPath"
+                    },
+                    "revision_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  },
+                  "required": [
+                    "invalidated",
+                    "path",
+                    "revision_id"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bounded SEO error; details and credentials are never exposed.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "X-Robots-Tag": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "noindex"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoErrorEnvelope"
                 }
               }
             }

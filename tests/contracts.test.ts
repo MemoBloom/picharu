@@ -176,7 +176,7 @@ describe('generated OpenAPI document', () => {
   it('is reproducible and covers every implemented public route', () => {
     const generated = createOpenApiDocument();
     const saved = JSON.parse(readFileSync('docs/interfaces/openapi.json', 'utf8'));
-    expect(saved).toEqual(generated);
+    expect(saved).toEqual(JSON.parse(JSON.stringify(generated)));
     expect(generated.openapi).toBe('3.0.3');
     const expected: Record<string, string[]> = {
       '/api/health': ['get'], '/api/tools': ['get'], '/api/me': ['get'],
@@ -186,6 +186,8 @@ describe('generated OpenAPI document', () => {
       '/api/jobs/{id}/cancel': ['post'], '/api/recommend': ['post'], '/api/credits': ['get'],
       '/api/credit-packages': ['get'], '/api/checkout': ['post'], '/api/orders': ['get'],
       '/api/stripe/webhook': ['post'],
+      '/api/seo/consent':['post','delete'], '/api/seo/events':['post'], '/api/seo/ga4-session':['post'],
+      '/api/seo/admin/observations':['post'], '/api/seo/admin/revision':['get'], '/api/seo/admin/overview':['get'], '/api/seo/admin/baseline':['get'], '/api/seo/admin/drafts':['post'], '/api/seo/admin/transitions':['post'], '/api/seo/revalidate':['post'],
       '/api/admin/session': ['get'], '/api/analytics/events': ['post'],
       '/api/analytics/config':['get'], '/api/admin/analytics/reports':['post'], '/api/admin/analytics/reports/{id}':['get'], '/api/admin/analytics/reports/{id}/export':['get'],
       '/api/dashboard': ['get'], '/api/credits/ledger': ['get'], '/api/account/jobs': ['get'], '/api/account/works': ['get'],
@@ -225,7 +227,7 @@ describe('generated OpenAPI document', () => {
     visit(generated);
     expect(new Set(operationIds).size).toBe(operationIds.length);
     expect(operationIds).toContain('consoleResolveUser');
-    expect(operationIds).toHaveLength(35);
+    expect(operationIds).toHaveLength(46);
   });
 
   it('documents real body-limit, media-type and unavailable responses plus versioned health', () => {

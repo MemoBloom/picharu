@@ -1,4 +1,5 @@
 import { z } from 'zod';
+export * from './seo';
 export * from './console';
 export * from './analytics';
 

@@ -518,6 +518,9 @@ JPY 的 amount_minor=500 表示 500 日元，不除以 100。套餐价格由服�
 
 2026-10-20：19 个带 Schema 标记的 JSON 示例通过当前共享 Schema 校验；18 个 Web 操作与现有 OpenAPI 匹配；20 工具参数表与工具配置逐项匹配。本轮仅修改文档及索引，没有修改应用行为或执行真实云端/模型调用。
 
+## SEO运营扩展
+
+SEO管理员鉴权、草稿可选观察计划、固定基线与不可变复盘见 [观察复盘协议](../seo/OBSERVATION_REVIEW.md)；准确Schema以packages/contracts及生成OpenAPI为准。该扩展不改变原任务、支付或用户照片协议。
 ## 双看板增量
 
 个人控制台接口见[PERSONAL_CONSOLE](../backend/PERSONAL_CONSOLE.md)；管理员接口及8页面口径见[ADMIN_ANALYTICS](../backend/ADMIN_ANALYTICS.md)。字段以contracts与生成OpenAPI为准。管理员报表使用POST创建15分钟快照，所有页面/钻取/分页/导出复用report_id；明细table独立分页，订单/流水/退款/成本都须finance:read。浏览器认证请求支持expectedOwnerId，CSV必须Bearer fetch→Blob，禁止Token查询参数。新结果页下载按钮用POST+action_id，GET不计保存；粗粒X-Picjp-Device与埋点均不参与扣费事实。

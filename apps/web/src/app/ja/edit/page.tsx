@@ -1,3 +1,4 @@
+export const metadata = { robots: { index: false, follow: false } };
 import { EditorWorkspace } from '../../../components/editor-workspace';
 
 export default async function EditPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {

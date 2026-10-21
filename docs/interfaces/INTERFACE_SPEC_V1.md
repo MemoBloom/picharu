@@ -133,6 +133,9 @@ charge.refunded（累计退款金额）与dispute事件独立处理：按累计�
 
 本轮验证以契约、HTTP路由行为、数据库事务、R2媒体处理/签名和Stripe/JEV适配的可重复测试为证据；真Supabase/R2/Stripe/Lambda环境联调需要真实凭据和部署。未完成的真实集成必须明确标记，不宣称已实现商用生成。
 
+## SEO运营扩展
+
+SEO管理员鉴权、草稿可选观察计划、固定基线与不可变复盘见 [观察复盘协议](../seo/OBSERVATION_REVIEW.md)；准确Schema以packages/contracts及生成OpenAPI为准。该扩展不改变原任务、支付或用户照片协议。
 ## 双看板加法契约
 
 Console与Analytics字段见packages/contracts/src/{console,analytics}.ts，契约包1.2.0；HTTP和Worker执行协议仍1.0.0，Worker现有固定消费版本不因看板自动升级。管理员快照/分页/CSV及退款事实细则见[ADMIN_ANALYTICS](../backend/ADMIN_ANALYTICS.md)。新增QUERY_TOO_LARGE为有界查询错误；数据缺失/未成熟通过指标状态表达，不返回虚构零。

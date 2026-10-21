@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-21",
+  "evidence_source": "User-returned Supabase SQL Editor seo_db_readiness; no direct cloud database connection by local agent",
+  "result": {
+    "scope": "database_role_metadata_and_read_rpc_only_not_http_ingestion_or_deployment",
+    "execution_role": "service_role",
+    "tables_checked": 13,
+    "all_rls_enabled": true,
+    "functions_checked": 29,
+    "rls_disabled_tables": [],
+    "published_page_count": 0,
+    "health_window_entries": 4,
+    "transaction_read_only": true,
+    "browser_table_exposure": [],
+    "service_role_table_reads": true,
+    "browser_function_exposure": [],
+    "successful_import_windows": 0,
+    "browser_table_grants_absent": true,
+    "service_role_function_execute": true,
+    "browser_function_grants_absent": true
+  },
+  "proves": [
+    "13 SEO tables have RLS enabled and no effective anon/authenticated table or column privileges",
+    "29 SEO functions have no effective anon/authenticated EXECUTE privileges",
+    "service_role has SELECT and EXECUTE privileges for the checked objects",
+    "seo_get_published and seo_ingestion_health execute in a service_role read-only SQL transaction"
+  ],
+  "pending": [
+    "Cloud Run ADC identity and Secret Manager runtime access",
+    "Supabase HTTP/PostgREST real report imports and full Google report adapter compatibility",
+    "scheduled collection, tag reception and deployment acceptance",
+    "manual SQL versus CLI migration history reconciliation"
+  ]
+}

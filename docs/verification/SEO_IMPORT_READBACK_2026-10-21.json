@@ -1,0 +1,129 @@
+{
+  "date": "2026-10-21",
+  "evidence_source": "User supplied Supabase SQL Editor seo_ingestion_health readback",
+  "scope": "four_specified_real_import_windows_only_not_tag_reception_weekly_backfill_or_deployment",
+  "summary": {
+    "expected_windows": 4,
+    "successful_windows": 4,
+    "empty_windows": 4
+  },
+  "raw_readback": [
+    {
+      "day": "2026-10-18",
+      "grain": "landing_event",
+      "source": "ga4",
+      "status": "empty",
+      "quality": {
+        "limited": false,
+        "finality": "not_guaranteed",
+        "dropped_rows": 0,
+        "input_sha256": "acd9e20c3dbc5e8b906aaa528fddbb1446a9c3df8a5e292411d67dda29c7fcbf",
+        "source_timezone": "Asia/Tokyo",
+        "subject_to_thresholding": false,
+        "data_loss_from_other_row": false,
+        "non_additive_users_sessions": true
+      },
+      "property": "559730643",
+      "created_at": "2026-10-21T06:17:56.434638+00:00",
+      "completed_at": "2026-10-21T06:17:56.589623+00:00",
+      "successful_at": "2026-10-21T06:17:56.589623+00:00",
+      "successful_status": "empty",
+      "successful_quality": {
+        "limited": false,
+        "finality": "not_guaranteed",
+        "dropped_rows": 0,
+        "input_sha256": "acd9e20c3dbc5e8b906aaa528fddbb1446a9c3df8a5e292411d67dda29c7fcbf",
+        "source_timezone": "Asia/Tokyo",
+        "subject_to_thresholding": false,
+        "data_loss_from_other_row": false,
+        "non_additive_users_sessions": true
+      }
+    },
+    {
+      "day": "2026-10-17",
+      "grain": "page",
+      "source": "gsc",
+      "status": "empty",
+      "quality": {
+        "limited": false,
+        "data_state": "final",
+        "dropped_rows": 0,
+        "input_sha256": "ef070c966148a30af2ddf443b163364c1c2f9c4287cdc206d9f2792ef20175e9",
+        "source_timezone": "America/Los_Angeles",
+        "all_rows_guaranteed": false
+      },
+      "property": "sc-domain:picmoko.com",
+      "created_at": "2026-10-21T05:45:23.918621+00:00",
+      "completed_at": "2026-10-21T05:45:24.004957+00:00",
+      "successful_at": "2026-10-21T05:45:24.004957+00:00",
+      "successful_status": "empty",
+      "successful_quality": {
+        "limited": false,
+        "data_state": "final",
+        "dropped_rows": 0,
+        "input_sha256": "ef070c966148a30af2ddf443b163364c1c2f9c4287cdc206d9f2792ef20175e9",
+        "source_timezone": "America/Los_Angeles",
+        "all_rows_guaranteed": false
+      }
+    },
+    {
+      "day": "2026-10-17",
+      "grain": "property",
+      "source": "gsc",
+      "status": "empty",
+      "quality": {
+        "limited": false,
+        "data_state": "final",
+        "dropped_rows": 0,
+        "input_sha256": "ae13788c9f67545e6adea1980955115c1fa807fd3cb6e2478146890b793210f9",
+        "source_timezone": "America/Los_Angeles",
+        "all_rows_guaranteed": false
+      },
+      "property": "sc-domain:picmoko.com",
+      "created_at": "2026-10-21T05:45:23.68582+00:00",
+      "completed_at": "2026-10-21T05:45:23.812108+00:00",
+      "successful_at": "2026-10-21T05:45:23.812108+00:00",
+      "successful_status": "empty",
+      "successful_quality": {
+        "limited": false,
+        "data_state": "final",
+        "dropped_rows": 0,
+        "input_sha256": "ae13788c9f67545e6adea1980955115c1fa807fd3cb6e2478146890b793210f9",
+        "source_timezone": "America/Los_Angeles",
+        "all_rows_guaranteed": false
+      }
+    },
+    {
+      "day": "2026-10-17",
+      "grain": "query_page",
+      "source": "gsc",
+      "status": "empty",
+      "quality": {
+        "limited": false,
+        "data_state": "final",
+        "dropped_rows": 0,
+        "input_sha256": "3db678cd8afe45d96e677fc5381145841f9d8b2b549431c4f2eda583ff7cbaa5",
+        "source_timezone": "America/Los_Angeles",
+        "all_rows_guaranteed": false
+      },
+      "property": "sc-domain:picmoko.com",
+      "created_at": "2026-10-21T05:45:24.093203+00:00",
+      "completed_at": "2026-10-21T05:45:24.190386+00:00",
+      "successful_at": "2026-10-21T05:45:24.190386+00:00",
+      "successful_status": "empty",
+      "successful_quality": {
+        "limited": false,
+        "data_state": "final",
+        "dropped_rows": 0,
+        "input_sha256": "3db678cd8afe45d96e677fc5381145841f9d8b2b549431c4f2eda583ff7cbaa5",
+        "source_timezone": "America/Los_Angeles",
+        "all_rows_guaranteed": false
+      }
+    }
+  ],
+  "limitations": [
+    "Empty importable results do not prove zero website visits.",
+    "GSC all_rows_guaranteed is false; GA4 finality is not_guaranteed.",
+    "Seven-day daily backfill, monitoring, scheduled collection and website tag reception remain unverified."
+  ]
+}

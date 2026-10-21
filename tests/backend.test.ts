@@ -69,6 +69,19 @@ beforeEach(async()=>{
 });
 
 describe('Vercel backend with real PostgreSQL semantics and isolated external ports',()=>{
+ it('rejects new retired tools before generation or reservation while replaying historical keys',async()=>{
+  const image=await upload();await credits();
+  for(const tool_id of ['remove_person','remove_object']){
+   const response=await call('/api/edit','POST',edit(image.image_id,{tool_id}));
+   expect(response.status).toBe(409);expect((await response.json()).error.code).toBe('UNSUPPORTED_CAPABILITY');
+  }
+  expect((await pg.query('select * from edit_jobs')).rows).toHaveLength(0);
+  const body=edit(image.image_id,{tool_id:'remove_person'});
+  const historical={id:randomUUID(),request_hash:requestHash(EditRequest.parse(body)),status:'completed',credits_reserved:3};
+  vi.spyOn(deps.db,'findJob').mockResolvedValue(historical);
+  const replay=await call('/api/edit','POST',body);
+  expect(replay.status).toBe(202);expect((await replay.json()).replayed).toBe(true);
+ });
  it('serves public health and exactly 18 active sanitized tools with no setup secrets',async()=>{
  const health=await call('/api/health','GET',undefined,'');expect(health.status).toBe(200);expect(health.headers.get('X-Contract-Version')).toBe('1.0.0');
  const body=await(await call('/api/tools','GET',undefined,'')).json();expect(body.tools).toHaveLength(18);for(const tool of body.tools)expect(ToolView.safeParse(tool).success).toBe(true);expect(JSON.stringify(body)).not.toContain('final_prompt');expect(body.tools.map((tool:any)=>tool.tool_id)).not.toContain('remove_person');expect(body.tools.map((tool:any)=>tool.tool_id)).not.toContain('remove_object');

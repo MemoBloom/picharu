@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-21",
+  "evidence_source": "User-returned Supabase SQL Editor seo_inventory; no direct database connection by local agent",
+  "scope": "catalog_presence_only_not_runtime_or_security_acceptance",
+  "schema_state": "SEO_STRUCTURE_PRESENT",
+  "stages": {
+    "base": {
+      "found": 6,
+      "expected": 6,
+      "missing": []
+    },
+    "core": {
+      "found": 20,
+      "expected": 20,
+      "missing": []
+    },
+    "analytics": {
+      "found": 17,
+      "expected": 17,
+      "missing": []
+    },
+    "health": {
+      "found": 1,
+      "expected": 1,
+      "missing": []
+    },
+    "observation": {
+      "found": 9,
+      "expected": 9,
+      "missing": []
+    }
+  },
+  "proves": [
+    "53 expected catalog entries are present, including six base dependencies and 47 SEO entries"
+  ],
+  "pending": [
+    "service-role read RPC execution",
+    "effective browser table/column/function grants and RLS",
+    "HTTP BFF/PostgREST and real report ingestion",
+    "Cloud Run identity and scheduled collection",
+    "manual SQL versus CLI migration history reconciliation"
+  ]
+}
