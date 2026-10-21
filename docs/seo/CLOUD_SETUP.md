@@ -126,6 +126,8 @@ SQL Editor手动执行不会自动写入Supabase CLI迁移历史。本次保留�
 
 ### 4.2 迁移后只读权限和函数检查
 
+2026-10-21 用户已回传本节检查通过，见[真实SQL角色读取摘要](../verification/SEO_DB_READ_2026-10-21.json)：13张表均启用RLS、29个函数授权检查通过，anon/authenticated无有效表/列或函数授权，service_role具备读取/执行权限；两个读取RPC成功。发布内容和成功导入窗仍为0，不再重复本节检查；下一步按[独立采集镜像与真实导入](COLLECTOR_CLOUD_RUN.md)推进。
+
 在同一项目SQL Editor新建查询，完整执行 [verify-database-read.sql](../../scripts/seo/verify-database-read.sql)，返回`seo_db_readiness`。该脚本使用只读事务和SET LOCAL ROLE service_role，仅检查系统权限并调用seo_get_published、seo_ingestion_health，最后ROLLBACK恢复身份。没有创建或修改业务数据、角色授权、照片或Prompt。
 
 预期execution_role为service_role，transaction_read_only及五项权限布尔值均为true；rls_disabled_tables、browser_table_exposure、browser_function_exposure应为空。当前迁移对应13张SEO表、29个函数，health_window_entries为4（一天的GSC三粒度加GA4一粒度）。新库published_page_count和successful_import_windows可为0，不是读取失败，也不能伪装为数据已导入。
@@ -145,6 +147,8 @@ insert into public.seo_members(user_id,role) values
 这是手工授权模板，不直接执行占位文字。作者身份不能审核自己的内容，不要求额外雇用一位人工编辑。切换 `SEO_CONTENT_BACKEND=database` 并验证公共读取后，后台才允许发布/回滚。
 
 ## 5. 每日采集与回补
+
+现有Google/SQL读取前置已完成。首次Cloud Build和Cloud Run操作见[逐步指南](COLLECTOR_CLOUD_RUN.md)，先只构建镜像，构建通过再配置独立Job及两天人工导入；不直接开启每日调度。
 
 在本仓库根运行，进程通过 ADC 获取 Google 只读身份，通过部署环境获取 Supabase 凭据；CLI 不自动读取 Next 的 `.env.local`：
 

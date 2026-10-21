@@ -16,6 +16,8 @@
 
 - [SEO S0–S4 实施与验收](seo/DELIVERY.md)、[Google与云端配置指南](seo/CLOUD_SETUP.md)
 
+- [SEO采集镜像与Cloud Run首次真实导入](seo/COLLECTOR_CLOUD_RUN.md)：先构建，后配置/执行；复用现有构建基础设施，独立于图片Worker。
+
 - [SEO CSV研究与健康检查](seo/RESEARCH_IMPORT.md)、[S0–S4要求复核](seo/REQUIREMENTS_AUDIT.md)
 
 - [SEO内容优化计划与观察复盘](seo/OBSERVATION_REVIEW.md)

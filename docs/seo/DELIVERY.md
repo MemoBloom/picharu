@@ -75,4 +75,8 @@ S1增量：[五个首发候选审校包](S1_REVIEW_PACKET.md)与[人工记录](S
 
 Google接入增量（2026-10-21）：用户回传GSC 2026-10-17与GA4 2026-10-18均HTTP200/empty，见[原样摘要及证明边界](../verification/SEO_GOOGLE_READ_2026-10-21.json)。Cloud Shell身份模拟成功不代表Cloud Run ADC/调度或真实标签已验收。独立Python诊断脚本使用官方IAM JSON scope生成短期令牌，避免稳定CLI不支持的--scopes；两个unittest方法覆盖11个离线场景，已加入CI Verify作业。另有只读SQL盘点53项基础/SEO对象，真实PGlite顺序迁移、精确签名与禁用触发器负例通过；它不代替权限/函数正文/实际导入验收。
 
-Supabase结构增量（2026-10-21）：用户先后回传NO_SEO_OBJECTS和迁移后SEO_STRUCTURE_PRESENT，53项全部齐全；前后摘要与源迁移SHA256已归档。新增只读service_role检查，覆盖有效表/列/函数授权、RLS及两个读取RPC，本地负例含PUBLIC授权、单列授权、禁用RLS与只读事务拒写。该检查仍待用户真实云端执行；不把结构完整当成HTTP/真实采集已通过。
+Supabase结构增量（2026-10-21）：用户先后回传NO_SEO_OBJECTS和迁移后SEO_STRUCTURE_PRESENT，53项全部齐全；前后摘要与源迁移SHA256已归档。只读service_role检查已获[用户真实回传](../verification/SEO_DB_READ_2026-10-21.json)：13表RLS、29函数授权、浏览器有效表/列/函数授权及两个读取RPC通过；发布/成功导入仍为0。本地负例含PUBLIC授权、单列授权、禁用RLS与只读事务拒写；f5495ca的CI39526804780已成功，不把SQL Editor读取当成HTTP/真实采集已通过。
+
+后续操作包：[独立采集构建与Cloud Run首次导入](COLLECTOR_CLOUD_RUN.md)，新增cloudbuild.seo.yaml及仅复用已有资源的构建脚本；禁网help通过后才上传独立SEO镜像，随后分步配置Job和指定日期导入。构建过程不读取运行Secret、不修改IAM或现有Worker；用户真实云构建/执行/数据库回读仍待。
+
+操作包本地验证：完整verify仍为191测试/90基础SQL/42路由构建通过；构建脚本bash语法及3个无网络命令替身场景通过（正确项目/专用构建身份/配置/标签、非法来源版本阻止云命令、资源检查失败不继续构建或报成功）；Cloud Build YAML解析及Dockerfile/禁网help配置检查通过。没有在本机或Cloud Shell执行真实云构建。

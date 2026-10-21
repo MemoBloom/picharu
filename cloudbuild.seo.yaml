@@ -1,0 +1,15 @@
+# Build/push only. No runtime secrets, deployment, report collection or model calls.
+substitutions:
+  _IMAGE_TAG: manual
+steps:
+  - id: build-seo-linux-amd64
+    name: gcr.io/cloud-builders/docker
+    args: ['build', '--platform=linux/amd64', '-f', 'Dockerfile.seo', '-t', 'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/picjp/seo-collector:${_IMAGE_TAG}', '.']
+  - id: smoke-seo-help-without-network
+    name: gcr.io/cloud-builders/docker
+    args: ['run', '--rm', '--network=none', 'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/picjp/seo-collector:${_IMAGE_TAG}', '--help']
+images:
+  - asia-northeast1-docker.pkg.dev/${PROJECT_ID}/picjp/seo-collector:${_IMAGE_TAG}
+timeout: 1200s
+options:
+  logging: CLOUD_LOGGING_ONLY
