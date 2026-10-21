@@ -90,6 +90,8 @@ async function main(){
   await db.query(await readFile('supabase/migrations/202610200400_worker.sql','utf8'));
   await db.query(await readFile('supabase/migrations/202610210100_console_foundation.sql','utf8'));
   await db.query(await readFile('supabase/migrations/202610210200_personal_console.sql','utf8'));
+  await db.query(await readFile('supabase/migrations/202610210300_admin_analytics.sql','utf8'));
+  await db.query(await readFile('supabase/migrations/202610210400_console_telemetry.sql','utf8'));
   await db.query('insert into auth.users(id) values($1)',[owner]);await seedImage(image);
   const cs=await clients(20);
   await db.query('update credit_accounts set available=100 where owner_id=$1',[owner]);
@@ -247,7 +249,75 @@ async function main(){
   check(personalLedger.items.length,2,'native ledger respects page limit');
   check(typeof personalLedger.next_cursor,'string','native ledger emits a stable continuation cursor');
   check(personalLedger.items.some((e:any)=>'business_key' in e),false,'native ledger excludes internal business keys');
-  console.log(`Native PostgreSQL independent-session concurrency passed: ${assertions} assertions; 20 same-key creates, 20 competing balances, 20 cancellations, 20 paid events, 30 delete/create races (${createdFirst} creation wins / ${deletedFirst} deletion wins); full/partial/disputed known-Charge facts and later reversal races.`);
+  // Stage 3: real connection overlap verifies device facts, cached report
+  // isolation, current authorization and immutable Stripe refund identities.
+  const ac=await clients(20);
+  await db.query("update credit_accounts set status='active',available=1000 where owner_id=$1",[owner]);
+  const beforeDevice=await account();
+  const deviceArgs=jobArgs('stage3_device_parallel_key');
+  const deviceOutcomes=await burst(ac,(c,i)=>rpc(c,'app_console_create_job',[...deviceArgs,i%2?'desktop':'mobile']));
+  check(deviceOutcomes.every(r=>r.status==='fulfilled'),true,'different-device same-key overlapping RPCs all succeed');
+  const deviceValues=deviceOutcomes.map(r=>(r as PromiseFulfilledResult<any>).value);
+  check(new Set(deviceValues.map(v=>v.job_id)).size,1,'device variants share one immutable task identity');
+  check(deviceValues.filter(v=>!v.replayed).length,1,'only one device contender inserts a task');
+  const deviceJob=deviceValues[0].job_id;
+  const frozenDevice=(await db.query('select analytics_device from edit_jobs where id=$1',[deviceJob])).rows[0].analytics_device;
+  check(['mobile','desktop'].includes(frozenDevice),true,'winning request supplies the frozen coarse device');
+  await rpc(ac[1],'app_console_create_job',[...deviceArgs,frozenDevice==='mobile'?'desktop':'mobile']);
+  check((await db.query('select analytics_device from edit_jobs where id=$1',[deviceJob])).rows[0].analytics_device,frozenDevice,'later cross-device replay cannot rewrite initial device');
+  const afterDevice=await account();
+  check(afterDevice.available,beforeDevice.available-5,'device wrappers reserve available credits once');
+  check(afterDevice.reserved,beforeDevice.reserved+5,'device wrappers reserve one task entitlement');
+  check(Number((await db.query("select count(*) n from credit_ledger where reference_id=$1 and kind='reserve'",[deviceJob])).rows[0].n),1,'cross-device concurrency has one reserve ledger');
+  await db.query("insert into console_roles(user_id,role,reason) values($1,'finance','native concurrency verification')",[owner]);
+  const analyticsQuery={start:new Date(Date.now()-86400000).toISOString(),end:new Date(Date.now()+1000).toISOString(),timezone:'Asia/Tokyo',bucket:'day',environment:'test',internal:'exclude',cohort:'all'};
+  // The writer has already inserted a task but deliberately has not committed.
+  // Snapshot construction must neither see a half-published task nor combine
+  // its eventual credit changes with earlier job facts.
+  await ac[1].query('begin');
+  const unpublished=await rpc(ac[1],'app_console_create_job',[...jobArgs('stage3_snapshot_unpublished'),'tablet']);
+  const report=await rpc(ac[0],'app_console_create_report',[owner,JSON.stringify(analyticsQuery),randomUUID()]);
+  check(report.dataset.jobs.some((j:any)=>j.id===unpublished.job_id),false,'report excludes an in-flight connection transaction');
+  check(report.dataset.users.find((u:any)=>u.id===owner).available,afterDevice.available,'report account and job facts share committed snapshot');
+  await ac[1].query('commit');
+  const snapshotReads=await Promise.all(ac.map(c=>rpc(c,'app_console_read_report',[owner,report.report_id,randomUUID()])));
+  check(snapshotReads.every(r=>r.dataset.as_of===report.dataset.as_of),true,'twenty independent readers retain one report as_of');
+  check(snapshotReads.every(r=>JSON.stringify(r.dataset)===JSON.stringify(report.dataset)),true,'later business commit cannot change cached report pages');
+  const fresh=await rpc(ac[2],'app_console_create_report',[owner,JSON.stringify(analyticsQuery),randomUUID()]);
+  check(fresh.dataset.jobs.some((j:any)=>j.id===unpublished.job_id),true,'a new report observes the newly committed task');
+  check(fresh.dataset.users.find((u:any)=>u.id===owner).available,afterDevice.available-5,'new report sees the matching committed reservation');
+  await ac[1].query('update console_roles set revoked_at=clock_timestamp() where user_id=$1',[owner]);
+  const revoked=await Promise.allSettled(ac.map(c=>rpc(c,'app_console_read_report',[owner,report.report_id,randomUUID()])));
+  check(revoked.every(r=>r.status==='rejected'&&/FORBIDDEN/.test(String(r.reason))),true,'all old report readers reject after role revocation commits');
+  // Refunds serialize on their order row while the Stripe identity remains
+  // unique across distinct webhook IDs and across status updates.
+  const refundId='re_native_concurrent';
+  const refundTime=new Date().toISOString();
+  async function refundBurst(state:string){
+   await db!.query('begin');await db!.query('select id from orders where id=$1 for update',[order.id]);
+   const pending=Promise.allSettled(ac.map((c,i)=>rpc(c,'app_console_record_refunds',[order.id,JSON.stringify([{id:refundId,occurred_at:refundTime,amount_minor:100,currency:'JPY',status:state}]),`evt_native_refund_${state}_${i}`])));
+   const deadline=Date.now()+5000;let waiting=0;
+   try{
+    while(Date.now()<deadline){
+     waiting=Number((await db!.query("select count(*) n from pg_stat_activity where datname=$1 and application_name='picjp-concurrency-test' and wait_event_type='Lock'",[database])).rows[0].n);
+     if(waiting===ac.length)break;await new Promise(resolve=>setTimeout(resolve,20));
+    }
+    check(waiting,20,`twenty ${state} refund facts genuinely overlap on the order lock`);
+   }finally{await db!.query('commit');}
+   return pending;
+  }
+  const pendingRefunds=await refundBurst('pending');
+  check(pendingRefunds.every(r=>r.status==='fulfilled'),true,'all pending refund identity replays succeed');
+  check(pendingRefunds.filter(r=>r.status==='fulfilled'&&r.value.recorded===1).length,1,'concurrent refund webhooks insert exactly one fact');
+  const succeededRefunds=await refundBurst('succeeded');
+  check(succeededRefunds.every(r=>r.status==='fulfilled'),true,'concurrent pending-to-succeeded refund transitions succeed');
+  check(succeededRefunds.every(r=>r.status==='fulfilled'&&r.value.recorded===0),true,'refund status transitions do not insert another amount');
+  check((await db.query('select count(*)::int n,sum(amount_minor)::int amount,min(status) status from console_refunds where id=$1',[refundId])).rows[0],{n:1,amount:100,status:'succeeded'},'one final refund fact and amount survive both concurrent bursts');
+  const terminalConflicts=await Promise.allSettled(ac.map((c,i)=>rpc(c,'app_console_record_refunds',[order.id,JSON.stringify([{id:refundId,occurred_at:refundTime,amount_minor:100,currency:'JPY',status:'failed'}]),`evt_native_refund_conflict_${i}`])));
+  check(terminalConflicts.every(r=>r.status==='rejected'&&/IDEMPOTENCY_CONFLICT/.test(String(r.reason))),true,'concurrent terminal conflicts cannot rewrite a successful refund');
+  check((await db.query('select amount_minor::int,status from console_refunds where id=$1',[refundId])).rows[0],{amount_minor:100,status:'succeeded'},'rejected refund transitions preserve immutable chronology');
+  await closeClients(ac);
+  console.log(`Native PostgreSQL independent-session concurrency passed: ${assertions} assertions; 20 same-key creates, 20 competing balances, 20 cancellations, 20 paid events, 30 delete/create races (${createdFirst} creation wins / ${deletedFirst} deletion wins); full/partial/disputed known-Charge facts and later reversal races; stage 3 cross-device idempotency, stable reports/current roles and refund identity transitions.`);
  }finally{
   if(db)await db.query('rollback').catch(()=>{});
   await Promise.allSettled([...sessions].map(c=>c.end()));

@@ -187,6 +187,7 @@ describe('generated OpenAPI document', () => {
       '/api/credit-packages': ['get'], '/api/checkout': ['post'], '/api/orders': ['get'],
       '/api/stripe/webhook': ['post'],
       '/api/admin/session': ['get'], '/api/analytics/events': ['post'],
+      '/api/analytics/config':['get'], '/api/admin/analytics/reports':['post'], '/api/admin/analytics/reports/{id}':['get'], '/api/admin/analytics/reports/{id}/export':['get'],
       '/api/dashboard': ['get'], '/api/credits/ledger': ['get'], '/api/account/jobs': ['get'], '/api/account/works': ['get'],
     };
     for (const [path, methods] of Object.entries(expected)) {
@@ -223,7 +224,7 @@ describe('generated OpenAPI document', () => {
     }
     visit(generated);
     expect(new Set(operationIds).size).toBe(operationIds.length);
-    expect(operationIds).toHaveLength(30);
+    expect(operationIds).toHaveLength(34);
   });
 
   it('documents real body-limit, media-type and unavailable responses plus versioned health', () => {

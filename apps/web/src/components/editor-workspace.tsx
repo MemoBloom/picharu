@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { ObservedToolButton } from './analytics-provider';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { EditRequest } from '@picjp/contracts';
@@ -318,7 +319,7 @@ export function EditorWorkspace({ initialTool, parentJobId, retryJobId }: { init
         {photos.length > 0 && <p className="small muted">外した写真は、この編集の対象から外れます。保存済み画像の削除ではありません。<Link href="/ja/legal/privacy">写真の取り扱い</Link></p>}
         {photos[0]?.state === 'ready' && <section className="panel stack"><div className="section-heading"><h2>ほかの表現も探す</h2><button className="text-button" disabled={recommending || locked} onClick={() => void recommend()}>{recommending ? '確認中…' : '編集候補を見る'}</button></div>
           {!recommendation && <p className="small muted">アップロードした写真から、利用できる編集候補を確認できます。</p>}
-          {recommendation && <><p className="small muted">{recommendation.source === 'fallback' ? 'おすすめ解析は利用できないため、利用可能な編集方法を表示します。' : '写真に合いそうな編集候補です。仕上がりを保証するものではありません。'}</p>{recommendation.recommendations.length ? <div className="button-row">{recommendation.recommendations.map((item) => <button className="button button-secondary" key={item.prompt_id} disabled={locked} onClick={() => chooseTool(item.tool_id)}>{item.name_ja}</button>)}</div> : <p>現在表示できる候補がありません。右側の一覧から編集方法をご覧ください。</p>}</>}
+          {recommendation && <><p className="small muted">{recommendation.source === 'fallback' ? 'おすすめ解析は利用できないため、利用可能な編集方法を表示します。' : '写真に合いそうな編集候補です。仕上がりを保証するものではありません。'}</p>{recommendation.recommendations.length ? <div className="button-row">{recommendation.recommendations.map((item) => <ObservedToolButton key={item.prompt_id} tool={item.tool_id} available={tools.some(t=>t.tool_id===item.tool_id&&t.available)} disabled={locked} onClick={() => chooseTool(item.tool_id)}>{item.name_ja}</ObservedToolButton>)}</div> : <p>現在表示できる候補がありません。右側の一覧から編集方法をご覧ください。</p>}</>}
         </section>}
       </section>
 

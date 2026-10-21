@@ -36,3 +36,5 @@ export const ConsoleDownloadResponse = z.object({
   download_url: z.string().url(), expires_at: z.string().datetime(),
   action_id: Uuid, recording: z.enum(['recorded', 'duplicate', 'disabled', 'unavailable']),
 }).strict();
+
+export type ConsoleEventReceipt=z.infer<typeof ConsoleEventReceipt>;

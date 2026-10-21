@@ -14,3 +14,5 @@
 - [Google/邮箱真实登录接入](backend/AUTH_SETUP.md)：picharu.vercel.app的Supabase/Google/SMTP配置、新用户初始化与验收。
 - [双看板三阶段开发](backend/CONSOLE_IMPLEMENTATION.md)、[阶段1数据与权限](backend/CONSOLE_FOUNDATION.md)、[分阶段验收](verification/CONSOLE_VERIFICATION.md)。
 - [阶段2个人控制台](backend/PERSONAL_CONSOLE.md)：本人使用总览、任务/作品筛选及积分流水。
+
+- [阶段3管理员完整数据看板](backend/ADMIN_ANALYTICS.md)：8页面、24指标、固定快照/分页/钻取/CSV、事件与实际退款事实。

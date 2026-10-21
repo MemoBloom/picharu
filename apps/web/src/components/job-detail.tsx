@@ -1,6 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import {useAuth} from '../lib/auth';
+import {coarseDevice} from '../lib/device';
+import {useResultObservation,ResultFeedback} from './analytics-provider';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ApiError, UserFacingError, api } from '../lib/api';
 import { findToolContent } from '../lib/tool-content';
@@ -12,10 +15,14 @@ const terminal = new Set(['completed', 'failed', 'cancelled']);
 const statusText: Record<string, string> = { queued: '順番を待っています', processing: '写真を編集しています', completed: '仕上がりを確認しましょう', failed: '編集を完了できませんでした', cancelled: '編集をキャンセルしました' };
 
 export function JobDetail({ jobId }: { jobId: string }) {
-  return <AuthGate><JobContent jobId={jobId} /></AuthGate>;
+  const {user}=useAuth();
+  return <AuthGate><JobContent key={`${user?.id}:${jobId}`} jobId={jobId} /></AuthGate>;
 }
 
 function JobContent({ jobId }: { jobId: string }) {
+  const {user}=useAuth();
+  const downloadAction=useRef<string|null>(null);
+  const [loadedSrc,setLoadedSrc]=useState('');
   const [job, setJob] = useState<Job | null>(null);
   const [original, setOriginal] = useState<ImageAsset | null>(null);
   const [result, setResult] = useState<ImageAsset | null>(null);
@@ -129,7 +136,9 @@ function JobContent({ jobId }: { jobId: string }) {
     setBusy(true);
     setActionError(null);
     try {
-      const response = await api<{ download_url: string }>(`/api/images/${encodeURIComponent(job.result_image_id)}/download`);
+      downloadAction.current??=crypto.randomUUID();
+      const response = await api<{ download_url: string }>(`/api/images/${encodeURIComponent(job.result_image_id)}/download`,{method:'POST',body:{action_id:downloadAction.current,device:coarseDevice()},expectedOwnerId:user?.id});
+      downloadAction.current=null;
       // Signed URLs are read fresh for every download and never saved in a draft.
       const anchor = document.createElement('a');
       anchor.href = response.download_url;
@@ -159,6 +168,7 @@ function JobContent({ jobId }: { jobId: string }) {
 
   const content = job ? findToolContent(job.tool_id) : null;
   const image = showOriginal ? original : result;
+  const resultRef=useResultObservation(jobId,!showOriginal&&!!result?.preview_url&&loadedSrc===result.preview_url&&!deleted);
   return <div className="container section">
     <PageHeading title={job ? statusText[job.status] || '編集の状況' : '編集の状況'} description={content?.name_ja} backHref="/ja/history" backLabel="編集履歴へ" />
     {!job && !error && <Loading label="編集の状況を確認しています…" />}
@@ -166,8 +176,9 @@ function JobContent({ jobId }: { jobId: string }) {
     {job && <div className="editor-grid job-grid">
       <section className="editor-canvas stack" aria-label="写真のプレビュー">
         {job.status === 'completed' ? <>
+          {!deleted&&<ResultFeedback job={jobId} completedAt={job.completed_at}/>}
           <div className="segmented" role="group" aria-label="写真を比較"><button className={!showOriginal ? 'active' : ''} aria-pressed={!showOriginal} onClick={() => setShowOriginal(false)}>仕上がり</button><button className={showOriginal ? 'active' : ''} aria-pressed={showOriginal} onClick={() => setShowOriginal(true)}>元の写真</button></div>
-          {image?.preview_url ? <figure className="editor-photo"><img src={image.preview_url} alt={showOriginal ? '編集に使用した元の写真' : '編集した仕上がりのプレビュー'} onError={() => setImageError(new UserFacingError('プレビューの有効期限が切れた可能性があります。画像を再読み込みしてください。'))} /><figcaption className="photo-caption">{showOriginal ? '元の写真' : '仕上がりのプレビュー'}</figcaption></figure> : <div className="empty-state panel"><h2>{deleted && !showOriginal ? '仕上がりの画像は削除されました' : 'プレビューを表示できません'}</h2><p>画像が期限切れ、削除済み、または読み込み中の可能性があります。編集履歴は残ります。</p>{!deleted && <button className="button button-secondary" onClick={refreshAssets}>画像を再読み込み</button>}</div>}
+          {image?.preview_url ? <figure className="editor-photo"><img ref={resultRef} onLoad={()=>setLoadedSrc(image.preview_url!)} src={image.preview_url} alt={showOriginal ? '編集に使用した元の写真' : '編集した仕上がりのプレビュー'} onError={() => setImageError(new UserFacingError('プレビューの有効期限が切れた可能性があります。画像を再読み込みしてください。'))} /><figcaption className="photo-caption">{showOriginal ? '元の写真' : '仕上がりのプレビュー'}</figcaption></figure> : <div className="empty-state panel"><h2>{deleted && !showOriginal ? '仕上がりの画像は削除されました' : 'プレビューを表示できません'}</h2><p>画像が期限切れ、削除済み、または読み込み中の可能性があります。編集履歴は残ります。</p>{!deleted && <button className="button button-secondary" onClick={refreshAssets}>画像を再読み込み</button>}</div>}
           <p className="small muted">プレビューは確認用の縮小画像です。保存するときは「ダウンロード」を選んでください。</p>
         </> : <div className="job-preview panel stack">
           {original?.preview_url && <img src={original.preview_url} alt="編集に使用した写真" className="job-original-preview" />}

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 export * from './console';
+export * from './analytics';
 
 export const CONTRACT_VERSION = '1.0.0' as const;
 export const ToolId = z.enum(['remove_person','remove_object','change_background','photo_color_grade','weather_season','light_time','ai_avatar','natural_beauty','hair_color','hairstyle','professional_headshot','anime_photo','illustration_photo','chibi_person','pet_illustration','pet_humanization','multi_photo_composite','product_background','room_redesign','clothing_recolor']);
@@ -45,7 +46,7 @@ export const JevRequest=z.object({contract_version:z.literal(CONTRACT_VERSION),r
 export const JevResponse=z.object({contract_version:z.literal(CONTRACT_VERSION),request_id:Id,catalog_revision:z.string(),model_version:z.string().min(1),inference_ms:z.number().nonnegative().finite(),
   recommendations:z.array(z.object({prompt_id:z.string(),prompt_version:z.number().int().positive(),score:z.number().finite(),reason_code:z.enum(['VISUAL_MATCH','SUBJECT_MATCH'])}).strict()).max(5)
 }).strict();
-export const ErrorCode=z.enum(['UNAUTHORIZED','FORBIDDEN','NOT_FOUND','INVALID_REQUEST','INVALID_PROMPT','IMAGE_NOT_READY','IMAGE_IN_USE','INSUFFICIENT_CREDITS','IDEMPOTENCY_CONFLICT','JOB_NOT_CANCELLABLE','UNSUPPORTED_CAPABILITY','GENERATION_DISABLED','RATE_LIMITED','SERVICE_UNAVAILABLE','INVALID_SIGNATURE','PAYMENT_MISMATCH','ACCOUNT_RESTRICTED','INTERNAL_ERROR']);
+export const ErrorCode=z.enum(['UNAUTHORIZED','QUERY_TOO_LARGE','FORBIDDEN','NOT_FOUND','INVALID_REQUEST','INVALID_PROMPT','IMAGE_NOT_READY','IMAGE_IN_USE','INSUFFICIENT_CREDITS','IDEMPOTENCY_CONFLICT','JOB_NOT_CANCELLABLE','UNSUPPORTED_CAPABILITY','GENERATION_DISABLED','RATE_LIMITED','SERVICE_UNAVAILABLE','INVALID_SIGNATURE','PAYMENT_MISMATCH','ACCOUNT_RESTRICTED','INTERNAL_ERROR']);
 export const ErrorEnvelope=z.object({error:z.object({code:ErrorCode,message:z.string(),request_id:Id,retryable:z.boolean()}).strict()}).strict();
 export const EditAccepted=z.object({job_id:Id,status:JobStatus,credits_reserved:z.number().int().nonnegative(),replayed:z.boolean()}).strict();
 export const ImageView=z.object({image_id:Id,status:z.enum(['uploading','ready','deleted']),mime_type:z.string(),bytes:z.number().int().nonnegative(),width:z.number().int().nullable(),height:z.number().int().nullable(),preview_url:z.string().url().nullable(),expires_at:z.string()}).strict();

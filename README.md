@@ -47,3 +47,7 @@ git push -u origin main
 将OWNER/REPOSITORY替换为自己的地址。main push或指向main的PR触发Verify与PostgreSQL concurrency检查；Version tag手动输入版本后完整检查并创建不可覆盖的注释标签。流水线不发布npm包、不自动部署Vercel。没有remote时GitHub runner和标签推送尚未验证。
 
 本仓库可单独clone、安装与运行CI，不要求检出父工作区或兄弟仓库。项目级产品规划和跨服务设计属于父工作区；未来Worker/GPU通过固定版本Schema/OpenAPI对接，不从本机兄弟路径直接导入代码。
+
+## 双看板功能分支
+
+用户个人控制台与管理员完整数据看板的三阶段实现及本地证据见[实施计划](docs/backend/CONSOLE_IMPLEMENTATION.md)和[管理员实现](docs/backend/ADMIN_ANALYTICS.md)。采集默认关闭；本地验证不表示云迁移/部署/真实自然采集完成。当前独立分支仍待与主UI及最新18方向目录集成。

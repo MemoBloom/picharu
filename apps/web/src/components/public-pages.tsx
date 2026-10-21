@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useToolObservation } from './analytics-provider';
 import Image from 'next/image';
 import { useEffect, useId, useMemo, useState } from 'react';
 import { api, errorMessage } from '../lib/api';
@@ -38,7 +39,8 @@ function FaqList({ items }: { items: { question: string; answer: string }[] }) {
 }
 
 function ToolRow({ tool, live, checked }: { tool: PublicToolContent; live?: Tool; checked: boolean }) {
-  return <Link className="tool-card" href={`/ja/tools/${tool.tool_id}`}>
+  const observed=useToolObservation(tool.tool_id,checked&&live?.available===true);
+  return <Link ref={observed.ref} onClick={observed.onSelect} className="tool-card" href={`/ja/tools/${tool.tool_id}`}>
     <span className="tool-icon"><Icon name={tool.icon} size={30} /></span>
     <span className="tool-card-content"><span className="tool-card-title">{tool.name_ja}</span><span className="tool-card-description">{tool.description}</span>
       {checked && <span className={`availability ${live?.available ? 'available' : ''}`}>{live?.available ? '利用できます' : '生成は準備中'}</span>}
