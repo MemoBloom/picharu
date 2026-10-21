@@ -88,6 +88,11 @@ async function main(){
    create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;
    grant execute on function auth.uid() to anon,authenticated,service_role;`);
   await db.query(await readFile('supabase/migrations/202610190001_web_backend.sql','utf8'));
+  await db.query(await readFile('supabase/migrations/202610200400_worker.sql','utf8'));
+  await db.query(await readFile('supabase/migrations/202610210100_console_foundation.sql','utf8'));
+  await db.query(await readFile('supabase/migrations/202610210200_personal_console.sql','utf8'));
+  await db.query(await readFile('supabase/migrations/202610210300_admin_analytics.sql','utf8'));
+  await db.query(await readFile('supabase/migrations/202610210400_console_telemetry.sql','utf8'));
   await db.query('insert into auth.users(id) values($1)',[owner]);await seedImage(image);
   const cs=await clients(20);
   await db.query('update credit_accounts set available=100 where owner_id=$1',[owner]);
@@ -245,7 +250,145 @@ async function main(){
   await rpc(db,'seo_revoke_session',[consent]);
   check(await rpc(db,'seo_delivery_allowed',[claims[0][0].id,claims[0][0].delivery_token]),false,'revocation cancels delivery even after a claim');
   await closeClients(seoClients);
-  console.log(`Native PostgreSQL core + SEO independent-session concurrency passed: ${assertions} assertions; 20 same-key creates, 20 competing balances, 20 cancellations, 20 paid events, 30 delete/create races (${createdFirst} creation wins / ${deletedFirst} deletion wins); full/partial/disputed known-Charge facts and later reversal races.`);
+  // Console v1: independent sessions genuinely overlap behind the exact locks
+  // taken by ingestion/finalization. Attempts/polls/retries must not inflate use.
+  await db.query("update console_settings set environment='test',collection_enabled=true");
+  const cc=await clients(20);
+  const exposure={event_id:randomUUID(),name:'tool_exposed',page_view_id:randomUUID(),exposure_id:randomUUID(),tool_id:'remove_person',device:'desktop',occurred_at:new Date().toISOString(),visible_ms:1000,visible_ratio:0.5};
+  await db.query('select pg_advisory_lock(hashtextextended($1::text,37))',[exposure.event_id]);
+  const eventPending=Promise.allSettled(cc.map(c=>rpc(c,'app_console_record_event',[owner,JSON.stringify(exposure)])));
+  const eventDeadline=Date.now()+5000;let eventWaiting=0;
+  try {
+   while(Date.now()<eventDeadline){
+    eventWaiting=Number((await db.query("select count(*) n from pg_stat_activity where datname=$1 and application_name='picjp-concurrency-test' and wait_event='advisory'",[database])).rows[0].n);
+    if(eventWaiting===cc.length)break;await new Promise(resolve=>setTimeout(resolve,20));
+   }
+   check(eventWaiting,20,'20 exact event replays overlap on their ingestion lock');
+  }finally{await db.query('select pg_advisory_unlock(hashtextextended($1::text,37))',[exposure.event_id]);}
+  const eventOutcomes=await eventPending;
+  check(eventOutcomes.every(r=>r.status==='fulfilled'),true,'all exact event replays succeed');
+  check(eventOutcomes.filter(r=>r.status==='fulfilled'&&r.value.recording==='recorded').length,1,'only one event replay is recorded');
+  const semantic=await Promise.all(cc.map(c=>rpc(c,'app_console_record_event',[owner,JSON.stringify({...exposure,event_id:randomUUID()})])));
+  check(semantic.every(r=>r.recording==='duplicate'),true,'new event IDs cannot duplicate the same page/tool exposure');
+  const consoleJob=randomUUID(),consoleImage=randomUUID(),actionId=randomUUID();
+  await db.query(`insert into edit_jobs(id,owner_id,tool_id,idempotency_key,request_hash,inputs,snapshot,credits_reserved) values($1,$2,'remove_person',$3,$4,'[]','{}',3)`,[consoleJob,owner,randomUUID(),hash]);
+  await db.query(`insert into images(id,owner_id,status,source_kind,source_job_id,storage_key,preview_key,sha256,mime_type,bytes,width,height,expires_at) values($1,$2,'ready','generated',$3,$4,$5,$6,'image/png',10,2,2,now()+interval '7 days')`,[consoleImage,owner,consoleJob,`results/${consoleImage}.png`,`results/${consoleImage}.jpg`,hash]);
+  await db.query("update edit_jobs set status='completed',result_image_id=$2,completed_at=now() where id=$1",[consoleJob,consoleImage]);
+  const beginActions=await Promise.all(cc.map(c=>rpc(c,'app_console_begin_download',[owner,consoleImage,actionId,'desktop'])));
+  check(beginActions.every(r=>r.capture),true,'20 concurrent download intents succeed');
+  check(Number((await db.query('select count(*) n from console_download_actions where action_id=$1',[actionId])).rows[0].n),1,'concurrent intents share one durable action');
+  await db.query('begin');await db.query('select * from console_download_actions where action_id=$1 for update',[actionId]);
+  const downloadPending=Promise.allSettled(cc.map(c=>rpc(c,'app_console_finish_download',[owner,actionId,true])));
+  const downloadDeadline=Date.now()+5000;let downloadWaiting=0;
+  try{
+   while(Date.now()<downloadDeadline){
+    downloadWaiting=Number((await db.query("select count(*) n from pg_stat_activity where datname=$1 and application_name='picjp-concurrency-test' and wait_event_type='Lock'",[database])).rows[0].n);
+    if(downloadWaiting===cc.length)break;await new Promise(resolve=>setTimeout(resolve,20));
+   }
+   check(downloadWaiting,20,'20 signed-link confirmations overlap on the action row');
+  }finally{await db.query('commit');}
+  const downloadOutcomes=await downloadPending;
+  check(downloadOutcomes.every(r=>r.status==='fulfilled'),true,'all signed-link replays succeed');
+  check(downloadOutcomes.filter(r=>r.status==='fulfilled'&&r.value.recording==='recorded').length,1,'one save-behavior event for 20 signed-link replays');
+  check(Number((await db.query("select count(*) n from analytics_events where name='download_url_issued' and job_id=$1",[consoleJob])).rows[0].n),1,'only one durable save event after concurrency');
+  await closeClients(cc);
+  const summary=await rpc(db,'app_personal_summary',[owner]);
+  const directCount=Number((await db.query('select count(*) n from edit_jobs where owner_id=$1 and created_at>=$2 and created_at<$3',[owner,summary.window.start,summary.as_of])).rows[0].n);
+  check(summary.jobs.total,directCount,'native personal summary agrees with owner-bound facts');
+  const personalJobs=await rpc(db,'app_personal_jobs',[owner,JSON.stringify({limit:50,status:'completed'}),false]);
+  check(personalJobs.items.every((j:any)=>j.status==='completed'),true,'native personal jobs filter uses public DTOs');
+  check(JSON.stringify(personalJobs.items).includes('final_prompt'),false,'native personal job projection excludes execution prompts');
+  const personalWorks=await rpc(db,'app_personal_jobs',[owner,JSON.stringify({limit:50,availability:'ready'}),true]);
+  check(personalWorks.items.some((w:any)=>w.job.job_id===consoleJob),true,'native works query includes the ready generated result');
+  const personalLedger=await rpc(db,'app_personal_ledger',[owner,JSON.stringify({limit:2})]);
+  check(personalLedger.items.length,2,'native ledger respects page limit');
+  check(typeof personalLedger.next_cursor,'string','native ledger emits a stable continuation cursor');
+  check(personalLedger.items.some((e:any)=>'business_key' in e),false,'native ledger excludes internal business keys');
+  // Stage 3: real connection overlap verifies device facts, cached report
+  // isolation, current authorization and immutable Stripe refund identities.
+  const ac=await clients(20);
+  await db.query("update credit_accounts set status='active',available=1000 where owner_id=$1",[owner]);
+  const beforeDevice=await account();
+  const deviceArgs=jobArgs('stage3_device_parallel_key');
+  const deviceOutcomes=await burst(ac,(c,i)=>rpc(c,'app_console_create_job',[...deviceArgs,i%2?'desktop':'mobile']));
+  check(deviceOutcomes.every(r=>r.status==='fulfilled'),true,'different-device same-key overlapping RPCs all succeed');
+  const deviceValues=deviceOutcomes.map(r=>(r as PromiseFulfilledResult<any>).value);
+  check(new Set(deviceValues.map(v=>v.job_id)).size,1,'device variants share one immutable task identity');
+  check(deviceValues.filter(v=>!v.replayed).length,1,'only one device contender inserts a task');
+  const deviceJob=deviceValues[0].job_id;
+  const frozenDevice=(await db.query('select analytics_device from edit_jobs where id=$1',[deviceJob])).rows[0].analytics_device;
+  check(['mobile','desktop'].includes(frozenDevice),true,'winning request supplies the frozen coarse device');
+  await rpc(ac[1],'app_console_create_job',[...deviceArgs,frozenDevice==='mobile'?'desktop':'mobile']);
+  check((await db.query('select analytics_device from edit_jobs where id=$1',[deviceJob])).rows[0].analytics_device,frozenDevice,'later cross-device replay cannot rewrite initial device');
+  const afterDevice=await account();
+  check(afterDevice.available,beforeDevice.available-5,'device wrappers reserve available credits once');
+  check(afterDevice.reserved,beforeDevice.reserved+5,'device wrappers reserve one task entitlement');
+  check(Number((await db.query("select count(*) n from credit_ledger where reference_id=$1 and kind='reserve'",[deviceJob])).rows[0].n),1,'cross-device concurrency has one reserve ledger');
+  await db.query("insert into console_roles(user_id,role,reason) values($1,'finance','native concurrency verification')",[owner]);
+  const analyticsQuery={start:new Date(Date.now()-86400000).toISOString(),end:new Date(Date.now()+1000).toISOString(),timezone:'Asia/Tokyo',bucket:'day',environment:'test',internal:'exclude',cohort:'all'};
+  await db.query(`create function pg_temp.console_equal_asof(p_query jsonb) returns jsonb language plpgsql as $$
+   declare uid uuid:=gen_random_uuid();jid uuid:=gen_random_uuid();d jsonb;
+   begin
+    insert into auth.users(id) values(uid);
+    update profiles set created_at=statement_timestamp() where id=uid;
+    insert into edit_jobs(id,owner_id,tool_id,idempotency_key,request_hash,inputs,snapshot,credits_reserved,created_at)
+    values(jid,uid,'illustration_photo',gen_random_uuid()::text,repeat('a',64),'[]','{}',3,statement_timestamp());
+    d:=console_analytics_dataset(p_query);
+    return jsonb_build_object('id',jid,'owner_id',uid,'dataset',d);
+   end $$;`);
+  const equal=(await db.query('select pg_temp.console_equal_asof($1) value',[JSON.stringify(analyticsQuery)])).rows[0].value;
+  const equalJob=equal.dataset.jobs.find((j:any)=>j.id===equal.id),equalUser=equal.dataset.users.find((u:any)=>u.id===equal.owner_id);
+  check(!!equalJob,true,'native current queued task at the exact as_of is visible');
+  check(!!equalUser,true,'native new queued owner at the exact as_of is visible');
+  check(equalJob.created_at,equal.dataset.as_of,'native fixture forces exact job/as_of equality');
+  check(equalUser.created_at,equal.dataset.as_of,'native fixture forces exact user/as_of equality');
+  // The writer has already inserted a task but deliberately has not committed.
+  // Snapshot construction must neither see a half-published task nor combine
+  // its eventual credit changes with earlier job facts.
+  await ac[1].query('begin');
+  const unpublished=await rpc(ac[1],'app_console_create_job',[...jobArgs('stage3_snapshot_unpublished'),'tablet']);
+  const report=await rpc(ac[0],'app_console_create_report',[owner,JSON.stringify(analyticsQuery),randomUUID()]);
+  check(report.dataset.jobs.some((j:any)=>j.id===unpublished.job_id),false,'report excludes an in-flight connection transaction');
+  check(report.dataset.users.find((u:any)=>u.id===owner).available,afterDevice.available,'report account and job facts share committed snapshot');
+  await ac[1].query('commit');
+  const snapshotReads=await Promise.all(ac.map(c=>rpc(c,'app_console_read_report',[owner,report.report_id,randomUUID()])));
+  check(snapshotReads.every(r=>r.dataset.as_of===report.dataset.as_of),true,'twenty independent readers retain one report as_of');
+  check(snapshotReads.every(r=>JSON.stringify(r.dataset)===JSON.stringify(report.dataset)),true,'later business commit cannot change cached report pages');
+  const fresh=await rpc(ac[2],'app_console_create_report',[owner,JSON.stringify(analyticsQuery),randomUUID()]);
+  check(fresh.dataset.jobs.some((j:any)=>j.id===unpublished.job_id),true,'a new report observes the newly committed task');
+  check(fresh.dataset.users.find((u:any)=>u.id===owner).available,afterDevice.available-5,'new report sees the matching committed reservation');
+  await ac[1].query('update console_roles set revoked_at=clock_timestamp() where user_id=$1',[owner]);
+  const revoked=await Promise.allSettled(ac.map(c=>rpc(c,'app_console_read_report',[owner,report.report_id,randomUUID()])));
+  check(revoked.every(r=>r.status==='rejected'&&/FORBIDDEN/.test(String(r.reason))),true,'all old report readers reject after role revocation commits');
+  // Refunds serialize on their order row while the Stripe identity remains
+  // unique across distinct webhook IDs and across status updates.
+  const refundId='re_native_concurrent';
+  const refundTime=new Date().toISOString();
+  async function refundBurst(state:string){
+   await db!.query('begin');await db!.query('select id from orders where id=$1 for update',[order.id]);
+   const pending=Promise.allSettled(ac.map((c,i)=>rpc(c,'app_console_record_refunds',[order.id,JSON.stringify([{id:refundId,occurred_at:refundTime,amount_minor:100,currency:'JPY',status:state}]),`evt_native_refund_${state}_${i}`])));
+   const deadline=Date.now()+5000;let waiting=0;
+   try{
+    while(Date.now()<deadline){
+     waiting=Number((await db!.query("select count(*) n from pg_stat_activity where datname=$1 and application_name='picjp-concurrency-test' and wait_event_type='Lock'",[database])).rows[0].n);
+     if(waiting===ac.length)break;await new Promise(resolve=>setTimeout(resolve,20));
+    }
+    check(waiting,20,`twenty ${state} refund facts genuinely overlap on the order lock`);
+   }finally{await db!.query('commit');}
+   return pending;
+  }
+  const pendingRefunds=await refundBurst('pending');
+  check(pendingRefunds.every(r=>r.status==='fulfilled'),true,'all pending refund identity replays succeed');
+  check(pendingRefunds.filter(r=>r.status==='fulfilled'&&r.value.recorded===1).length,1,'concurrent refund webhooks insert exactly one fact');
+  const succeededRefunds=await refundBurst('succeeded');
+  check(succeededRefunds.every(r=>r.status==='fulfilled'),true,'concurrent pending-to-succeeded refund transitions succeed');
+  check(succeededRefunds.every(r=>r.status==='fulfilled'&&r.value.recorded===0),true,'refund status transitions do not insert another amount');
+  check((await db.query('select count(*)::int n,sum(amount_minor)::int amount,min(status) status from console_refunds where id=$1',[refundId])).rows[0],{n:1,amount:100,status:'succeeded'},'one final refund fact and amount survive both concurrent bursts');
+  const terminalConflicts=await Promise.allSettled(ac.map((c,i)=>rpc(c,'app_console_record_refunds',[order.id,JSON.stringify([{id:refundId,occurred_at:refundTime,amount_minor:100,currency:'JPY',status:'failed'}]),`evt_native_refund_conflict_${i}`])));
+  check(terminalConflicts.every(r=>r.status==='rejected'&&/IDEMPOTENCY_CONFLICT/.test(String(r.reason))),true,'concurrent terminal conflicts cannot rewrite a successful refund');
+  check((await db.query('select amount_minor::int,status from console_refunds where id=$1',[refundId])).rows[0],{amount_minor:100,status:'succeeded'},'rejected refund transitions preserve immutable chronology');
+  await closeClients(ac);
+  console.log(`Native PostgreSQL core + consoles + SEO independent-session concurrency passed: ${assertions} assertions; 20 same-key creates, 20 competing balances, 20 cancellations, 20 paid events, 30 delete/create races (${createdFirst} creation wins / ${deletedFirst} deletion wins); full/partial/disputed known-Charge facts and later reversal races; stage 3 cross-device idempotency, stable reports/current roles and refund identity transitions.`);
  }finally{
   if(db)await db.query('rollback').catch(()=>{});
   await Promise.allSettled([...sessions].map(c=>c.end()));

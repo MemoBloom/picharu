@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-21",
+  "evidence_source": "User-returned gcloud execution reference and report that the job log command returned no JSON; no direct cloud query by local agent",
+  "execution_name": "picmoko-seo-import-staging-dtx6n",
+  "intended_job": "picmoko-seo-import-staging",
+  "intended_project": "picjp-staging",
+  "intended_region": "asia-northeast1",
+  "intended_source": "gsc",
+  "intended_day": "2026-10-17",
+  "reported_reference": "gcloud run jobs executions describe picmoko-seo-import-staging-dtx6n",
+  "reported_job_log_json_absent": true,
+  "execution_terminal_state": null,
+  "import_result": null,
+  "scope": "execution_reference_only_not_success_or_failure_acceptance",
+  "follow_up_evidence": "SEO_GSC_IMPORT_2026-10-21.json",
+  "follow_up_summary": "User later supplied job logs with gsc 2026-10-17 complete and container exit(0); original unknown-result fields above preserve the initial observation. Database readback remains pending.",
+  "next_read_only_checks": [
+    "describe the same execution status with explicit project and region",
+    "query Cloud Logging job resource directly, including system and container messages"
+  ]
+}

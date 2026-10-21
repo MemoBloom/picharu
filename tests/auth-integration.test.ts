@@ -94,6 +94,7 @@ beforeAll(async () => {
   pg = new PGlite();
   await pg.exec("create schema auth; create table auth.users(id uuid primary key,email text,raw_user_meta_data jsonb);create role anon;create role authenticated;create role service_role bypassrls;grant usage on schema public,auth to anon,authenticated,service_role;create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;");
   await pg.exec(await readFile('supabase/migrations/202610190001_web_backend.sql', 'utf8'));
+  await pg.exec(await readFile('supabase/migrations/202610200400_worker.sql', 'utf8'));
 });
 beforeEach(async () => {
   await pg.exec('truncate auth.users cascade; truncate rate_buckets;');

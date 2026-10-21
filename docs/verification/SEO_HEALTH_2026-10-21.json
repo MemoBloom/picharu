@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-21",
+  "evidence_source": "User verbal confirmation; full health JSON and execution ID not supplied",
+  "scope": "reported_runtime_health_not_scheduler_or_notification_acceptance",
+  "reported": {
+    "healthy": true,
+    "source_groups": 4,
+    "successful_days_per_group": 7,
+    "all_missing_days_empty": true,
+    "all_alerts_empty": true
+  },
+  "is_fixture_from_raw_json": null,
+  "raw_json": null,
+  "execution_name": null,
+  "pending": [
+    "Daily Scheduler configuration and actual dispatch",
+    "Cloud Run daily pipeline completion",
+    "Alert policy and notification receipt acceptance",
+    "Website GA4 tag reception, nonempty reconciliation, content evaluation and deployment"
+  ]
+}

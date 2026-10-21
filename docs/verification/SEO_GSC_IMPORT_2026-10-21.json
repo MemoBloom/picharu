@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-21",
+  "evidence_source": "User-returned Cloud Logging query for the SEO job; no direct cloud query by local agent",
+  "job": "picmoko-seo-import-staging",
+  "previously_reported_execution": "picmoko-seo-import-staging-dtx6n",
+  "scope": "reported_gsc_collector_completion_and_container_exit_only_not_database_readback_or_traffic_acceptance",
+  "collector_result": {
+    "source": "gsc",
+    "results": [{ "day": "2026-10-17", "status": "complete" }]
+  },
+  "reported_container_exit_code": 0,
+  "reported_log_entries": [
+    { "severity": "INFO", "timestamp": "2026-10-21T05:45:30.581465Z" },
+    { "severity": "INFO", "textPayload": "Container called exit(0).", "timestamp": "2026-10-21T05:45:24.259857Z" },
+    { "jsonPayload": { "results": [{ "day": "2026-10-17", "status": "complete" }], "source": "gsc" }, "timestamp": "2026-10-21T05:45:24.201380Z" },
+    { "severity": "INFO", "timestamp": "2026-10-21T05:44:44.128249Z" },
+    { "severity": "NOTICE", "timestamp": "2026-10-21T05:44:43.213303Z" }
+  ],
+  "correlation_note": "Logs were filtered by job name, not execution label; the supplied excerpt does not independently bind entries to the execution resource or expose its status conditions.",
+  "interpretation": "The configured collector reports complete only after all collected GSC windows finish their Supabase RPC imports. This confirms the reported GSC runtime flow, while complete versus empty windows and stored facts still require database readback.",
+  "pending": [
+    "Supabase readback for GSC property/page/query_page on 2026-10-17",
+    "GA4 full report adapter and import runtime verification",
+    "report row counts, complete versus empty state and quality metadata",
+    "scheduled collection, tag reception, content evaluation and deployment acceptance"
+  ]
+}

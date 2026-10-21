@@ -1,5 +1,21 @@
 # SEO S0–S4 工程交付与验收
 
+2026-10-21集成：SEO分支已整合最新main `2117eb4`，保留品牌UI/认证/双看板；398测试、90基础SQL、165原生并发断言、三模式各42HTTP、96发布及浏览器回归通过。修复统计Provider在身份变化时重建认证回调的问题，普通产品页仍按owner重置。见[连接点与验证边界](../integration/SEO_MAIN_INTEGRATION.md)。正常构建保持noindex，尚未合入main或生产发布。
+
+当前待办与上线顺序见[SEO剩余任务清单](REMAINING_TASKS.md)，按最新用户回传区分链路健康、网站标签、内容评价和正式部署。
+
+当前健康反馈（2026-10-21）：用户报告healthy=true、四组各7天成功、missing_days/alerts均为空，见[反馈证据](../verification/SEO_HEALTH_2026-10-21.json)。按用户反馈健康检查通过，未补造原始JSON/执行ID。下一步按[每日采集与告警指南](SCHEDULING_AND_ALERTS.md)建立独立每日Job、最小权限Scheduler身份与三项告警；配置、调度触发及通知收件均待用户执行验收。
+
+当前七日回补进度（2026-10-21）：用户报告GSC/GA4各7天complete、容器exit(0)，见[七日回补反馈](../verification/SEO_DAILY_IMPORT_2026-10-21.json)。尚未提供原始日期/执行ID；下一步运行health并回传JSON，以核对28窗口、缺日、陈旧及质量告警。health仅读取Supabase并计算状态，不重新拉取Google报表或写入导入数据；无需开启collection开关。健康通过以healthy=true、is_fixture=false及四组各7个成功日、missing_days/alerts为空为准。
+
+当前验收（2026-10-21）：用户已回传[Supabase四窗口只读结果](../verification/SEO_IMPORT_READBACK_2026-10-21.json)，GSC 2026-10-17的property/page/query_page及GA4 2026-10-18的landing_event，资源/时区均正确；四项status与successful_status均empty，完成时间及成功时间齐全，limited=false、dropped_rows=0。指定日期的真实Google→Cloud Run→Supabase→只读回查链路通过。empty表示可导入结果为空，不代表网站无访问；GSC不保证完整行、GA4仍不保证最终性。下一步执行第5节七日回补，再检查健康状态；标签接收、调度/监控、内容人工评价和正式部署仍待。下文构建/首次运行记录保留为操作历史，以本段为当前状态。
+
+最新GA4反馈（2026-10-21）：用户报告GA4也为`status:complete`、容器`exit(0)`，见[按反馈保存的证据边界](../verification/SEO_GA4_IMPORT_2026-10-21.json)。两来源运行已按反馈通过，下一步只读核对目标日期/资源下四窗口的状态/完成时间及质量；尚未取得GA4原始日志日期和数据库回读，不宣称已完成四窗口验收或真实标签收数。
+
+最新GSC运行进度（2026-10-21）：用户回传Cloud Logging中`source:gsc`、2026-10-17 `status:complete`及`Container called exit(0)`，见[真实运行摘要及原始日志](../verification/SEO_GSC_IMPORT_2026-10-21.json)。按当前采集器语义，全部GSC窗口的Supabase RPC导入完成后才输出complete；运行链路按反馈通过，但数据库三粒度的complete/empty、行数/质量回读及GA4仍待，不宣称已有自然流量或全面上线。
+
+最新云端进度（2026-10-21）：用户已回传独立SEO镜像构建/上传成功，源码ed0b303，镜像`asia-northeast1-docker.pkg.dev/picjp-staging/picjp/seo-collector:seo-ed0b30305583`，见[原样构建摘要及证明边界](../verification/SEO_IMAGE_BUILD_2026-10-21.json)。后续独立Job/运行身份、真实报表导入和数据库回读尚未验收；下文较早“云构建待执行”为历史记录。
+
 更新：2026-10-21。目标 worktree 为 `worktrees/picjp-web-seo`，分支 `feat/seo-platform`，基线 main `f7f640a`。草稿评审：[PR #6](https://github.com/MemoBloom/picharu/pull/6)，尚未合并。工程在该 worktree 独立实现；原 UI、认证与 Worker checkout 的修改没有混入。
 
 ## 阶段状态
@@ -8,7 +24,7 @@
 |---|---|---|
 | S0 | 初始 HTML 正文、H1/链接；canonical/OG/JSON-LD；robots/sitemap；私有页与占位页 noindex；真实 404；旧域公共页面迁移，保留认证/API/邮件素材路径 | 合并评审及生产域名实测 |
 | S1 | 18方向意图映射、独立正文与限制；3个保留重点候选详细说明/FAQ及中日对照包；3篇日语教程（背景/发色/宠物）；真实样例证据Schema及独立审核门槛 | 三个保留候选的真实授权before/after、模型效果evaluation与日语审校；18工具和3教程均noindex；两项消除功能不再列为待评测 |
-| S2 | GSC 三种粒度、GA4 事件报表、同意管理和手动标签、任务/支付事实与漏记修复、每日回补/幂等导入/失败状态、Planner/Trends CSV、缺日与质量健康检查、28 天数据库聚合与明细上限提示；独立采集镜像与调度入口 | 迁移预期结构53项已获用户回传齐全；运行身份/权限、真实标签/导入与调度验收待完成；Google两项API已获200空结果 |
+| S2 | GSC 三种粒度、GA4 事件报表、同意管理和手动标签、任务/支付事实与漏记修复、每日回补/幂等导入/失败状态、Planner/Trends CSV、缺日与质量健康检查、28 天数据库聚合与明细上限提示；独立采集镜像与调度入口 | 迁移结构53项与权限只读检查通过；Cloud Run真实导入/数据库回查指定四窗均成功empty；七日回补获用户7+7天complete/exit(0)反馈；28窗健康获用户通过反馈；真实标签接收、调度/监控及非空对账仍待 |
 | S3 | 基于曝光的规则候选；不可变草稿、作者与审核人分离、固定草稿基线的 CAS 发布/回滚、操作 UUID 幂等审计；HMAC 时间戳/nonce 失效回调；版本绑定假设/基线快照、等长观察与不可变复盘 | 运营身份、真实数据下候选判断、实际观察周期与负责人复盘、正式发布演练；规则不是统计显著性结论 |
 | S4 | 数据库内容后台、ISR、动态新教程目录、同版本 metadata/正文、真实 SerpApi 协议适配与条件隔离 | 云端访问/部署；排名供应商采购与来源评审另行决定，未调用收费排名接口；BigQuery 尚未启用，当前选用排名来源适配路线 |
 

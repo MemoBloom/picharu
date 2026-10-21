@@ -1,5 +1,7 @@
 import { z } from 'zod';
 export * from './seo';
+export * from './console';
+export * from './analytics';
 
 export const CONTRACT_VERSION = '1.0.0' as const;
 export const ToolId = z.enum(['remove_person','remove_object','change_background','photo_color_grade','weather_season','light_time','ai_avatar','natural_beauty','hair_color','hairstyle','professional_headshot','anime_photo','illustration_photo','chibi_person','pet_illustration','pet_humanization','multi_photo_composite','product_background','room_redesign','clothing_recolor']);
@@ -45,7 +47,7 @@ export const JevRequest=z.object({contract_version:z.literal(CONTRACT_VERSION),r
 export const JevResponse=z.object({contract_version:z.literal(CONTRACT_VERSION),request_id:Id,catalog_revision:z.string(),model_version:z.string().min(1),inference_ms:z.number().nonnegative().finite(),
   recommendations:z.array(z.object({prompt_id:z.string(),prompt_version:z.number().int().positive(),score:z.number().finite(),reason_code:z.enum(['VISUAL_MATCH','SUBJECT_MATCH'])}).strict()).max(5)
 }).strict();
-export const ErrorCode=z.enum(['UNAUTHORIZED','NOT_FOUND','INVALID_REQUEST','INVALID_PROMPT','IMAGE_NOT_READY','IMAGE_IN_USE','INSUFFICIENT_CREDITS','IDEMPOTENCY_CONFLICT','JOB_NOT_CANCELLABLE','UNSUPPORTED_CAPABILITY','GENERATION_DISABLED','RATE_LIMITED','SERVICE_UNAVAILABLE','INVALID_SIGNATURE','PAYMENT_MISMATCH','ACCOUNT_RESTRICTED','INTERNAL_ERROR']);
+export const ErrorCode=z.enum(['UNAUTHORIZED','QUERY_TOO_LARGE','FORBIDDEN','NOT_FOUND','INVALID_REQUEST','INVALID_PROMPT','IMAGE_NOT_READY','IMAGE_IN_USE','INSUFFICIENT_CREDITS','IDEMPOTENCY_CONFLICT','JOB_NOT_CANCELLABLE','UNSUPPORTED_CAPABILITY','GENERATION_DISABLED','RATE_LIMITED','SERVICE_UNAVAILABLE','INVALID_SIGNATURE','PAYMENT_MISMATCH','ACCOUNT_RESTRICTED','INTERNAL_ERROR']);
 export const ErrorEnvelope=z.object({error:z.object({code:ErrorCode,message:z.string(),request_id:Id,retryable:z.boolean()}).strict()}).strict();
 export const EditAccepted=z.object({job_id:Id,status:JobStatus,credits_reserved:z.number().int().nonnegative(),replayed:z.boolean()}).strict();
 export const ImageView=z.object({image_id:Id,status:z.enum(['uploading','ready','deleted']),mime_type:z.string(),bytes:z.number().int().nonnegative(),width:z.number().int().nullable(),height:z.number().int().nullable(),preview_url:z.string().url().nullable(),expires_at:z.string()}).strict();
@@ -67,5 +69,48 @@ export const OrderView=z.object({order_id:Id,package_id:Id,credits:z.number().in
 export const DeleteImageResponse=z.object({image_id:Id,status:z.literal('deleted'),cleanup_pending:z.boolean()}).strict();
 export const CheckoutResponse=z.object({order_id:Id,checkout_url:z.string().url()}).strict();
 export const CreditPackage=z.object({package_id:Id,credits:z.number().int().positive(),amount_minor:z.number().int().positive(),currency:z.literal('JPY')}).strict();
+
+// Personal console. Ownership always comes from the verified bearer, never query parameters.
+const ConsoleTime=z.string().datetime({offset:true});
+const ConsoleCount=z.number().int().nonnegative().safe();
+export const PersonalSummary=z.object({
+ as_of:ConsoleTime,window:z.object({start:ConsoleTime,end:ConsoleTime,timezone:z.literal('Asia/Tokyo')}).strict(),
+ credits:CreditView,ongoing_jobs:ConsoleCount,pending_orders:ConsoleCount,consumed_credits:ConsoleCount,
+ jobs:z.object({total:ConsoleCount,queued:ConsoleCount,processing:ConsoleCount,completed:ConsoleCount,failed:ConsoleCount,cancelled:ConsoleCount}).strict(),
+ recent_jobs:z.array(JobView).max(5),recent_works:z.array(JobView).max(5),
+}).strict();
+export const LedgerKind=z.enum(['reserve','release','consume','purchase','revoke','adjustment']);
+export const PersonalLedgerQuery=Pagination.extend({kind:LedgerKind.optional(),start:ConsoleTime.optional(),end:ConsoleTime.optional(),before:ConsoleTime.optional()}).strict();
+export const PersonalJobsQuery=Pagination.extend({status:JobStatus.optional(),tool_id:z.string().regex(/^[a-z][a-z0-9_]{0,99}$/).optional(),start:ConsoleTime.optional(),end:ConsoleTime.optional(),before:ConsoleTime.optional()}).strict();
+export const PersonalWorksQuery=PersonalJobsQuery.omit({status:true}).extend({availability:z.enum(['ready','expired','deleted','missing']).optional()}).strict();
+export const PersonalLedgerEntry=z.object({
+ entry_id:Id,kind:LedgerKind,available_delta:z.number().int().safe(),reserved_delta:z.number().int().safe(),
+ reference_id:Id.nullable(),reference_type:z.enum(['job','order','other']),created_at:ConsoleTime,
+}).strict();
+export const PersonalLedgerPage=z.object({as_of:ConsoleTime,snapshot_before:ConsoleTime,items:z.array(PersonalLedgerEntry).max(50),next_cursor:z.string().nullable()}).strict();
+export const PersonalJobsPage=z.object({as_of:ConsoleTime,snapshot_before:ConsoleTime,items:z.array(JobView).max(50),next_cursor:z.string().nullable()}).strict();
+export const PersonalWork=z.object({job:JobView,availability:z.enum(['ready','expired','deleted','missing']),expires_at:ConsoleTime.nullable()}).strict();
+export const PersonalWorksPage=z.object({as_of:ConsoleTime,snapshot_before:ConsoleTime,items:z.array(PersonalWork).max(50),next_cursor:z.string().nullable()}).strict();
 export const WorkerDrainRequest=z.object({contract_version:z.literal(CONTRACT_VERSION),limit:z.number().int().min(1).max(20).default(5)}).strict();
 export const WorkerAck=z.object({contract_version:z.literal(CONTRACT_VERSION),request_id:Id,processed:z.number().int().min(0).max(20),remaining:z.boolean()}).strict();
+
+// Private Worker RPC protocol. Package 1.1.0 is additive; HTTP contract stays 1.0.0.
+const WText=z.string().min(1).max(128);
+const WInt=z.number().int().nonnegative().safe();
+const WTime=z.string().datetime({offset:true});
+export const WorkerStage=z.enum(['queued','submitting','waiting_provider','storing','settling','needs_reconciliation','done']);
+export const WorkerSupportedVersion=z.object({contract_version:z.literal(CONTRACT_VERSION),execution_type:z.literal('commercial_edit'),execution_version:z.literal(1),provider:WText,adapter_version:WText}).strict();
+export const WorkerResultRef=z.object({kind:z.enum(['url','provider_asset']),locator:z.string().min(1).max(4096),provider:WText}).strict();
+export const WorkerCost=z.object({currency:z.string().regex(/^[A-Z]{3}$/),amount_minor:WInt,evidence:z.enum(['provider_report','invoice','estimate']),provider_reference:z.string().max(128).nullable()}).strict();
+export const WorkerArtifact=z.object({kind:z.enum(['provider_output','result','preview']),storage_key:z.string().min(1).max(1024),sha256:z.string().regex(/^[a-f0-9]{64}$/),mime_type:z.enum(['image/png','image/jpeg','image/webp']),bytes:z.number().int().positive().max(33554432),width:z.number().int().positive(),height:z.number().int().positive()}).strict().superRefine((v,c)=>{if(v.width*v.height>24000000)c.addIssue({code:'custom',message:'Pixel limit exceeded'});if(v.kind==='result'&&v.mime_type!=='image/png'||v.kind==='preview'&&(v.mime_type!=='image/jpeg'||Math.max(v.width,v.height)>768||v.bytes>1048576))c.addIssue({code:'custom',message:'Invalid normalized artifact'});});
+export const WorkerInputAsset=z.object({image_id:Id,role:InputRole,position:z.number().int().min(0).max(3),storage_key:z.string().min(1).max(1024),sha256:z.string().regex(/^[a-f0-9]{64}$/),mime_type:z.literal('image/png'),bytes:z.number().int().positive().max(33554432),width:z.number().int().positive(),height:z.number().int().positive()}).strict();
+export const WorkerCheckpoint=z.object({provider_state:z.enum(['pending','succeeded','failed','unknown']).nullable(),result_ref:WorkerResultRef.nullable(),result_expires_at:WTime.nullable(),artifacts:z.array(WorkerArtifact).max(3),poll_count:WInt,transport_retry_count:WInt,error_class:WText.nullable()}).strict();
+export const WorkerAttempt=z.object({attempt_id:Id,attempt_no:z.number().int().positive(),provider:WText,model_id:z.string().min(1).max(512),adapter_version:WText,provider_request_key:WText,provider_job_id:z.string().min(1).max(512).nullable(),state:z.enum(['prepared','accepted','succeeded','failed','uncertain']),submitted_at:WTime.nullable(),result_ref:WorkerResultRef.nullable(),result_expires_at:WTime.nullable(),poll_count:WInt,transport_retry_count:WInt,estimated_cost:WorkerCost,actual_cost:WorkerCost.nullable()}).strict();
+export const WorkerClaim=z.object({job_id:Id,owner_id:Id,status:z.enum(['processing']),stage:WorkerStage,lease_token:Id,lease_version:z.number().int().positive().safe(),lease_expires_at:WTime,recovery_deadline_at:WTime,snapshot:z.record(z.unknown()),input_assets:z.array(WorkerInputAsset).max(4),attempt:WorkerAttempt.nullable(),artifact_manifest:z.array(WorkerArtifact).max(3),preflight_error:WText.nullable(),fresh_submission:z.boolean(),checkpoint:WorkerCheckpoint}).strict();
+export const WorkerClaimResponse=z.object({claims:z.array(WorkerClaim).max(20),skipped:z.object({not_due:WInt,leased:WInt,terminal:WInt,unsupported:WInt,backpressure:WInt}).strict()}).strict();
+export const WorkerEvidence=z.object({provider_request_key:WText,operation:z.enum(['submit','lookup','fetch']),started_at:WTime,observed_at:WTime,transport_phase:z.enum(['before_send','body_sent_or_unknown','response_received']),http_status:z.number().int().min(100).max(599).nullable(),reason_code:WText}).strict();
+export const WorkerWriteAck=z.object({applied:z.boolean(),status:z.literal('processing'),stage:WorkerStage,next_attempt_at:WTime.nullable()}).strict();
+export const WorkerCompleteAck=z.object({applied:z.boolean(),status:z.literal('completed'),result_image_id:Id,credits_consumed:WInt}).strict();
+export const WorkerFailAck=z.object({applied:z.boolean(),status:z.literal('failed'),credits_released:WInt}).strict();
+export const WorkerUncertainAck=z.object({applied:z.boolean(),status:z.literal('processing'),stage:z.literal('needs_reconciliation'),recovery_deadline_at:WTime}).strict();
+export const WorkerCleanupClaim=z.object({tasks:z.array(z.object({task_id:Id,storage_key:z.string().min(1).max(1024),reason:WText,lease_token:Id,lease_expires_at:WTime,attempt_count:WInt}).strict()).max(100)}).strict();

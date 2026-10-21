@@ -1,0 +1,97 @@
+/* Zen Kaku for reading/controls; Zen Maru for prominent headings. */
+:root {
+  --font-brand: var(--font);
+  --font-heading: 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Yu Gothic', Meiryo, sans-serif;
+  --accent-hover: #954538;
+  --accent-soft: #fff1eb;
+  --brand-ink: #67483c;
+}
+body { font-synthesis: none; letter-spacing: .01em; }
+h1, h2, h3 { letter-spacing: .015em; line-height: 1.6; }
+h1, h2, .upload-title { font-family: var(--font-heading); }
+h3, button, input, textarea, select { font-family: var(--font); }
+.hero-copy h1 { font-size: 50px; line-height: 1.55; letter-spacing: .005em; }
+.workspace-heading h1 { font-size: 34px; letter-spacing: .015em; }
+.picmoko-brand {
+  font-family: var(--font-brand);
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: .005em;
+  color: var(--brand-ink);
+  gap: 9px;
+}
+.picmoko-brand-small, .footer-inner .picmoko-brand { font-size: 25px; }
+.desktop-nav a, .header-account { font-weight: 700; }
+.button, .editor-fieldset legend, .advanced-settings > summary { letter-spacing: .02em; }
+.button:hover:not(:disabled) { background: var(--accent-hover); }
+.button-secondary:hover:not(:disabled), .button.danger:hover:not(:disabled) { background: var(--surface); }
+.choice-option.selected, .chooser-item.selected { background: var(--accent-soft); }
+input, textarea, select { letter-spacing: .01em; }
+input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
+.page-heading p, .hero-copy > p, .task-tip, .tool-card-description { line-height: 1.95; }
+.tool-card-description, .chooser-item small, .task-tip { font-size: 14px; }
+.upload-description { font-size: 15px; }
+.upload-format, .workspace-fine-print { font-size: 13px; }
+.action-status { font-size: 14px; }
+.choice-option { font-size: 14px; }
+.tool-change { font-size: 14px; }
+.credit-number, .price-number, .action-cost { font-variant-numeric: tabular-nums; }
+@media (min-width: 1400px) {
+  .hero-copy h1 { font-size: 54px; }
+}
+@media (max-width: 1000px) {
+  .hero-copy h1 { font-size: 40px; }
+}
+@media (max-width: 700px) {
+  body { font-size: 16px; }
+  .picmoko-brand { font-size: 29px; gap: 7px; letter-spacing: .005em; }
+  .hero-copy h1 { font-size: 34px; line-height: 1.65; letter-spacing: .005em; }
+  .workspace-heading h1, .page-heading h1 { font-size: 27px; letter-spacing: .01em; }
+  .hero-copy > p, .workspace-heading p, .page-heading p { font-size: 15px; line-height: 1.95; }
+  .header-account, .header-context-link, .task-tip, .tool-card-description, .chooser-item small { font-size: 14px; }
+  .upload-description { font-size: 14px; }
+  .upload-format, .workspace-fine-print, .workspace-actionbar .action-status { font-size: 13px; }
+  .workspace-actionbar .action-status { line-height: 1.75; }
+  .choice-option, .choice-option:has(input[value=""]) { font-size: 13px; }
+  .tool-change { font-size: 13px; }
+  .current-tool strong { font-size: 15px; }
+  .footer-inner .picmoko-brand { font-size: 25px; }
+}
+@media (max-width: 360px) {
+  .picmoko-brand { font-size: 27px; }
+  .workspace-heading h1 { font-size: 25px; }
+  .header-account { padding-inline: 10px; }
+  .header-context-link { font-size: 13px; }
+}
+/* Native dialogs otherwise use the browser's canvas text color. */
+.tool-chooser, .photo-lightbox, .confirm-dialog { color: var(--ink); font-family: var(--font); }
+/* Custom A wordmark: the image owns its lettering and colors. */
+.picmoko-brand .picmoko-wordmark { width: 132px; height: auto; object-fit: contain; flex-shrink: 0; }
+.picmoko-brand-small .picmoko-wordmark, .footer-inner .picmoko-brand .picmoko-wordmark { width: 104px; height: auto; }
+@media (max-width: 700px) { .picmoko-brand .picmoko-wordmark { width: 124px; height: auto; } }
+@media (max-width: 360px) { .picmoko-brand .picmoko-wordmark { width: 116px; } }
+/* Keep narrow-phone labels readable after the body-font change. */
+@media (max-width: 700px) { .header-context-link { white-space: nowrap; flex-shrink: 0; } }
+@media (max-width: 340px) {
+  .picmoko-brand .picmoko-wordmark { width: 104px; }
+  .picmoko-workspace .choice-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Account entry stays recognizable in the header and within thumb reach. */
+.header-account { gap: 8px; flex-shrink: 0; min-height: 44px; }
+.header-account svg { flex-shrink: 0; }
+.header-login { color: #fff; background: var(--accent); border-color: var(--accent); }
+.header-login:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.auth-method-note { color: var(--muted); font-size: 14px; line-height: 1.9; }
+@media (max-width: 1000px) { .header-signup { display: none; } }
+@media (max-width: 700px) {
+  .site-header { position: sticky; top: 0; z-index: 30; }
+  .mobile-nav { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .mobile-account { color: var(--accent); font-weight: 700; }
+  .mobile-account svg { background: var(--accent-soft); border-radius: 8px; box-sizing: content-box; padding: 3px; }
+  .mobile-account[aria-current=page] { background: var(--accent-soft); }
+}
+@media (max-width: 360px) {
+  .header-account { gap: 5px; padding-inline: 8px; }
+  .editing-header .header-account svg { display: none; }
+}

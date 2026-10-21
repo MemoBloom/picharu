@@ -1,0 +1,14 @@
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;padding:12px 0 24px;border-bottom:1px solid var(--line)}
+.metrics dt{font-size:13px;color:var(--muted);line-height:1.6}.metrics dd{font-size:32px;font-weight:700;line-height:1.5;font-variant-numeric:tabular-nums}.metrics small{font-size:14px;font-weight:400}
+.period{display:grid;gap:12px;padding-block:12px 24px;border-bottom:1px solid var(--line)}
+.statuses{display:flex;flex-wrap:wrap;gap:12px 28px}.statuses>div{display:flex;gap:12px;font-size:14px}.statuses dt{color:var(--muted)}.statuses dd{font-variant-numeric:tabular-nums}
+.rows{margin:0;padding:0;list-style:none}.rows li{border-bottom:1px solid var(--line)}.rows a{display:flex;justify-content:space-between;align-items:center;gap:20px;padding-block:16px;min-height:48px;font-size:14px}.rows a:hover{color:var(--accent)}.rows a>span:first-child{min-width:0}.rows a>span:last-child{flex-shrink:0;font-size:13px}.rows small{display:block;color:var(--muted);font-size:12px;line-height:1.8}
+.filter{display:flex;align-items:center;flex-wrap:wrap;gap:12px;font-size:14px}.filter select{background:var(--bg);border:1px solid var(--line);border-radius:8px;min-height:44px;padding:8px 12px;max-width:100%}
+.filters{display:flex;align-items:flex-end;flex-wrap:wrap;gap:16px;padding-block:8px 20px;border-bottom:1px solid var(--line)}.filters label{display:grid;gap:6px;font-size:13px;flex:1 1 150px;min-width:0}.filters select,.filters input{font:inherit;min-height:44px;min-width:0;width:100%;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.tableWrap{overflow-x:auto;max-width:100%;border-bottom:1px solid var(--line)}.table{border-collapse:collapse;width:100%;min-width:540px;font-size:14px}.table th,.table td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--line)}.table thead th{font-size:12px;font-weight:500;color:var(--muted)}.table tbody th{font-weight:500}.table small{display:block;font-size:12px;color:var(--muted)}.table td{white-space:nowrap;font-variant-numeric:tabular-nums}
+.tableWrap:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+@media(max-width:760px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.metrics dd{font-size:28px}.rows a{gap:12px}.rows a>span:last-child{max-width:5.5em;white-space:normal;text-align:right}.statuses{gap:8px 18px}.statuses>div{font-size:13px}}
+.tabs:global(.tabs){display:flex;overflow-x:auto;flex-wrap:nowrap;gap:20px;max-width:100%;scroll-margin-top:96px}.tabs>button{flex:0 0 auto;white-space:nowrap;min-height:44px}
+.accountShell :global(.credit-grid) span,.accountShell :global(.credit-grid) strong{display:block}
+.scrollHint{display:none}
+@media(max-width:760px){.scrollHint{display:block}}

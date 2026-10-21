@@ -1,7 +1,7 @@
 import { beforeEach,afterEach,describe,it,expect,vi } from 'vitest';
 const mocks=vi.hoisted(()=>({getBrowserAuth:vi.fn(),getSession:vi.fn(),refreshSession:vi.fn()}));
 vi.mock('../apps/web/src/lib/auth',()=>({getBrowserAuth:mocks.getBrowserAuth}));
-import { api,ApiError,UserFacingError,errorMessage } from '../apps/web/src/lib/api';
+import { api,ApiError,UserFacingError,errorMessage,downloadCsv } from '../apps/web/src/lib/api';
 import { safeNext } from '../apps/web/src/lib/navigation';
 import { loadDraft,saveDraft,clearUserState } from '../apps/web/src/lib/drafts';
 const A='00000000-0000-4000-8000-000000000001',B='00000000-0000-4000-8000-000000000002';
@@ -12,6 +12,18 @@ const rejected=()=>Response.json({error:{code:'UNAUTHORIZED',message:'UNAUTHORIZ
 beforeEach(()=>{vi.clearAllMocks();current=session();mocks.getSession.mockImplementation(async()=>({data:{session:current},error:null}));mocks.refreshSession.mockImplementation(async()=>({data:{session:current},error:null}));mocks.getBrowserAuth.mockReturnValue({auth:{getSession:mocks.getSession,refreshSession:mocks.refreshSession}});fetchMock=vi.fn();vi.stubGlobal('fetch',fetchMock);vi.stubGlobal('window',new EventTarget());});
 afterEach(()=>vi.unstubAllGlobals());
 describe('browser API ownership and retry boundary',()=>{
+ it('keeps SEO consent independent from owner-bound console telemetry and device metadata',async()=>{
+  vi.stubGlobal('localStorage',{getItem:()=>JSON.stringify({choice:'allow',expires:Date.now()+60000})});Object.assign(window,{innerWidth:390});
+  fetchMock.mockResolvedValue(Response.json({job_id:A,status:'queued',credits_reserved:3,replayed:false}));
+  await api('/api/edit',{method:'POST',body:{idempotency_key:'same'},keepalive:true,expectedOwnerId:A});
+  expect(fetchMock.mock.calls[0][1].headers).toMatchObject({'X-Analytics-Consent':'granted','X-Picjp-Device':'mobile',Authorization:'Bearer token-A'});
+  expect(fetchMock.mock.calls[0][1].keepalive).toBe(true);
+  current=session(B);await expect(api('/api/edit',{method:'POST',body:{idempotency_key:'same'},expectedOwnerId:A})).rejects.toMatchObject({status:401});expect(fetchMock).toHaveBeenCalledTimes(1);
+ });
+ it('rejects queued observations belonging to a previous owner before network',async()=>{current=session(B);await expect(api('/api/analytics/events',{method:'POST',expectedOwnerId:A,body:{event_id:A}})).rejects.toMatchObject({status:401});expect(fetchMock).not.toHaveBeenCalled();});
+ it('freezes device classification separately from edit body and uses bounded keepalive observations',async()=>{Object.assign(window,{innerWidth:390});fetchMock.mockResolvedValue(Response.json({job_id:A,status:'queued',credits_reserved:3,replayed:false}));await api('/api/edit',{method:'POST',body:{idempotency_key:'same'},keepalive:true});expect(fetchMock.mock.calls[0][1].headers['X-Picjp-Device']).toBe('mobile');expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({idempotency_key:'same'});expect(fetchMock.mock.calls[0][1].keepalive).toBe(true);});
+ it('does not deliver an old CSV when owner changes while decoding the blob',async()=>{fetchMock.mockResolvedValue({ok:true,status:200,headers:new Headers({'Content-Type':'text/csv'}),blob:async()=>{current=session(B);return new Blob(['private']);}});await expect(downloadCsv('/api/admin/analytics/reports/'+A+'/export',A)).rejects.toMatchObject({status:401});});
+ it('downloads CSV through a bearer request without embedding credentials in URLs',async()=>{const click=vi.fn(),anchor={click,href:'',download:''};vi.stubGlobal('document',{createElement:()=>anchor});const make=vi.spyOn(URL,'createObjectURL').mockReturnValue('blob:fixture');const revoke=vi.spyOn(URL,'revokeObjectURL').mockImplementation(()=>{});vi.useFakeTimers();try{fetchMock.mockResolvedValue(new Response('csv',{headers:{'Content-Type':'text/csv; charset=utf-8','Content-Disposition':'attachment; filename="report.csv"'}}));await downloadCsv('/api/admin/analytics/reports/'+A+'/export?section=users',A);expect(fetchMock.mock.calls[0][1].headers.Authorization).toBe('Bearer token-A');expect(fetchMock.mock.calls[0][0]).not.toContain('token');expect(anchor.download).toBe('report.csv');expect(click).toHaveBeenCalledOnce();vi.runAllTimers();expect(revoke).toHaveBeenCalledWith('blob:fixture');}finally{vi.useRealTimers();make.mockRestore();revoke.mockRestore();}});
  it('never attaches an auth token to public requests',async()=>{fetchMock.mockResolvedValue(Response.json({tools:[]}));await api('/api/tools',{authenticated:false});expect(mocks.getSession).not.toHaveBeenCalled();expect(fetchMock.mock.calls[0][1].headers.Authorization).toBeUndefined();});
  it('does not send a private request without a session',async()=>{current=null;await expect(api('/api/credits')).rejects.toMatchObject({status:401});expect(fetchMock).not.toHaveBeenCalled();});
  it('refreshes once for the same owner and preserves the original body and idempotency key',async()=>{fetchMock.mockResolvedValueOnce(rejected()).mockResolvedValueOnce(Response.json(order));mocks.refreshSession.mockImplementation(async()=>{current=session(A,'token-refreshed');return {data:{session:current},error:null};});await api('/api/checkout',{method:'POST',body:{package_id:A,idempotency_key:'fixture_checkout_key1'}});expect(fetchMock).toHaveBeenCalledTimes(2);expect(fetchMock.mock.calls[1][1].body).toBe(fetchMock.mock.calls[0][1].body);expect(fetchMock.mock.calls[1][1].headers.Authorization).toBe('Bearer token-refreshed');});
@@ -27,6 +39,11 @@ describe('browser API ownership and retry boundary',()=>{
  it('does not expose arbitrary exception messages or backend implementation details',()=>{expect(errorMessage(new Error('SECRET_TEST_VALUE'))).not.toContain('SECRET');expect(errorMessage(new UserFacingError('写真を選んでください。'))).toBe('写真を選んでください。');expect(errorMessage(new ApiError(402,'INSUFFICIENT_CREDITS'))).toContain('クレジット');});
 });
 describe('login return paths',()=>{
+ it('keeps SEO and product-console return paths in one restricted allowlist',()=>{
+  for(const path of ['/admin/seo','/admin/users?view=usage','/ja/guides','/ja/guides/change-background-photo'])expect(safeNext(path)).toBe(path);
+  for(const path of ['/admin/seo/unknown','/ja/guides//evil','/ja/guides/../../api/checkout'])expect(safeNext(path)).toBe('/ja/edit');
+ });
+ it('allows administrator return routes and rejects unknown administrator targets',()=>{expect(safeNext('/admin/users?view=usage')).toBe('/admin/users?view=usage');expect(safeNext('/admin/unknown')).toBe('/ja/edit');});
  it('preserves a supported tool and parent intent',()=>{expect(safeNext(`/ja/edit?tool=hair_color&parent_job_id=${A}`)).toBe(`/ja/edit?tool=hair_color&parent_job_id=${A}`);});
  it.each(['https://evil.example','//evil.example','/\\evil.example','/ja/login?next=/ja/login','/auth/callback','/api/checkout','/ja/edit\n'])('rejects unsafe or looping target %s',value=>{expect(safeNext(value)).toBe('/ja/edit');});
 });

@@ -21,5 +21,7 @@ export interface Payments{
  retrieveSession(id:string):Promise<Row>;
  retrievePaymentIntent(id:string):Promise<Row>;
  retrieveCharge(id:string):Promise<Row>;
+ /** A single bounded, read-only Stripe refund page; never an auto-paginating stream. */
+ listRefunds?(chargeId:string,startingAfter?:string):Promise<{data:Row[];has_more:boolean}>;
 }
 export interface Dependencies{db:Database;storage:Storage;payments:Payments;fetch:typeof fetch;now:()=>Date;}

@@ -1,0 +1,1967 @@
+{
+  "source": "Google Fonts CSS2 API",
+  "date": "2026-10-20",
+  "fontDisplay": "swap",
+  "files": [
+    {
+      "file": "fredoka-500-8d107b7c4c59.woff2",
+      "url": "https://fonts.gstatic.com/s/fredoka/v17/X7nP4b87HvSqjb_WIi2yDCRwoQ_k7367_B-i2yQag0-mac3OwyL8EemKttxNbikt.woff2",
+      "family": "Fredoka",
+      "weight": 500,
+      "bytes": 16260,
+      "sha256": "8d107b7c4c59dadbb9722e411a39024ed8bc224192008e7732461474dab916ea"
+    },
+    {
+      "file": "zen-maru-gothic-400-8234fcdd8751.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.2.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 1008,
+      "sha256": "8234fcdd87515efc6633b426db7555d947c38ff3a063e4ff9c6a361dd8c4791b"
+    },
+    {
+      "file": "zen-maru-gothic-400-d5c19798ac66.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.3.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 10956,
+      "sha256": "d5c19798ac66728c891ffb8b1a685a5cdbcb0edf072f964a5432b426228e6502"
+    },
+    {
+      "file": "zen-maru-gothic-400-29accfe349c6.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.4.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 2004,
+      "sha256": "29accfe349c6c1356dd59bec6ee769aa77a9a8f1d688327cb84b4897e999e8ec"
+    },
+    {
+      "file": "zen-maru-gothic-400-22783645b530.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.5.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 23728,
+      "sha256": "22783645b530555aef7797e736b5c30d97879b44aee49838f87401053500c51e"
+    },
+    {
+      "file": "zen-maru-gothic-400-82346ae65d63.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.6.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 28024,
+      "sha256": "82346ae65d634535af6faae3eef3cab5069109d9084eeb9019e3fc034e537478"
+    },
+    {
+      "file": "zen-maru-gothic-400-7bdf773201c3.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.7.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 31344,
+      "sha256": "7bdf773201c373b2731aadc0cad29305dd5e1a28c3aa826dbfd71585efdf1b91"
+    },
+    {
+      "file": "zen-maru-gothic-400-76f95170c627.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.8.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 28996,
+      "sha256": "76f95170c6279aa5024405344808e6dc14f5fc90b5e2e9764916f90a3188948c"
+    },
+    {
+      "file": "zen-maru-gothic-400-0ac222e3320c.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.9.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 26224,
+      "sha256": "0ac222e3320c6abd4f928fc90f82911a627a3ef51ddde78009290a39c3de4ff4"
+    },
+    {
+      "file": "zen-maru-gothic-400-5e35abc04fa8.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.10.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 28624,
+      "sha256": "5e35abc04fa86e580228c7dbe94dbe45af1066d807c264a4efad60a6ce79c980"
+    },
+    {
+      "file": "zen-maru-gothic-400-86282be61c97.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.11.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 29616,
+      "sha256": "86282be61c972d2d6931c8b670fc6551a670e40a20b4994541d807ba3517143f"
+    },
+    {
+      "file": "zen-maru-gothic-400-eacd4dc77cfa.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.12.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 24380,
+      "sha256": "eacd4dc77cfa504a1fb8f803fb9a99ca84c7d1424d3441cc5c6de866c1b83465"
+    },
+    {
+      "file": "zen-maru-gothic-400-e603e6e282a8.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.13.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 23460,
+      "sha256": "e603e6e282a80cc503e65b6304d1d1e89a9ff1931d28036684ac6318bb826052"
+    },
+    {
+      "file": "zen-maru-gothic-400-3c5ab388b2c9.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.14.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 26040,
+      "sha256": "3c5ab388b2c938dfe9665f83867cf878121f07043c47c85e335c494a24365076"
+    },
+    {
+      "file": "zen-maru-gothic-400-e6bfaa917a49.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.15.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 29484,
+      "sha256": "e6bfaa917a4973598cce29e5e2be7bc4b3e8f0ade1a38e7192efd3e315b1fba2"
+    },
+    {
+      "file": "zen-maru-gothic-400-9f4b14521545.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.16.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 24708,
+      "sha256": "9f4b14521545473b4f16e51e49abd6af65725b6d6ad479141d713afd56803c36"
+    },
+    {
+      "file": "zen-maru-gothic-400-6e08efc8d5a0.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.17.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 27220,
+      "sha256": "6e08efc8d5a0da57e712ea82e56a86f9800181801aee309a753caa549c30b9a0"
+    },
+    {
+      "file": "zen-maru-gothic-400-3002d02f7b11.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.18.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 24920,
+      "sha256": "3002d02f7b113c3fa4255ff1970ddfd104eedd16f45c6609f733c0688d1f541d"
+    },
+    {
+      "file": "zen-maru-gothic-400-847e28904d68.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.19.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 27164,
+      "sha256": "847e28904d68631ac0b67ae4288d8beeeb54c57341e97586ef4694bd5cb56d1f"
+    },
+    {
+      "file": "zen-maru-gothic-400-5c5f4e86d021.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.20.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 21544,
+      "sha256": "5c5f4e86d02165f1a842ece210ebb49e131d9e7a39523104c0b698fea5c2cdb0"
+    },
+    {
+      "file": "zen-maru-gothic-400-593119e3fcb7.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.21.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 26244,
+      "sha256": "593119e3fcb79038d69bbc86318848e2fd9ac0bd1481e16940c200a3da42714b"
+    },
+    {
+      "file": "zen-maru-gothic-400-1be4a055a211.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.22.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 24348,
+      "sha256": "1be4a055a211a37d8a7edffe32facb8ef430456b2f620c1489c8a0a1da026b6b"
+    },
+    {
+      "file": "zen-maru-gothic-400-2144a12d327d.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.23.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 36144,
+      "sha256": "2144a12d327daf907acce8b4c03fdcf52647d1a03b8159b5fedbf00bcb7de961"
+    },
+    {
+      "file": "zen-maru-gothic-400-5af31d64a857.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.24.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 29360,
+      "sha256": "5af31d64a857d84a00d5a77a7e5dd60b1919a7975cd3e0cd48414b23853c85cf"
+    },
+    {
+      "file": "zen-maru-gothic-400-4e85cdcd4b3b.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.25.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 27828,
+      "sha256": "4e85cdcd4b3bdf0eb6394bf44298afec2b3a8515fe8bdbe858e6f51ad5e4b69c"
+    },
+    {
+      "file": "zen-maru-gothic-400-0859589a215b.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.26.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 22016,
+      "sha256": "0859589a215bd88665d07f3eb08c8a9c0ba3d2173e2c5639729f94606bd40850"
+    },
+    {
+      "file": "zen-maru-gothic-400-d0c72ded10b5.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.27.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 20692,
+      "sha256": "d0c72ded10b51ec316cd93f5ba24b861c663942e78c88fab2b37f5b1bed9683e"
+    },
+    {
+      "file": "zen-maru-gothic-400-dd0aa0651d23.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.28.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 26400,
+      "sha256": "dd0aa0651d233964abb006e0cc5d969ddf28adf4f543de8a947cdc4c51c2bf86"
+    },
+    {
+      "file": "zen-maru-gothic-400-26adfbe2ffe4.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.29.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 21272,
+      "sha256": "26adfbe2ffe42b811faa6478977e2f2d7d43e9157e23e67a50eaadb62bce331a"
+    },
+    {
+      "file": "zen-maru-gothic-400-77c1b4b109c0.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.30.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 27232,
+      "sha256": "77c1b4b109c031a88f5d485e1a9973baf9997cffbdd3476fd462bc7d998179d3"
+    },
+    {
+      "file": "zen-maru-gothic-400-a88577c678ab.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.31.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 29212,
+      "sha256": "a88577c678ab9918679447a85ed5097ae6398b0abd55875313b73f3ba519982d"
+    },
+    {
+      "file": "zen-maru-gothic-400-c2a4e0d58d01.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.32.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 26876,
+      "sha256": "c2a4e0d58d0154135c53eb7f6e4243d5f776bf020a909546b12d3f388926da0a"
+    },
+    {
+      "file": "zen-maru-gothic-400-ec0d42e47ce6.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.33.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 20820,
+      "sha256": "ec0d42e47ce6eb5c9bcd7211a6432813b27e85eef41aa20aec61da94369650a8"
+    },
+    {
+      "file": "zen-maru-gothic-400-68cdb065a4c7.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.34.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 29052,
+      "sha256": "68cdb065a4c7417ff860bc568b5270b61ad95d96aa625fe264981cfc5bfe01db"
+    },
+    {
+      "file": "zen-maru-gothic-400-99170570faff.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.35.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 26012,
+      "sha256": "99170570faffee03469464979464e6fd7786d925524d0de4db344345c8352d6f"
+    },
+    {
+      "file": "zen-maru-gothic-400-5793284db44d.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.36.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 21512,
+      "sha256": "5793284db44dc35b85eda58183c68aa8fce9fa9c1c15d486f338129494a4d10b"
+    },
+    {
+      "file": "zen-maru-gothic-400-1ef11d7f8db6.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.37.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 25728,
+      "sha256": "1ef11d7f8db67f0e5d9a3fb6a2cc86222c1076384c02cbffca23c8a3b4d6d0d2"
+    },
+    {
+      "file": "zen-maru-gothic-400-92a76080f822.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.38.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 20416,
+      "sha256": "92a76080f822a82d849f1b9531fb7d006430c2cb1f0b68bf61b3cce25178ba07"
+    },
+    {
+      "file": "zen-maru-gothic-400-5fde53eed2fc.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.39.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 30032,
+      "sha256": "5fde53eed2fcca89f4d1426453d5128cfd12f9ffe46c17c8b0c7bc76ec635acf"
+    },
+    {
+      "file": "zen-maru-gothic-400-afe53e0c324c.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.40.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 23804,
+      "sha256": "afe53e0c324cbc1560aed0540be9f59c3f71fa656a7d85690668e1d677b38f34"
+    },
+    {
+      "file": "zen-maru-gothic-400-d3cfefb2be5d.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.41.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 27716,
+      "sha256": "d3cfefb2be5da7598c7effef7034c0a21f1d57772d6b008e3d1f1ae031be04ff"
+    },
+    {
+      "file": "zen-maru-gothic-400-c2ccd33fbc6c.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.42.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 22972,
+      "sha256": "c2ccd33fbc6cd87dfa46c3600715d7e9167c8397911e0fb43f051b5e1f9a9088"
+    },
+    {
+      "file": "zen-maru-gothic-400-06beadcd9bca.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.43.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 21876,
+      "sha256": "06beadcd9bca48a84415738f888a03c7f9ecef22d56d1fd9188c215308b5ff2e"
+    },
+    {
+      "file": "zen-maru-gothic-400-5d84308a98f6.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.44.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 23388,
+      "sha256": "5d84308a98f6f051e59784daadf9a57d09a7e75a78f535b1cd05470bd094927f"
+    },
+    {
+      "file": "zen-maru-gothic-400-2dff0860a989.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.45.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 19076,
+      "sha256": "2dff0860a989cb21f6b19f5490426b38da70bd0779b21f21fa9815f7f53c53e6"
+    },
+    {
+      "file": "zen-maru-gothic-400-e0d0948c46e1.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.46.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 18332,
+      "sha256": "e0d0948c46e1c30a10e5036a319e97b7fa9e90c3da27ea77bf58e24238b3bf2b"
+    },
+    {
+      "file": "zen-maru-gothic-400-f4153e91fa2c.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.47.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 20960,
+      "sha256": "f4153e91fa2c1c7450ee0e1e9eebd2924833dc0e12cc921273a0cdf5c4988d96"
+    },
+    {
+      "file": "zen-maru-gothic-400-eb12a879b444.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.48.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 22668,
+      "sha256": "eb12a879b4443f6695a8f7990d28c2fc40bd5c3e8a190eafeb7a7e0e3478c5a0"
+    },
+    {
+      "file": "zen-maru-gothic-400-6b9d80ca6989.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.49.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 20664,
+      "sha256": "6b9d80ca6989ee92d290bcb153a2e7d1f44da79331d285fb16ec50e2d0c28464"
+    },
+    {
+      "file": "zen-maru-gothic-400-d2e1735b4f5c.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.50.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 9400,
+      "sha256": "d2e1735b4f5c695682c5f5b62f59b252fdcac0b7fb331ef49c804613eda40048"
+    },
+    {
+      "file": "zen-maru-gothic-400-852277fd47ca.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.51.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 3024,
+      "sha256": "852277fd47ca55a5fb905ae204dd18b41d5ec3e525df69117b3afa222dcd9962"
+    },
+    {
+      "file": "zen-maru-gothic-400-f7e2ef8e247d.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.52.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 11624,
+      "sha256": "f7e2ef8e247dcf0cd96f927c13f645a9b2a8196d23038171b4910385b0d08281"
+    },
+    {
+      "file": "zen-maru-gothic-400-96e2de84fc02.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.53.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 7632,
+      "sha256": "96e2de84fc02ed4185b751aea984775ab5aecc342facc470449a9411f3aa3ecf"
+    },
+    {
+      "file": "zen-maru-gothic-400-6a56f3924eb7.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.54.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 1824,
+      "sha256": "6a56f3924eb77da82f716c5960c343caf953fb2c18c3681a55daeba5a533509e"
+    },
+    {
+      "file": "zen-maru-gothic-400-5abc3cd0b626.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.55.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 1684,
+      "sha256": "5abc3cd0b62633254899c318b0a19540e2e40e27f702ffcaddb5ef98702db2d3"
+    },
+    {
+      "file": "zen-maru-gothic-400-b438966d7241.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.56.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 4324,
+      "sha256": "b438966d72418ee3ec8020635a6c44a2344471f3dec341fcdcff23b298456d4f"
+    },
+    {
+      "file": "zen-maru-gothic-400-81c74a92b740.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.57.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 1360,
+      "sha256": "81c74a92b7409eec8d0b261e20f01980f888172126d14963fb31c47eaf18d395"
+    },
+    {
+      "file": "zen-maru-gothic-400-fa8b7bdc0961.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.58.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 8480,
+      "sha256": "fa8b7bdc0961c12604d79290a36e12382d02a76b679520d9dd7306288d41f7d3"
+    },
+    {
+      "file": "zen-maru-gothic-400-7f650cd39795.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.59.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 5424,
+      "sha256": "7f650cd3979506173c17bd0e6629360977c6eed02046014ff6899c77ff6b3ab7"
+    },
+    {
+      "file": "zen-maru-gothic-400-a52bf35d387c.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.60.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 15292,
+      "sha256": "a52bf35d387cddb84c0647721092fb779fd18c4a2e767356274e631d4dab0bfd"
+    },
+    {
+      "file": "zen-maru-gothic-400-33e4c4a25704.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.61.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 14732,
+      "sha256": "33e4c4a257041fff4c7b2a91348f476e406903ff47699c51ae8e2c4d77d21c15"
+    },
+    {
+      "file": "zen-maru-gothic-400-dbc3460e6cf3.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.62.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13908,
+      "sha256": "dbc3460e6cf3cd586acdd47c4298446f37c00a78c8c4d6f4a8620fad7e2321b8"
+    },
+    {
+      "file": "zen-maru-gothic-400-226bef5b1a97.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.63.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 12344,
+      "sha256": "226bef5b1a97db64b9289ab4f13d73a3981c86285066570e3a6f19b48ca6e0be"
+    },
+    {
+      "file": "zen-maru-gothic-400-40239d854710.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.64.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 15980,
+      "sha256": "40239d85471019f873f862a96f2a47437a239dda91d637efe6593c89d9cef774"
+    },
+    {
+      "file": "zen-maru-gothic-400-b776579b1c95.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.65.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 15476,
+      "sha256": "b776579b1c95a9db7d42f3a03d8b44a00bfa7a5e6102c80563bb295baec16382"
+    },
+    {
+      "file": "zen-maru-gothic-400-3e740b350d8f.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.66.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13648,
+      "sha256": "3e740b350d8fafe14d4c82e41cfc93446b87665e9086e4574c49f810842caa60"
+    },
+    {
+      "file": "zen-maru-gothic-400-74d59cc17acc.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.67.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13332,
+      "sha256": "74d59cc17accb024a2ba45e1405756374db8a15e63e3ef63d99988e549a3aca5"
+    },
+    {
+      "file": "zen-maru-gothic-400-b830b5cb66ca.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.68.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 14808,
+      "sha256": "b830b5cb66cad02f9e108392fb83f46c250c74a4c2a921f39fa69d9d0356ad3d"
+    },
+    {
+      "file": "zen-maru-gothic-400-ccde93e6b8af.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.69.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 14292,
+      "sha256": "ccde93e6b8af5f4bb2d9ab0d502faa85a99888c8045ee226f0ef1f7275e5a481"
+    },
+    {
+      "file": "zen-maru-gothic-400-5b4cabca27db.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.70.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13852,
+      "sha256": "5b4cabca27dbffe290c94740d58df1fec92e26fd5b1371a72296b59ed36ff951"
+    },
+    {
+      "file": "zen-maru-gothic-400-35d87f08d5bd.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.71.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13376,
+      "sha256": "35d87f08d5bd4cc7fe32736e4e4889a729bad8d60a3c074f9ab36c7e97684141"
+    },
+    {
+      "file": "zen-maru-gothic-400-3334daaebbf0.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.72.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 15272,
+      "sha256": "3334daaebbf04a1323383f894c73c8f0a74ebbe6d891126f33968b177d30fcce"
+    },
+    {
+      "file": "zen-maru-gothic-400-d3ee25c08151.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.73.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13868,
+      "sha256": "d3ee25c081518be5c3a7f33c12d310d1cb1a407e193ec941e8a61e4180609cce"
+    },
+    {
+      "file": "zen-maru-gothic-400-479b8c1e3568.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.74.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 12820,
+      "sha256": "479b8c1e3568724c758b7f09a41f72832dcc40701c73c2be9ccce67a6ebe5de1"
+    },
+    {
+      "file": "zen-maru-gothic-400-ff68534bd69a.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.75.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13024,
+      "sha256": "ff68534bd69ae86d389645eafd04e173ed504c07e372768bdf9de683a5081d0f"
+    },
+    {
+      "file": "zen-maru-gothic-400-e2afa08953fd.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.76.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13176,
+      "sha256": "e2afa08953fdc30bf17532d079c6e7c2dfa556cb0c142940993e433b26ad747f"
+    },
+    {
+      "file": "zen-maru-gothic-400-fbac7fae80ce.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.77.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 14240,
+      "sha256": "fbac7fae80cea6e93520199c06e0f0b2cd2464b3787c0fcdda3d9251e5513e9f"
+    },
+    {
+      "file": "zen-maru-gothic-400-7573e9d52126.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.78.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 14368,
+      "sha256": "7573e9d521265e6093498c7b0375eb37038710d6bc2b7f574f0a1747e6f72e55"
+    },
+    {
+      "file": "zen-maru-gothic-400-20728e95cb3f.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.79.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 14124,
+      "sha256": "20728e95cb3fac0d1aca73b621f25ec779192d409e55019a53f6ccbb32cda18b"
+    },
+    {
+      "file": "zen-maru-gothic-400-830d8b87068b.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.80.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13216,
+      "sha256": "830d8b87068b8997b540160890516b60b006c4ee8001c56a905542290643a04b"
+    },
+    {
+      "file": "zen-maru-gothic-400-d1232c52dd8a.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.81.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13012,
+      "sha256": "d1232c52dd8ad59840baf997a7f433053ff582808c48d1d73aa0d2342a90d7ef"
+    },
+    {
+      "file": "zen-maru-gothic-400-17b569ec8f35.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.82.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13876,
+      "sha256": "17b569ec8f357a0283b6a42570ba7c75f7b6bd7f2622c38574ac3045a3d8d2cd"
+    },
+    {
+      "file": "zen-maru-gothic-400-d28478d989c4.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.83.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13712,
+      "sha256": "d28478d989c42b6a9d5853ad4f5db3ee364dca5b09fa1c07d37b58fe1c219229"
+    },
+    {
+      "file": "zen-maru-gothic-400-ffa2488e205c.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.84.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13304,
+      "sha256": "ffa2488e205cd1eb66332d063e6d9fbe630332872035c8cd8f6c67a2fbc2bdf1"
+    },
+    {
+      "file": "zen-maru-gothic-400-814fe710a9bc.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.85.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 12244,
+      "sha256": "814fe710a9bc5bb08f60000a4a3fcfbfeab344a4b8d60c1dcf71d15c08b89bdc"
+    },
+    {
+      "file": "zen-maru-gothic-400-a355f778fcc7.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.86.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 12436,
+      "sha256": "a355f778fcc7764d0e883b85cbcf13bb6f05c31ae6954cca22e982edbbec5b41"
+    },
+    {
+      "file": "zen-maru-gothic-400-f44bb2cb39ea.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.87.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13504,
+      "sha256": "f44bb2cb39ea66c7c47d841e2e396b6cd5471a31805c74ff31f1adbc57b22ab1"
+    },
+    {
+      "file": "zen-maru-gothic-400-22cb9bf326ee.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.88.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 12856,
+      "sha256": "22cb9bf326ee9e0770adf8e248eca2bf0602a925cad6a9e106298a67fa4d36d4"
+    },
+    {
+      "file": "zen-maru-gothic-400-b2a243df61b9.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.89.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 12916,
+      "sha256": "b2a243df61b939db707dd6b763e08a131979696115afce5502747397cf23c82e"
+    },
+    {
+      "file": "zen-maru-gothic-400-ad3267ece766.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.90.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13492,
+      "sha256": "ad3267ece766bdce3144ebe34e687c5a1a4e2ac5e483a0f22cecab5f764be1fb"
+    },
+    {
+      "file": "zen-maru-gothic-400-a71002821f63.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.91.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13472,
+      "sha256": "a71002821f63cfdc490119d1782ff698fc825ed329ab654dd0cc492ae9d1aab8"
+    },
+    {
+      "file": "zen-maru-gothic-400-64d5604fb750.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.92.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13220,
+      "sha256": "64d5604fb750041092729288be2c2114de270cd8390deda30d4b17a145336981"
+    },
+    {
+      "file": "zen-maru-gothic-400-1f7081fce768.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.93.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 12924,
+      "sha256": "1f7081fce768060963fd52c21562e725c452cb7a90fd72becfda1f46e9dd5d71"
+    },
+    {
+      "file": "zen-maru-gothic-400-862cd867764e.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.94.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13608,
+      "sha256": "862cd867764ebd9897724a132df670ad42b39e3ffa8e1ad8f7cde0493360bba1"
+    },
+    {
+      "file": "zen-maru-gothic-400-93b2bb0e36c9.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.95.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 12484,
+      "sha256": "93b2bb0e36c9ee9e26fea0e87b45f998770aa7264533b772be5256583f29e3a1"
+    },
+    {
+      "file": "zen-maru-gothic-400-69746d327490.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.96.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 12916,
+      "sha256": "69746d327490ca71a52ae329ead2655177dd8a878204a71cf1e51f468d878774"
+    },
+    {
+      "file": "zen-maru-gothic-400-4192ec6fb520.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.97.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 12300,
+      "sha256": "4192ec6fb520d5d8f5346b83d531051a5c44ef5b8321f5610388be13a90b448a"
+    },
+    {
+      "file": "zen-maru-gothic-400-c58e80e0039a.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.98.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13240,
+      "sha256": "c58e80e0039aab52ded27c73783abce31ebaa570fc0f40f378fcda93cc9f5068"
+    },
+    {
+      "file": "zen-maru-gothic-400-72b19aa16dfa.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.99.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 14164,
+      "sha256": "72b19aa16dfa8ecc6b1c8c2efd26ff70ceb2653182f4db3d840763e3b38961c8"
+    },
+    {
+      "file": "zen-maru-gothic-400-1731c0962068.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.100.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13796,
+      "sha256": "1731c0962068d156eecdf056fb2721d6d8a1667610d7240c393663b909a87fde"
+    },
+    {
+      "file": "zen-maru-gothic-400-2e18c255fd5e.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.101.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 11768,
+      "sha256": "2e18c255fd5e4d6d115e911275a4fe0e9b31c11edc0fea6170064b0f2d872af1"
+    },
+    {
+      "file": "zen-maru-gothic-400-5d717f4fe445.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.102.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 12516,
+      "sha256": "5d717f4fe4456b66a77430767eb2a419a0fa1fdec82195fe7dbc0d66251053ef"
+    },
+    {
+      "file": "zen-maru-gothic-400-321ed871ce91.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.103.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13040,
+      "sha256": "321ed871ce914e49049a6ce5210052dbf4836be81cdb4b4be442cedc2d40f276"
+    },
+    {
+      "file": "zen-maru-gothic-400-f49449bec50a.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.104.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 12876,
+      "sha256": "f49449bec50a6b90301300e82c3ec0000a85534b96ea5b268efa550482099a59"
+    },
+    {
+      "file": "zen-maru-gothic-400-5fb8106d4e47.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.105.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13128,
+      "sha256": "5fb8106d4e47a9bc6c80762d77d8860c779412a87521814bd56144c21164d041"
+    },
+    {
+      "file": "zen-maru-gothic-400-f707c23ad783.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.106.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 14148,
+      "sha256": "f707c23ad783ec2c88b98b7a15b4dc00be3cfa19a6e8143787be54dd1d80df9a"
+    },
+    {
+      "file": "zen-maru-gothic-400-c7fc84ccda10.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.107.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 12176,
+      "sha256": "c7fc84ccda1098791112ddf99f382a4bd4ddfb982bd68351360d4aec014e3f20"
+    },
+    {
+      "file": "zen-maru-gothic-400-790838099339.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.108.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 13440,
+      "sha256": "790838099339a1d9862458b8ae0fb3b2276b8b85b57ae7a5ab6b0050be3df796"
+    },
+    {
+      "file": "zen-maru-gothic-400-7cd832ceacb3.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.109.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 11728,
+      "sha256": "7cd832ceacb3d0fa7bc1a1f4c2f1d60c12fe9e9ac9b510fe276d780c5574f446"
+    },
+    {
+      "file": "zen-maru-gothic-400-cce0ec4c317c.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.110.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 11848,
+      "sha256": "cce0ec4c317c0486ae06cd172cfdf26ced0bb80f2ed819ad6c69a8898c333561"
+    },
+    {
+      "file": "zen-maru-gothic-400-3552e85e2a5b.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.111.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 12628,
+      "sha256": "3552e85e2a5bbfa76dbbcaaf5a43359ebc50aee7c719b3de78d319c6b096acae"
+    },
+    {
+      "file": "zen-maru-gothic-400-e62f1387acb2.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.112.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 12072,
+      "sha256": "e62f1387acb2dd3443e7b35793c106031660e95ab8036339ee5aefa7e773f4fb"
+    },
+    {
+      "file": "zen-maru-gothic-400-20943d850047.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.113.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 11072,
+      "sha256": "20943d85004780025b9ae36687a7b9eaad1fe100ae20336e60237fc14410c8bb"
+    },
+    {
+      "file": "zen-maru-gothic-400-64e1acf871ee.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.114.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 10968,
+      "sha256": "64e1acf871ee31578cbcffb86d090b31b8c203a53fa08a0da77b1456983e95e3"
+    },
+    {
+      "file": "zen-maru-gothic-400-c95d6badbd61.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.115.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 11396,
+      "sha256": "c95d6badbd61b155c4993c6ea7e79661029d824430864de3cd4f35ed26fb26b2"
+    },
+    {
+      "file": "zen-maru-gothic-400-c5577ab2cc14.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.116.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 11292,
+      "sha256": "c5577ab2cc14b838c83c58dc217dbf7f5cf9f84cfb2ef91910e25d56c08e4401"
+    },
+    {
+      "file": "zen-maru-gothic-400-26c3a2aa42c9.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.117.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 8624,
+      "sha256": "26c3a2aa42c91c47f1e99a28f1d95a9b31fa0872ded26de56faab78d63e65f91"
+    },
+    {
+      "file": "zen-maru-gothic-400-65c931cfa1da.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.118.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 8296,
+      "sha256": "65c931cfa1da732fc32a2de23f3d14e47d7d5463701a6db2902228516c810e2f"
+    },
+    {
+      "file": "zen-maru-gothic-400-c8594ec57433.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-k6EJgNLDc4aPt1DLTVkMY-EVqJJo7qCKeuXNZ.119.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 18012,
+      "sha256": "c8594ec5743324e8a42a5ae73462414acda8a237cc0bab1e77d3001fdbd70a32"
+    },
+    {
+      "file": "zen-maru-gothic-400-89d8b5356229.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-U7khnFrKW9ZH8.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 5340,
+      "sha256": "89d8b5356229f4e4146256768622b5be22acde21f912c2a8fb3d68ee8e859438"
+    },
+    {
+      "file": "zen-maru-gothic-400-c4218400b299.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-U6UhnFrKW9ZH8.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 5212,
+      "sha256": "c4218400b299b4b7da5887b70c3235c61be1b8bf54a9b28ba0191adba16a2c1a"
+    },
+    {
+      "file": "zen-maru-gothic-400-5ec5d40dbbe0.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-U5EhnFrKW9ZH8.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 2076,
+      "sha256": "5ec5d40dbbe0fa6af29fd94181d223a87bcf8401a87c86b8164c748214a41a44"
+    },
+    {
+      "file": "zen-maru-gothic-400-d652b5eddc2b.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0SIpIxzW5b-RxT-6A8jWAtCp-U6khnFrKW9Q.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 400,
+      "bytes": 11552,
+      "sha256": "d652b5eddc2b877784592d1bb40e1713f97623ec7638801021519c1ea88b0b43"
+    },
+    {
+      "file": "zen-maru-gothic-700-0d7c9804f312.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.2.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 1040,
+      "sha256": "0d7c9804f312cd15c000f05af82ab2f471dbed455ad3d22076c7c30a8c1a6963"
+    },
+    {
+      "file": "zen-maru-gothic-700-1c038d8de7fe.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.3.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 11028,
+      "sha256": "1c038d8de7fe22c8aaa74d84a1eb374b873b05a53371dfd4807ca710e6efa612"
+    },
+    {
+      "file": "zen-maru-gothic-700-f59343be7d22.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.4.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 2040,
+      "sha256": "f59343be7d22f548cc26a6bb7f6060aa1a648fb2a5584bd73c1ff9e35a919386"
+    },
+    {
+      "file": "zen-maru-gothic-700-560d20b3d1c9.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.5.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 24176,
+      "sha256": "560d20b3d1c9154ef2689bc2f451087c357a93fb138827b1afa54318aa855abe"
+    },
+    {
+      "file": "zen-maru-gothic-700-02ca9527df8e.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.6.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 29744,
+      "sha256": "02ca9527df8e4bd9374ae5431bd67f6c33ef1e46241a2f7a0efc20dc29224ff8"
+    },
+    {
+      "file": "zen-maru-gothic-700-c50b3adbca86.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.7.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 32380,
+      "sha256": "c50b3adbca866b66ca76ae5a7f1068e7fd1c8f11db8e82e5f1b700435cf9ffe7"
+    },
+    {
+      "file": "zen-maru-gothic-700-3a63819cae2e.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.8.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 29852,
+      "sha256": "3a63819cae2e7c4fb18c7018ae618ca8ff843b7d21134c71a14b2c25b226fe77"
+    },
+    {
+      "file": "zen-maru-gothic-700-2c7905937d27.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.9.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 26736,
+      "sha256": "2c7905937d27aaeb674381893263194bc5d3e7fc7d1b53dd63846562f03497e1"
+    },
+    {
+      "file": "zen-maru-gothic-700-2e7f6b661e1f.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.10.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 30052,
+      "sha256": "2e7f6b661e1f000386ee6ef6aa4215f8691bf771ad469ee747ee8e07621cf021"
+    },
+    {
+      "file": "zen-maru-gothic-700-7d01150f8da9.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.11.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 30656,
+      "sha256": "7d01150f8da95818f321fd4adf145200034c465b9f633c4fc107efba83780a96"
+    },
+    {
+      "file": "zen-maru-gothic-700-6cf980ff3db1.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.12.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 25780,
+      "sha256": "6cf980ff3db122e07355fbbf7608e1c0a8f3fbc89728783557d8dc010f46c19f"
+    },
+    {
+      "file": "zen-maru-gothic-700-c8c23b9750fe.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.13.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 23932,
+      "sha256": "c8c23b9750fe79b3815b107ddc99c73fe1035f19c83c786c29a87d85b881765e"
+    },
+    {
+      "file": "zen-maru-gothic-700-0dcde9657bb2.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.14.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 26280,
+      "sha256": "0dcde9657bb2c6c57e109ae9f394217b7ef57198057a39c761d5f4332f323698"
+    },
+    {
+      "file": "zen-maru-gothic-700-3ca540dd5d82.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.15.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 29816,
+      "sha256": "3ca540dd5d826f89bc0dfac79edaa0097f4974511976b1951910b3fed5f58b69"
+    },
+    {
+      "file": "zen-maru-gothic-700-05bd0cd8b7ce.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.16.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 25172,
+      "sha256": "05bd0cd8b7cec8f664e3bcb6dfc3e888edc8f81ce021d1c9661af454f76fe762"
+    },
+    {
+      "file": "zen-maru-gothic-700-3eef695eff0e.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.17.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 27908,
+      "sha256": "3eef695eff0eda716f96aca403f0b7851825ab026cd81074294b030fdbdb241e"
+    },
+    {
+      "file": "zen-maru-gothic-700-ef63ea41f311.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.18.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 25164,
+      "sha256": "ef63ea41f31116d892b0a6d7b109beaade884d9a0106b78341d863b2916e9e83"
+    },
+    {
+      "file": "zen-maru-gothic-700-c28337bad128.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.19.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 28060,
+      "sha256": "c28337bad128aec3b27385e2326b6a099435759017df3c176d6801daf8bca089"
+    },
+    {
+      "file": "zen-maru-gothic-700-50cda15e5ba3.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.20.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 22332,
+      "sha256": "50cda15e5ba3f2d7a0388f35b7d8b125e97c6fd23067fbd5827745ac9426b931"
+    },
+    {
+      "file": "zen-maru-gothic-700-a140537806cf.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.21.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 26600,
+      "sha256": "a140537806cf37614c2493ed1d4efb0fa53361b67e518d5b0e622ffb287e607d"
+    },
+    {
+      "file": "zen-maru-gothic-700-83d695fc820d.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.22.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 25024,
+      "sha256": "83d695fc820d1d91b9cb722379a0d0454cd01b9dcdd1cc5d39c8b685717ba8b0"
+    },
+    {
+      "file": "zen-maru-gothic-700-478fbc586e16.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.23.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 38596,
+      "sha256": "478fbc586e16a53791c0ae14bcf01b61235a6ccccccf427ce9b80d26fae6907e"
+    },
+    {
+      "file": "zen-maru-gothic-700-7a26a165b449.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.24.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 30708,
+      "sha256": "7a26a165b449f4f68d3f261f4391f08200cbc5f7687c025c31e43c5fe0defd11"
+    },
+    {
+      "file": "zen-maru-gothic-700-50caa2b3152f.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.25.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 28776,
+      "sha256": "50caa2b3152f085eb07daaef9625963bdbeaad792701899ff2d9e6e79d336ff0"
+    },
+    {
+      "file": "zen-maru-gothic-700-16ab77b9ef4e.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.26.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 22400,
+      "sha256": "16ab77b9ef4e1a1e41d13ed64ebdde8e9034451a9161eda2d6b2957b9b627d37"
+    },
+    {
+      "file": "zen-maru-gothic-700-670d1c3a4217.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.27.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 21292,
+      "sha256": "670d1c3a42179431d5359f4049645798c6f8db2c65f719dd330289930e423471"
+    },
+    {
+      "file": "zen-maru-gothic-700-119f85a80301.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.28.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 26848,
+      "sha256": "119f85a8030119c54a6952d08226aa7a8ab3d5f6d611c14628594971ea611a10"
+    },
+    {
+      "file": "zen-maru-gothic-700-4716bddbf888.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.29.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 21772,
+      "sha256": "4716bddbf8889c9b0164f17eb552a1a4055875c683d2144924f5910a642beac2"
+    },
+    {
+      "file": "zen-maru-gothic-700-2571df2dde1f.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.30.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 27916,
+      "sha256": "2571df2dde1f67ae753c5a3a108aecc08bf7afae863ebbdf432a704e866f9d97"
+    },
+    {
+      "file": "zen-maru-gothic-700-1e65ae60867f.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.31.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 30320,
+      "sha256": "1e65ae60867f1c91577e58bca636f434916943f0fa5f543d347718ef9dfe4b17"
+    },
+    {
+      "file": "zen-maru-gothic-700-3e81a94c7639.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.32.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 27572,
+      "sha256": "3e81a94c76398a19d0b379037b216e15159e26acec3babe82932461c5f58ff6d"
+    },
+    {
+      "file": "zen-maru-gothic-700-800aefe95a7c.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.33.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 21220,
+      "sha256": "800aefe95a7c8621d6d843df58e7cb856ba49976a3cb9c59a10fe4142c1047e7"
+    },
+    {
+      "file": "zen-maru-gothic-700-d305fceb3251.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.34.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 30224,
+      "sha256": "d305fceb3251ff6f12d0f488441111e771319637d6d47a8596a41cfea5f79d7b"
+    },
+    {
+      "file": "zen-maru-gothic-700-11b9b5ebac9a.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.35.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 27016,
+      "sha256": "11b9b5ebac9aa9ec6cd18ecc75fb5411b1cdc704e1fa4214362847f9deb4c588"
+    },
+    {
+      "file": "zen-maru-gothic-700-5e34fe7b223f.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.36.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 22180,
+      "sha256": "5e34fe7b223fcd9cda1273b0fa012251069688501f3d1b5e772d5a164e5272f6"
+    },
+    {
+      "file": "zen-maru-gothic-700-a03ebb75eaa5.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.37.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 26068,
+      "sha256": "a03ebb75eaa59e600adf1f4acb390bbb814c1e0efadff3219b1db07807eb2e7f"
+    },
+    {
+      "file": "zen-maru-gothic-700-81a736528140.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.38.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 21004,
+      "sha256": "81a7365281406c0260f87aad7d57e69d2fdd06d1e0efa6ed3791259c5b253f83"
+    },
+    {
+      "file": "zen-maru-gothic-700-514a83192422.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.39.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 30716,
+      "sha256": "514a83192422dc16d52882229b111bbf1b4d9fa00e99281920aa30db41e12b6c"
+    },
+    {
+      "file": "zen-maru-gothic-700-24b1483c8158.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.40.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 24532,
+      "sha256": "24b1483c8158f677362b16248d715b3f40414cb36639e08e522302afde3ae18e"
+    },
+    {
+      "file": "zen-maru-gothic-700-c4e384e7a80f.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.41.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 28308,
+      "sha256": "c4e384e7a80f5688e786c24de7a9da5ec972cef3352e499823b2c0c0a37d38e6"
+    },
+    {
+      "file": "zen-maru-gothic-700-e5b9e58520a9.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.42.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 23584,
+      "sha256": "e5b9e58520a92e2bb72cfce066921fe43d1d4190e7e0c4919e18e6bb743a2c18"
+    },
+    {
+      "file": "zen-maru-gothic-700-cd9e545492b1.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.43.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 22000,
+      "sha256": "cd9e545492b1474bb7675ef40aa14a927473236f3ba19ac64ea8d6f8fa16c801"
+    },
+    {
+      "file": "zen-maru-gothic-700-48fb5d4767c5.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.44.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 23960,
+      "sha256": "48fb5d4767c5fd01d28c85a534a970c30fa76c64e808d85b23907a4cf333e9d5"
+    },
+    {
+      "file": "zen-maru-gothic-700-f6a77aa80527.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.45.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 19652,
+      "sha256": "f6a77aa8052701f78d2145d134bed120fd299dcf5fef24217445964fe56857de"
+    },
+    {
+      "file": "zen-maru-gothic-700-f4bf496e2554.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.46.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 18764,
+      "sha256": "f4bf496e25546538100f6f6821170c633d4a29ae8d67c95ae17af2af858231cf"
+    },
+    {
+      "file": "zen-maru-gothic-700-268a8352d78b.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.47.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 21524,
+      "sha256": "268a8352d78b405efb498521212275fb953b367067fc48736b51d531c444eb55"
+    },
+    {
+      "file": "zen-maru-gothic-700-653b08100ee8.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.48.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 23196,
+      "sha256": "653b08100ee8dce6ef552ecdab8934b70983b941f4373f54054e1f3eeb949aaf"
+    },
+    {
+      "file": "zen-maru-gothic-700-d3abb566ff55.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.49.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 21196,
+      "sha256": "d3abb566ff55056c16d385cf11dae8fa7b38b4eb97d8b50039727841b433a523"
+    },
+    {
+      "file": "zen-maru-gothic-700-1285e66256af.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.50.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 9676,
+      "sha256": "1285e66256af0fcc4481c843cdec3e495ff1e2486247022651d6cb63ba951fb3"
+    },
+    {
+      "file": "zen-maru-gothic-700-cb87c4cdcee7.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.51.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 2996,
+      "sha256": "cb87c4cdcee7fa4572add890764be36ad325f8a22e4de1393132ae93222f1541"
+    },
+    {
+      "file": "zen-maru-gothic-700-b69b40b4b32c.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.52.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 11468,
+      "sha256": "b69b40b4b32cfb4a2941f33ae53b7cde1373f0299740b291ae36b74254a6ff7c"
+    },
+    {
+      "file": "zen-maru-gothic-700-3ff5a3edbd72.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.53.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 7652,
+      "sha256": "3ff5a3edbd72da27ca3407fa1a9e6b56bf9aa595a2b416aae24e0d35417db954"
+    },
+    {
+      "file": "zen-maru-gothic-700-feb46cf0907e.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.54.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 1856,
+      "sha256": "feb46cf0907e2fbaa0462d838772183450cbf7dd924732f0ad893365e64fa86a"
+    },
+    {
+      "file": "zen-maru-gothic-700-48011edc512b.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.55.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 1684,
+      "sha256": "48011edc512be0d2374d64794fe6f39388caee4d3bbae844f88963e398eaad62"
+    },
+    {
+      "file": "zen-maru-gothic-700-938cf93afac1.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.56.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 4340,
+      "sha256": "938cf93afac1f07d33bafe1f75567e368e62bc8972c829f046ef9207ffd7b710"
+    },
+    {
+      "file": "zen-maru-gothic-700-0817e0423aa0.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.57.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 1364,
+      "sha256": "0817e0423aa0fe65263526ec298472fcb44dec3230365a9866a1b479de214673"
+    },
+    {
+      "file": "zen-maru-gothic-700-e989639f70b7.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.58.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 8452,
+      "sha256": "e989639f70b77d75a74fea9e7ad7ac6be2dfcf6f5ced80ee45b5e6ee699a8aaf"
+    },
+    {
+      "file": "zen-maru-gothic-700-a16c9867ad21.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.59.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 5484,
+      "sha256": "a16c9867ad217408c60d4b4dd1afc6f967fcf8811d878f9dcfd99b91cdd145d3"
+    },
+    {
+      "file": "zen-maru-gothic-700-8941c220e6ea.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.60.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 15544,
+      "sha256": "8941c220e6eaaacf764a5a8e696feab3ba002b159abffca3d3d5cf7bb094150b"
+    },
+    {
+      "file": "zen-maru-gothic-700-d6639f2ae8bc.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.61.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 15052,
+      "sha256": "d6639f2ae8bc18ea8081d8e61afb516c34f43706c0270be369f54d7236c063bf"
+    },
+    {
+      "file": "zen-maru-gothic-700-12b72a70fbcd.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.62.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 14388,
+      "sha256": "12b72a70fbcd8036367fa132af74b0a15eca7b63e19b1b1aaf86b456186aabf6"
+    },
+    {
+      "file": "zen-maru-gothic-700-3a16af4a0890.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.63.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 12456,
+      "sha256": "3a16af4a0890cd4144c94f58a141b3eee7100c9d40f53044a7ab07e1f706d9e5"
+    },
+    {
+      "file": "zen-maru-gothic-700-c2c0c1d27648.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.64.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 16376,
+      "sha256": "c2c0c1d2764891f6d2a36467ca8ed192df311daa452fe8fc598236d6e4db13e7"
+    },
+    {
+      "file": "zen-maru-gothic-700-2ca44f0ff868.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.65.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 15776,
+      "sha256": "2ca44f0ff8686347e50e673403a0ec6584e3f33b408b301c163d20685cb11256"
+    },
+    {
+      "file": "zen-maru-gothic-700-094228aa62ab.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.66.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13908,
+      "sha256": "094228aa62ab8a8877e50d77ee93e4b7b3baecf2304bf98dd0107fcb73ee46fe"
+    },
+    {
+      "file": "zen-maru-gothic-700-0a31b057dbba.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.67.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13616,
+      "sha256": "0a31b057dbbac012117d5585e03a3f6f0980d213b62c1b42dfcaa34a45038441"
+    },
+    {
+      "file": "zen-maru-gothic-700-9f56cf9560c3.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.68.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 15064,
+      "sha256": "9f56cf9560c3183d77b64397ddb1002d4d510ec2b220036cd6c63f09b9839bbd"
+    },
+    {
+      "file": "zen-maru-gothic-700-1d4f573e5a5d.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.69.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 14476,
+      "sha256": "1d4f573e5a5dbea448c6c5e95b06c2dc59164a95dc0aa2fd213b29e8a9555da7"
+    },
+    {
+      "file": "zen-maru-gothic-700-7ef25807b485.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.70.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 14056,
+      "sha256": "7ef25807b48590dbd5eec587e1db51f377dcd06cffe2a6d6fe7e7b225e9787be"
+    },
+    {
+      "file": "zen-maru-gothic-700-e55326559925.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.71.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13436,
+      "sha256": "e5532655992515e670d5c9b832325657d03551eaaf57c0fe5725d4b5e202e190"
+    },
+    {
+      "file": "zen-maru-gothic-700-4e4afaa6234e.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.72.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 15440,
+      "sha256": "4e4afaa6234ebac8f7b4747e631313f8f0c31a53b32170ad0ff6075e45200935"
+    },
+    {
+      "file": "zen-maru-gothic-700-79f27e7ece8f.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.73.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 14256,
+      "sha256": "79f27e7ece8f6ff8fb82d366dcef226028b29e9d845d1c74998e0c9dca8bb793"
+    },
+    {
+      "file": "zen-maru-gothic-700-28a89073c38d.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.74.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13132,
+      "sha256": "28a89073c38d5f6d8de3dba29b0d9ab8fd9dbe516b55afd7385004af0fdb1802"
+    },
+    {
+      "file": "zen-maru-gothic-700-468d22531a4f.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.75.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13384,
+      "sha256": "468d22531a4f765e369fc69b0e2e81eced58278f6c1be77549e3acc1db336f82"
+    },
+    {
+      "file": "zen-maru-gothic-700-7fb140c38416.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.76.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13432,
+      "sha256": "7fb140c38416af0a4f49cb04f35a9ab5cc91ba5d4cc524f11a79106ef0572106"
+    },
+    {
+      "file": "zen-maru-gothic-700-6753f8d232f5.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.77.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 14408,
+      "sha256": "6753f8d232f533b879e65cfe1b0995ddfd10b2b1648fc8feda49e16226d9c707"
+    },
+    {
+      "file": "zen-maru-gothic-700-7b6d1e9a72e5.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.78.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 14528,
+      "sha256": "7b6d1e9a72e5a174b84c46642fed6ce3ee884619a8409a5c0765adcec0fdd30a"
+    },
+    {
+      "file": "zen-maru-gothic-700-963506b5df17.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.79.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 14336,
+      "sha256": "963506b5df17561c16873fab87f9fe82dbe8a907476f3bc0b24d5f767a66a63c"
+    },
+    {
+      "file": "zen-maru-gothic-700-9c0a097ae26f.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.80.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13376,
+      "sha256": "9c0a097ae26f006bade2e5cddb9b4b2a1f5344a6da09cf9c735559ee02178019"
+    },
+    {
+      "file": "zen-maru-gothic-700-846d4704d1c2.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.81.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13328,
+      "sha256": "846d4704d1c2b2e5e15c6936e04cacbb63f2401c9c92b625ba0523395ba6b9e0"
+    },
+    {
+      "file": "zen-maru-gothic-700-ebdb8fc9f67d.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.82.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 14236,
+      "sha256": "ebdb8fc9f67daf2362396213e4b063fe8c28af5a69d6b5cb1969305da38400b2"
+    },
+    {
+      "file": "zen-maru-gothic-700-2f9f709d3054.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.83.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13988,
+      "sha256": "2f9f709d30543543325fbcd621e292454888d041528fe91b7a900bbf7a147a8d"
+    },
+    {
+      "file": "zen-maru-gothic-700-0e05d4976751.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.84.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13392,
+      "sha256": "0e05d4976751ee6aa5e2628c0f2e4aec89fb9368d61ce82e5dc54a0cc363b26f"
+    },
+    {
+      "file": "zen-maru-gothic-700-27ef7463f4bf.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.85.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 12604,
+      "sha256": "27ef7463f4bf7db2bb07d3741527e14f17d48c51e63ddfba91e1d39eab2b525b"
+    },
+    {
+      "file": "zen-maru-gothic-700-1fa5625081ce.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.86.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 12492,
+      "sha256": "1fa5625081cee6a9c641097ec598d42e2f84e14a58630369faf1e253a7ef293c"
+    },
+    {
+      "file": "zen-maru-gothic-700-75525e03d66c.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.87.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13828,
+      "sha256": "75525e03d66cef732f2e15500531bf6f17ff9863d1ba46bdb7309901f8a9167d"
+    },
+    {
+      "file": "zen-maru-gothic-700-8af46416b401.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.88.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 12968,
+      "sha256": "8af46416b401447d7356ef7c22931300d8fb5a53a60375942c1babec414e1fb9"
+    },
+    {
+      "file": "zen-maru-gothic-700-80cff9f30799.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.89.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13212,
+      "sha256": "80cff9f3079975616daadb4a09fa421a86d6c9924887318f4cf1171201917a68"
+    },
+    {
+      "file": "zen-maru-gothic-700-4937c2036dc0.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.90.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13796,
+      "sha256": "4937c2036dc03a484c33370cc84c6762afaa094c26e840a4529c3f57b76037df"
+    },
+    {
+      "file": "zen-maru-gothic-700-39ebd3b019c2.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.91.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13628,
+      "sha256": "39ebd3b019c22b995acff0e742ace399eff791d8f9078a89195410bc9ec76667"
+    },
+    {
+      "file": "zen-maru-gothic-700-d2b86f1c90b4.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.92.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13400,
+      "sha256": "d2b86f1c90b4550caa2bb4c594bd19539b26f5aa31012a9814b4a3b862883adf"
+    },
+    {
+      "file": "zen-maru-gothic-700-72e4a20d8163.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.93.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13064,
+      "sha256": "72e4a20d81637dca2437f5df558fd077892fb79b41c0b6aadb311dfcf1c63a98"
+    },
+    {
+      "file": "zen-maru-gothic-700-d7bb3823c787.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.94.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13948,
+      "sha256": "d7bb3823c787d6e6d157779ea07503a46303c90ce32a31e995156f34a007ea5b"
+    },
+    {
+      "file": "zen-maru-gothic-700-e8fee7f5ec94.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.95.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 12628,
+      "sha256": "e8fee7f5ec9457d7f243f94d5c97397d719ed93d1170877521ef6b8c086765a5"
+    },
+    {
+      "file": "zen-maru-gothic-700-83dcc7f550f9.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.96.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13040,
+      "sha256": "83dcc7f550f9f5fb54166924fb135649a2cc323fbb92974d7ec94a5f601ec21c"
+    },
+    {
+      "file": "zen-maru-gothic-700-ce113c9f4527.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.97.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 12444,
+      "sha256": "ce113c9f452789fde91b2bedc9edad1288d0b14a0d6adc4f3a4dd445d492c97e"
+    },
+    {
+      "file": "zen-maru-gothic-700-cde5cf6dcdf6.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.98.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13528,
+      "sha256": "cde5cf6dcdf6a1808e1bb0a8909568d2c19a6c8a989cfc8219f2d9dc8c2f6410"
+    },
+    {
+      "file": "zen-maru-gothic-700-94b485f44c2b.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.99.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 14476,
+      "sha256": "94b485f44c2bb2f61b434f2016f8bd3638448a7720c82fab834cfc82494fff80"
+    },
+    {
+      "file": "zen-maru-gothic-700-3fff16db9ebe.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.100.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 14060,
+      "sha256": "3fff16db9ebe42383267f2f314207bc822634cff06e97b81d75c57b7deae7135"
+    },
+    {
+      "file": "zen-maru-gothic-700-f839c094e957.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.101.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 11928,
+      "sha256": "f839c094e9573dd4e6636e5a86da35ab03985299b6b2cbcff9ed4a15c9476e2b"
+    },
+    {
+      "file": "zen-maru-gothic-700-09449efb84c2.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.102.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 12760,
+      "sha256": "09449efb84c245f6ea6e5366b8d9408fc67ca396912442bf2d4c3d0df48e85e9"
+    },
+    {
+      "file": "zen-maru-gothic-700-899ab087416e.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.103.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13200,
+      "sha256": "899ab087416e5d5112441f18f2741f72c7f85775d5b62cbc979f4b204c5d6b10"
+    },
+    {
+      "file": "zen-maru-gothic-700-3c10803e09da.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.104.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13148,
+      "sha256": "3c10803e09da6d0cbb5359d69d0602bcb682e8a3ce3719860f75572e15d8cf11"
+    },
+    {
+      "file": "zen-maru-gothic-700-06ff3e277714.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.105.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13452,
+      "sha256": "06ff3e277714137bfb63ea1b51a8fa65f9c9ddb67b11c5e52bc84ce6761a9f56"
+    },
+    {
+      "file": "zen-maru-gothic-700-0ed9e1f7b4aa.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.106.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 14276,
+      "sha256": "0ed9e1f7b4aa54e5db79627263c2a2c91b687f6aabd773a03e0cfd0cbd75fd21"
+    },
+    {
+      "file": "zen-maru-gothic-700-314452534ae4.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.107.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 12496,
+      "sha256": "314452534ae4dcab2dc9b14c481ea2a7f5dff938df844db60c79a46c05b3cc60"
+    },
+    {
+      "file": "zen-maru-gothic-700-5fc9ef9116be.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.108.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 13724,
+      "sha256": "5fc9ef9116be7fb77f929f4292c16ad26b047d8751c48b441468bc025210359f"
+    },
+    {
+      "file": "zen-maru-gothic-700-dd98b3a01581.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.109.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 11784,
+      "sha256": "dd98b3a0158187f54f30081d90a6b20443e9b5ec21bf6011138b8ba5c662c71f"
+    },
+    {
+      "file": "zen-maru-gothic-700-7fdd396a6de1.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.110.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 11984,
+      "sha256": "7fdd396a6de1e3ef51993dcb10c3fab61618c6e9b7ec3c04ea7e76f622073449"
+    },
+    {
+      "file": "zen-maru-gothic-700-68c018dbf9da.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.111.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 12856,
+      "sha256": "68c018dbf9dad5860cd8b2264be7257d148310e3eee666705398173ca7c6e7f9"
+    },
+    {
+      "file": "zen-maru-gothic-700-a9fd64dcded6.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.112.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 12160,
+      "sha256": "a9fd64dcded696d5f5e8bde6071fbb22ab907f2aab2fb61cf50826d762a1c6f3"
+    },
+    {
+      "file": "zen-maru-gothic-700-35bd3cb437fb.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.113.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 11204,
+      "sha256": "35bd3cb437fb173e131a18d5b56379cab504523fd71eb7b680ee21c8bc128907"
+    },
+    {
+      "file": "zen-maru-gothic-700-df35bcb2da52.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.114.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 11136,
+      "sha256": "df35bcb2da520d4f9968ac46cf18bc93de015cb787859b5e15e833348747405c"
+    },
+    {
+      "file": "zen-maru-gothic-700-5573fd1c80a5.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.115.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 11336,
+      "sha256": "5573fd1c80a5de90a845ff090735c936e53004746df659a232406e1d28c5cb68"
+    },
+    {
+      "file": "zen-maru-gothic-700-5c89d9b87596.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.116.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 11484,
+      "sha256": "5c89d9b87596bc317c12f111f9314fa0298619b87b9193c905a5f2edf5d355d2"
+    },
+    {
+      "file": "zen-maru-gothic-700-9ceff17a3523.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.117.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 8820,
+      "sha256": "9ceff17a35235bb337d8bda96e7f7971287262e97664ac1a514ab3f137f54c28"
+    },
+    {
+      "file": "zen-maru-gothic-700-9997d6ea6bd9.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.118.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 8324,
+      "sha256": "9997d6ea6bd97af0b166662b626eb892d35895615e449e7eb9296f075fb8d1da"
+    },
+    {
+      "file": "zen-maru-gothic-700-4c7067a0d6be.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1COZqc_am_qlmzXUwN6k5QM5oCrTKUrBY1uqOu.119.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 18900,
+      "sha256": "4c7067a0d6be96b1f12965ce111d109b71975fd15288aceb24aa0afff8d22910"
+    },
+    {
+      "file": "zen-maru-gothic-700-7cd3dc941619.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1yP5Cb36v1vmui.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 5396,
+      "sha256": "7cd3dc941619c8d044c26be569a380637cd903b217e53a4f7626135427bbb12d"
+    },
+    {
+      "file": "zen-maru-gothic-700-81c1d9cec6ef.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1yOJCb36v1vmui.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 5272,
+      "sha256": "81c1d9cec6efefe3873809cd813779ab7e0372de19cbf5c96adfd2ab3240e944"
+    },
+    {
+      "file": "zen-maru-gothic-700-0c4362250178.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1yNZCb36v1vmui.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 2096,
+      "sha256": "0c436225017860f49bcb434b9f7ce3b9faab4d3426c605444e5a7d79663fb6ac"
+    },
+    {
+      "file": "zen-maru-gothic-700-9d65f92a3e11.woff2",
+      "url": "https://fonts.gstatic.com/s/zenmarugothic/v20/o-0XIpIxzW5b-RxT-6A8jWAtCp-cUW1yO5Cb36v1vg.woff2",
+      "family": "Zen Maru Gothic",
+      "weight": 700,
+      "bytes": 11608,
+      "sha256": "9d65f92a3e11edcef9d73694b5b73cb6888243aee54e8034b162eb368c6ff3ed"
+    }
+  ]
+}

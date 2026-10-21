@@ -17,3 +17,6 @@ credentials*.json
 service-account*.json
 __pycache__/
 *.pyc
+
+# Private server prompts and evaluation material must never enter Git or public assets.
+/packages/prompts/private/

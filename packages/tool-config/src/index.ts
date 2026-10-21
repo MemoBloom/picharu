@@ -31,6 +31,7 @@ export const tools=catalog.map((entry)=>{
     subjects:pets.has(id)?['dog','cat','pet']:portraits.has(id)?['person']:['person','pet','landscape','object'],
     risk:entry.main_risk,parameters_schema:specs[id].strict()};
 });
+// Complete historical catalog is retained above; public product scope uses this view.
 export const activeTools=tools.filter(tool=>!isRetiredTool(tool.tool_id));
 export function getTool(id:ToolId){return tools.find(t=>t.tool_id===id)!;}
 export function validateToolParameters(id:ToolId,parameters:Record<string,unknown>){return getTool(id).parameters_schema.parse(parameters);}

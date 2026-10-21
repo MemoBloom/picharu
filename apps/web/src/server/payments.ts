@@ -13,4 +13,11 @@ export class StripePayments implements Payments{
  async retrieveSession(id:string){return await this.client.checkout.sessions.retrieve(id) as unknown as Row;}
  async retrievePaymentIntent(id:string){return await this.client.paymentIntents.retrieve(id,{expand:['latest_charge']}) as unknown as Row;}
  async retrieveCharge(id:string){return await this.client.charges.retrieve(id) as unknown as Row;}
+ async listRefunds(chargeId:string,startingAfter?:string){
+  // SDK RefundsResource.list is GET /v1/refunds. Charge.refunds only embeds the
+  // ten most recent objects, so it is not a complete accounting source.
+  const page=await this.client.refunds.list({charge:chargeId,limit:25,...(startingAfter?{starting_after:startingAfter}:{})},
+   {timeout:3000,maxNetworkRetries:0});
+  return {data:page.data as unknown as Row[],has_more:page.has_more};
+ }
 }

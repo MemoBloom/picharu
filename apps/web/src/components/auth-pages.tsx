@@ -8,6 +8,7 @@ import { api } from '../lib/api';
 import { trackSeoEvent } from '../lib/seo-analytics';
 import { browserLoginStorage, consumeLoginTarget, createLoginCompletion, LoginFlowError, loginTarget, parseLoginCallback, startEmailLogin, startGoogleLogin } from '../lib/auth-flow';
 import { Loading, Notice, PageHeading } from './ui';
+import { GoogleSignInButton } from './google-sign-in-button';
 
 function authError(code?: string) {
   if (code === 'over_email_send_rate_limit' || code === 'over_request_rate_limit') return 'しばらく時間をおいてから、もう一度お試しください。';
@@ -58,13 +59,14 @@ export function LoginPage() {
   return <div className="container page-stack auth-panel surface stack">
     <PageHeading title="ログイン・新規登録" description="写真の続きを、ここから。初めての方は、同じ手順でアカウントを作成できます。" />
     {!auth.ready ? <Loading label="ログイン状態を確認しています" /> : !auth.configured ? <Notice>ログイン機能はただいま準備中です。ツールの紹介はログインせずにご覧いただけます。</Notice> : auth.user ? error ? <><Notice tone="error">{error}</Notice><button className="button" onClick={() => setVerification(value => value + 1)}>アカウントをもう一度確認</button></> : <Loading label="アカウントを確認しています" /> : <>
-      <button type="button" className="button button-secondary" disabled={!!busy} onClick={google}>{busy === 'google' ? 'Google に接続しています…' : 'Google で続ける'}</button>
+      <p className="auth-method-note">Google またはメールアドレスで始められます。パスワードの設定は不要です。</p>
+      <GoogleSignInButton busy={busy === 'google'} disabled={!!busy} onClick={google} />
       <div className="auth-divider"><span>またはメールアドレスで</span></div>
       <form className="stack" onSubmit={sendEmail}>
         <label className="field">メールアドレス<input type="email" name="email" required maxLength={254} value={email} onChange={event => { setEmail(event.target.value); setSent(false); }} autoComplete="email" inputMode="email" placeholder="you@example.com" disabled={!!busy} /></label>
         <button className="button" type="submit" disabled={!!busy || waiting > 0}>{busy === 'email' ? '送信しています…' : waiting > 0 ? `${waiting} 秒後に再送できます` : sent ? 'ログインリンクを再送する' : 'ログインリンクを送る'}</button>
       </form>
-      {sent && <Notice tone="success">ログインリンクを送信しました。メール内のリンクを開いてください。届かない場合は迷惑メールフォルダーもご確認ください。</Notice>}
+      {sent && <Notice tone="success"><p>ログインリンクを送信しました。</p><p className="break-anywhere">{email.trim()} に届いたメール内のリンクを開いてください。初めての方は、メールの確認後に登録が完了します。</p><p>届かない場合は迷惑メールフォルダーをご確認ください。アドレスを間違えた場合は入力し直し、再送できるまでお待ちください。</p></Notice>}
       {error && <Notice tone="error">{error}</Notice>}
       <p className="fine-print">ご利用前に<Link href="/ja/legal/terms">利用規約</Link>と<Link href="/ja/legal/privacy">プライバシーポリシー</Link>をご確認ください。正式な内容は公開準備中です。</p>
     </>}

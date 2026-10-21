@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname,useRouter,useSearchParams } from 'next/navigation';
-import { useEffect,type ReactNode } from 'react';
+import { useEffect,useState,type ReactNode } from 'react';
 import { useAuth } from '../lib/auth';
 import { ApiError,errorMessage } from '../lib/api';
 import { loginHref } from '../lib/navigation';
@@ -39,8 +39,11 @@ export function ErrorNotice({error,onRetry}:{error:unknown;onRetry?:()=>void}){r
 export function AuthGate({children}:{children:ReactNode}){
  const {user,ready,configured}=useAuth();const router=useRouter();const pathname=usePathname();const query=useSearchParams();
  const next=pathname+(query.size?`?${query}`:'');
- useEffect(()=>{if(ready&&configured&&!user)router.replace(loginHref(next));},[ready,configured,user,router,next]);
- if(!ready)return <Loading/>;
+ // A streamed route can hydrate after the outer auth provider has resolved.
+ // Its first client render must still match the server's loading placeholder.
+ const [hydrated,setHydrated]=useState(false);useEffect(()=>setHydrated(true),[]);
+ useEffect(()=>{if(hydrated&&ready&&configured&&!user)router.replace(loginHref(next));},[hydrated,ready,configured,user,router,next]);
+ if(!hydrated||!ready)return <Loading/>;
  if(!user)return <div className="auth-required"><PageHeading title="ログインして、続きを。" description="写真や編集の履歴を、あなたのアカウントで管理します。"/><Notice>{configured?'ログイン画面に移動します。':'ログイン機能を準備中です。ツールや使い方をご覧いただけます。'}</Notice><div className="button-row"><Link href={loginHref(next)} className="button">ログインへ</Link><Link href="/ja/tools" className="button button-secondary">ツールを見る</Link></div></div>;
  return <>{children}</>;
 }

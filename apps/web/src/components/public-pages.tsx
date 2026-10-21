@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import { useToolObservation } from './analytics-provider';
 import Image from 'next/image';
 import { useEffect, useId, useMemo, useState } from 'react';
 import { api, errorMessage } from '../lib/api';
 import type { Tool } from '../lib/types';
-import { findToolContent, publicToolContent, toolCategories, type PublicToolContent } from '../lib/tool-content';
+import { findPublicToolContent, publicToolContent, toolCategories, type PublicToolContent } from '../lib/tool-content';
 import { Icon, Loading, Notice, PageHeading } from './ui';
 
 function useToolCatalog() {
@@ -38,7 +39,8 @@ function FaqList({ items }: { items: { question: string; answer: string }[] }) {
 }
 
 function ToolRow({ tool, live, checked }: { tool: PublicToolContent; live?: Tool; checked: boolean }) {
-  return <Link className="tool-card" href={`/ja/tools/${tool.tool_id}`}>
+  const observed=useToolObservation(tool.tool_id,checked&&live?.available===true);
+  return <Link ref={observed.ref} onClick={observed.onSelect} className="tool-card" href={`/ja/tools/${tool.tool_id}`}>
     <span className="tool-icon"><Icon name={tool.icon} size={30} /></span>
     <span className="tool-card-content"><span className="tool-card-title">{tool.name_ja}</span><span className="tool-card-description">{tool.description}</span>
       {checked && <span className={`availability ${live?.available ? 'available' : ''}`}>{live?.available ? '利用できます' : '生成は準備中'}</span>}
@@ -57,7 +59,7 @@ export function HomePage() {
   const { tools, error } = useToolCatalog();
   return <>
     <section className="hero container">
-      <div className="hero-copy"><h1>いつもの写真に、<br />新しい表情を。</h1><p>むずかしい操作はいりません。<br className="mobile-break" />写真を選んで、好きな仕上がりへ。</p>
+      <div className="hero-copy"><h1>AIで写真を、<br />もっと自由に。</h1><p>むずかしい操作はいりません。<br className="mobile-break" />写真を選んで、好きな仕上がりへ。</p>
         <div className="hero-actions"><Link className="button" href="/ja/edit">写真を編集する<Icon name="arrow-right" size={18} /></Link><Link className="text-link" href="/ja/tools">ツールを見てみる<Icon name="arrow-right" size={18} /></Link></div>
       </div>
       <figure className="hero-figure"><Image src="/images/editorial-cat.png" alt="窓辺のやわらかな光を浴びる猫" width={1200} height={900} priority sizes="(max-width: 760px) calc(100vw - 40px), 50vw" /><figcaption>イメージ写真 · 編集結果の比較ではありません</figcaption></figure>
@@ -99,7 +101,7 @@ export function ToolDirectory() {
 }
 
 export function ToolDetail({ toolId }: { toolId: string }) {
-  const content = findToolContent(toolId)!;
+  const content = findPublicToolContent(toolId)!;
   const { tools, error, retry } = useToolCatalog();
   const live = tools?.find((tool) => tool.tool_id === toolId);
   const related = publicToolContent.filter((tool) => tool.category_ja === content.category_ja && tool.tool_id !== toolId).slice(0, 4);

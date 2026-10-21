@@ -1,7 +1,7 @@
 import { afterEach,beforeEach,describe,expect,it,vi } from 'vitest';
 import { ToolId } from '@picjp/contracts';
 import { activeTools,getTool } from '@picjp/tool-config';
-import { findHistoricalToolContent,findToolContent,publicToolContent } from '../apps/web/src/lib/tool-content';
+import { findHistoricalToolContent,findPublicToolContent,publicToolContent } from '../apps/web/src/lib/tool-content';
 vi.mock('next/cache',()=>({unstable_cache:(fn:unknown)=>fn}));
 vi.mock('../apps/web/src/server/seo/repository',()=>({seoRpc:vi.fn()}));
 import { seoRpc } from '../apps/web/src/server/seo/repository';
@@ -23,7 +23,7 @@ describe('retirement overrides historical public content without invalidating hi
   expect(publicToolContent).toHaveLength(18);
   for(const id of ['remove_person','remove_object'] as const){
    expect(ToolId.parse(id)).toBe(id);expect(getTool(id).tool_id).toBe(id);
-   expect(findHistoricalToolContent(id)?.tool_id).toBe(id);expect(findToolContent(id)).toBeUndefined();
+   expect(findHistoricalToolContent(id)?.tool_id).toBe(id);expect(findPublicToolContent(id)).toBeUndefined();
   }
  });
  it('returns early 404 and noindex without asking the database to revive retired URLs',async()=>{

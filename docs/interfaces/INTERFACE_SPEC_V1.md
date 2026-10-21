@@ -69,7 +69,7 @@ EditRequest：`{tool_id,inputs:[{image_id,role}],prompt_id?,parameters?,user_ins
 - output `{quality:'standard'|'high',aspect_ratio:'preserve'|'1:1'|'3:4'|'4:3'|'16:9'|'9:16'}`；未支持规格在预留前拒绝。
 - parent_job_id若存在必须同用户completed，且primary必须等于该任务的result_image_id；另附的原始参考图仍需独立校验。
 - 服务端选择已配置/验证的模型profile，包含精确model_id、provider、adapter_version、verified_tool_ids、允许角色/张数、输出能力及pricing_version/积分。
-- final_prompt、工具/模板/模型/参数/执行/计价版本、输入集合均进入不可变快照；初期execution_type=commercial_edit、execution_version=1。未来可新增CPU/受控处理类型，不在本轮开发Worker。
+- final_prompt、工具/模板/模型/参数/执行/计价版本、输入集合均进入不可变快照；初期execution_type=commercial_edit、execution_version=1。未来可新增CPU/受控处理类型，Worker 执行代码在独立 picjp-worker 仓库。
 - 初期20模板均标未评测，不直接当成成熟效果。GENERATION_ENABLED默认false；必须配置真实验证的模型profile和明确启用后才能接收用户生成，不靠假模型/假费用过关。
 
 同用户幂等键16..128字符，同键同规范化请求复用任务；同键不同输入/参数409。同键不同用户隔离。请求hash来自归一化用户请求，不包含会变化的当前模型/价格；重放必须复用原快照和费用，不因新默认模型而变化。
@@ -82,9 +82,9 @@ EditRequest：`{tool_id,inputs:[{image_id,role}],prompt_id?,parameters?,user_ins
 
 内部stage建议 queued,submitting,waiting_provider,storing,settling,needs_reconciliation,done。认领带lease_token和lease_expires_at，阶段写回均校验当前领取版本，过期旧Worker不能覆盖新Worker结果。
 
-Cloud Run设计接口：POST /internal/v1/drain `{contract_version,limit?:1..20}`（认证调度），POST /internal/v1/process-job `{contract_version,job_id}`（可选快速触发），GET /health（无敏感信息）。工作必须在受认证请求生命周期内完成一个有界阶段并保存checkpoint。响应WorkerAck为 `{contract_version,request_id,processed:0..20,remaining:boolean}`，processed统计已持久化阶段，process-job只能0/1，drain不超过limit；健康探针返回 `{status:'ok',contract_version:'1.0.0'}`。Google IAM/OIDC ID token audience为服务URL，分别授权scheduler/dispatcher服务账户。Vercel初期不持有Google长期私钥，也不依赖fire-and-forget。
+Cloud Run 内部接口（已有本地实现，尚未部署）：POST /internal/v1/drain `{contract_version,limit?:1..20}`（认证调度），POST /internal/v1/process-job `{contract_version,job_id}`（可选快速触发），GET /health（无敏感信息）。工作必须在受认证请求生命周期内完成一个有界阶段并保存checkpoint。响应WorkerAck为 `{contract_version,request_id,processed:0..20,remaining:boolean}`，processed统计已持久化阶段，process-job只能0/1，drain不超过limit；健康探针返回 `{status:'ok',contract_version:'1.0.0'}`。Google IAM/OIDC ID token audience为服务URL，分别授权scheduler/dispatcher服务账户。Vercel初期不持有Google长期私钥，也不依赖fire-and-forget。
 
-Worker未来使用PG受控RPC：worker_claim_jobs、worker_record_submission、worker_defer_job、worker_complete_job、worker_fail_job、worker_mark_uncertain。具体参数、权限、状态/故障表与租约时序由Worker设计文档列出；本轮不实现这些worker执行函数。Web RPC创建的快照是唯一生成语义来源，Worker不能重新从模板库编译。
+Worker使用PG受控RPC：worker_claim_jobs、worker_record_submission、worker_defer_job、worker_complete_job、worker_fail_job、worker_mark_uncertain。具体参数、权限、状态/故障表与租约时序由Worker设计文档列出；增量 migration 202610200400_worker.sql 已实现执行函数，尚未应用到云环境。当前落实及明确差异见 [Worker 接口评审](WORKER_INTERFACE_REVIEW.md)。Web RPC创建的快照是唯一生成语义来源，Worker不能重新从模板库编译。
 
 供应商受理后响应丢失：先查幂等/请求号，无法确认则needs_reconciliation，禁止盲重提交。保存失败只重试保存；R2与PG没有跨系统事务，结果对象幂等保存后PG原子settle。超出恢复期限时按失败释放并记录平台损失；晚到结果不可在已释放后自动补扣。
 
@@ -136,3 +136,6 @@ charge.refunded（累计退款金额）与dispute事件独立处理：按累计�
 ## SEO运营扩展
 
 SEO管理员鉴权、草稿可选观察计划、固定基线与不可变复盘见 [观察复盘协议](../seo/OBSERVATION_REVIEW.md)；准确Schema以packages/contracts及生成OpenAPI为准。该扩展不改变原任务、支付或用户照片协议。
+## 双看板加法契约
+
+Console与Analytics字段见packages/contracts/src/{console,analytics}.ts，契约包1.2.0；HTTP和Worker执行协议仍1.0.0，Worker现有固定消费版本不因看板自动升级。管理员快照/分页/CSV及退款事实细则见[ADMIN_ANALYTICS](../backend/ADMIN_ANALYTICS.md)。新增QUERY_TOO_LARGE为有界查询错误；数据缺失/未成熟通过指标状态表达，不返回虚构零。
