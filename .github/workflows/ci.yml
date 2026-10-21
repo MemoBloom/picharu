@@ -45,6 +45,8 @@ jobs:
           execSync(installCommand, { stdio: 'inherit' });
           NODE
       - run: npm run verify
+      - name: Google read preflight offline regression (Python 3)
+        run: python3 -m unittest discover -s tests -p test_google_read_preflight.py
 
   postgres-concurrency:
     name: PostgreSQL concurrency

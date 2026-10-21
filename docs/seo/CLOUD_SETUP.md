@@ -1,6 +1,6 @@
 # picmoko SEO 云端接入
 
-更新：2026-10-20。此文档随 `feat/seo-platform` 独立开发分支保存；不表示已部署。
+更新：2026-10-21。此文档随 `feat/seo-platform` 独立开发分支保存；不表示已部署。
 
 ## 已确认的信息
 
@@ -10,7 +10,8 @@
 | GA4 资源名称 | `picmoko` | 名称，不是 Property ID |
 | GA4 Property ID | `559730643` | 已提供，报表 API 使用此数字 |
 | GA4 Measurement ID | `G-RGY24MR7LP` | 已提供，网站采集使用此编号 |
-| GSC Domain property | `sc-domain:picmoko.com` | 用户反馈尚未验证；API 权限也未验收 |
+| GSC Domain property | `sc-domain:picmoko.com` | 用户报告已验证；服务账号真实读取HTTP200空数据通过 |
+| 专用采集服务账号 | `picmoko-seo-reader@picjp-staging.iam.gserviceaccount.com` | GSC受限/GA4查看者；Cloud Shell短期服务账号读取已获200响应摘要 |
 
 这些编号不属于密钥。服务账号私钥、SMTP/API 密钥、Supabase Secret 和 OAuth 令牌不放进文档、聊天或 Git。
 
@@ -48,6 +49,36 @@
 
 这一步只有知道编号还不够；后台成员授权完成后才可以读到数据。
 
+### 3.1 首次真实只读连通检查（Cloud Shell）
+
+2026-10-21 用户已反馈两项报表权限/API配置完成。修正版Cloud Shell测试已获用户回传：GSC 2026-10-17 HTTP200/ok:true/empty，GA4 2026-10-18 HTTP200/ok:true/empty，证明两项报表真实读取与空结果处理通过；摘要见 [实际读取记录](../verification/SEO_GOOGLE_READ_2026-10-21.json)。未取得原始报表或令牌；尚未证明标签真实收数、数据库导入或Cloud Run运行身份。旧脚本曾返回TOKEN_SETUP_FAILED。当前修正版移除了稳定版gcloud不支持的--scopes，改用IAM generateAccessToken请求只读scope。此检查只验证Google身份与报表读取，不需要Supabase凭据，不写入数据库或启动采集排程。读取日期按GSC美国太平洋/GA4日本日期分别取D-3；当前GA4资源时区如非Asia/Tokyo，应按后台时区调整测试日期。空数据不代表失败，200也不代表已完成真实流量或采集导入验收。
+
+打开Google Cloud控制台顶部的Cloud Shell终端，用你自己的项目管理Google账号操作。为避免下载JSON私钥，本次使用短期服务账号模拟。先启用IAM Service Account Credentials API，再允许当前登录用户仅在这个专用服务账号上使用Token Creator。它让你的登录账号取得该服务账号的短期令牌，不会给该服务账号增加Cloud项目Owner/Editor权限。后台授权由用户执行；若已有对应权限，可跳过重复授权。
+
+```sh
+gcloud services enable iamcredentials.googleapis.com --project=picjp-staging
+seo_operator=$(gcloud config get-value account)
+gcloud iam service-accounts add-iam-policy-binding \
+  picmoko-seo-reader@picjp-staging.iam.gserviceaccount.com \
+  --project=picjp-staging \
+  --member="user:${seo_operator}" \
+  --role=roles/iam.serviceAccountTokenCreator
+```
+
+上述命令成功后，上传仓库内的 [google-read-preflight.py](../../scripts/seo/google-read-preflight.py) 到Cloud Shell主目录。通过终端右上角菜单的“上传文件”选择该文件；不要复制长段Python到终端。令牌仅在进程内存使用，不打印/保存，报表原文不输出。
+
+```sh
+python3 ~/google-read-preflight.py
+```
+
+脚本为唯一可执行来源：gcloud获取当前登录用户令牌，再由官方IAM接口在JSON `scope`字段指定GSC/GA4只读范围，申请900秒服务账号令牌。不要把`--scopes`加到`gcloud auth print-access-token`；当前稳定版命令不支持该参数。
+
+预期分别有一行gsc和ga4，`http_status:200`、`ok:true`；新站可出现`data_state:empty`。只反馈这两行摘要即可。403需核对身份/权限/API，不能凭截图添加用户成功认定API已连通；先排查，不把账号升级为所有者。若失败，反馈包含stage、http_status和reasons的摘要。cloud_shell_login表示当前Cloud Shell登录阶段；service_identity表示IAM生成服务账号令牌阶段；gsc/ga4表示各报表阶段。旧脚本TOKEN_SETUP_FAILED不能单独证明权限缺失，不要据此升级资源权限。
+
+如果Token Creator是专为本次检查新增、后续也不需要用该登录身份调试，可在测试结束后撤销这一条授权；已有授权不要盲目移除。未来Cloud Run运行身份与本次Cloud Shell调试身份分别验收。
+
+参考：[Google服务账号模拟](https://cloud.google.com/docs/authentication/use-service-account-impersonation)、[IAM指定scope生成令牌](https://cloud.google.com/iam/docs/reference/credentials/rest/v1/projects.serviceAccounts/generateAccessToken)、[Search Console只读scope](https://developers.google.com/webmaster-tools/v1/how-tos/authorizing)。本地模拟只证明脚本输出和错误处理，不能代替真实云执行。
+
 ## 4. 环境变量与数据库
 
 在目标部署环境设置（代码库示例见 `.env.example`）：
@@ -64,6 +95,13 @@ NEXT_PUBLIC_ANALYTICS_ENABLED=false
 ```
 
 `NEXT_PUBLIC_` 变量在构建时固定。Preview 环境强制 noindex。开启采集前，服务端还需独立生成至少 32 字符的 `SEO_EVENT_SECRET`；发布回调另用独立的 `SEO_REVALIDATE_SECRET`。密钥仅在部署后台保存。
+
+先在已有Supabase项目的SQL Editor新建查询，复制并运行 [只读结构盘点](../../scripts/seo/inspect-schema.sql)，把结果`seo_inventory`返回。它仅查询系统目录，核对四份SEO迁移涉及的表、函数精确参数签名和启用触发器，以及基础依赖；不读取用户记录，不创建对象或修改权限。
+
+- `BASE_DEPENDENCIES_MISSING`：先核对项目与基础迁移，不能直接执行SEO迁移。
+- `NO_SEO_OBJECTS`：预期SEO对象均未发现，可据迁移历史确定首次执行顺序。
+- `PARTIAL_SEO_STRUCTURE`：只应用了部分对象或对象损坏；按`missing`与迁移历史定位，不整套重复执行。
+- `SEO_STRUCTURE_PRESENT`：列出的结构已存在，后续仍需核对函数版本/权限、运行身份和真实导入，不代表全部云端验收。
 
 数据库顺序：现有 Web 基础迁移 → 现有 Worker 迁移（若已使用）→ `20261020153000_seo.sql` → `20261020160000_seo_analytics.sql` → `20261020163245_seo_health.sql` → `20261020164700_seo_observation.sql`。不要重复运行已应用迁移；先检查迁移历史，在测试环境演练。SEO 表和 RPC 不直接授权给普通用户，BFF 验证 Supabase JWT 后再执行角色检查。
 
@@ -118,7 +156,7 @@ npm run seo:collect -- rank /secure/path/reviewed-targets.json 2026-10-20 --allo
 ## 7. 上线验收与仍待完成
 
 - 代码：S0–S4 工程基线已有本地测试；S3计划/观察报告已离线验证，实际观察与复盘待验收；真实验收也有下列门槛；合并/部署状态以交付与 PR 记录为准。
-- Google：GSC 待所有权验证；两个资源的服务账号读取权限待配置；尚无真实采集样本。
+- Google：GSC受限/GA4查看者及API配置后，用户回传两项Cloud Shell服务账号HTTP200空结果摘要；真实读取通过。数据导入、标签收数及Cloud Run身份/调度仍待验收。
 - GA4：编号已确认；标签/业务传输已实现，同意机制真实浏览器和后台接收待验收。
 - 内容：20 工具和 3 篇教程有正文基线；真实授权样例、模型版本/效果证据和日语审校待完成，保持 noindex。
 - 发布：先测试库演练独立审核、并发冲突、缓存失效、回滚，再批准正式环境索引。
