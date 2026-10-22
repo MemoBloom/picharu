@@ -32,7 +32,6 @@
 .effect-style-card{display:flex;flex-direction:column;min-width:0;gap:8px}
 .effect-style-image{display:block;overflow:hidden;border:1px solid var(--line);border-radius:12px}
 .effect-card-comparison{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line)}
-.effect-card-comparison.has-multiple-inputs{grid-template-columns:repeat(3,minmax(0,1fr))}
 .effect-card-panel{display:flex;flex-direction:column;min-width:0;background:#fff}
 .effect-card-panel img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:contain}
 .effect-card-panel>span{display:block;text-align:center;font-size:12px;line-height:1.6;padding:7px 4px;color:var(--muted)}

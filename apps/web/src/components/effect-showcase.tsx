@@ -28,12 +28,12 @@ export function ExampleNote({ examples }: { examples: EffectExample[] }) {
 }
 
 export function EffectCardComparison({ example }: { example: EffectExample }) {
-  const inputs = [{ src: example.before, label: example.additionalInputs?.length ? '人物の写真' : '元の写真' }, ...(example.additionalInputs || [])];
-  return <span className={`effect-card-comparison${inputs.length > 1 ? ' has-multiple-inputs' : ''}`} role="group" aria-label="元の写真と仕上がりを比較">
-    {inputs.map(input => <span className="effect-card-panel" key={input.src}>
-      <img src={input.src} alt={input.label} width={440} height={440} loading="lazy" />
-      <span>{input.label}</span>
-    </span>)}
+  const inputLabel = example.additionalInputs?.length ? '人物の写真' : '元の写真';
+  return <span className="effect-card-comparison" role="group" aria-label="元の写真と仕上がりを比較">
+    <span className="effect-card-panel">
+      <img src={example.before} alt={inputLabel} width={440} height={440} loading="lazy" />
+      <span>{inputLabel}</span>
+    </span>
     <span className="effect-card-panel effect-card-result">
       <img src={example.after} alt={`${presentationOf(example).name}の${example.provenance === 'imagegen' ? 'imagegenデモ作例' : '仕上がり例'}`} width={440} height={440} loading="lazy" />
       <span>仕上がり</span>
