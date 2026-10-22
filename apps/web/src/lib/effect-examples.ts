@@ -23,6 +23,8 @@ export type EffectExample = {
   title?: string;
   shortName?: string;
   description?: string;
+  additionalInputs?: { src: string; label: string }[];
+  capabilityNote?: string;
 };
 
 export function avatarParameter(value?: string) {

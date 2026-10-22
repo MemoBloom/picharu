@@ -25,6 +25,9 @@
 .style-inspiration .section-heading p{font-size:14px;color:var(--muted);margin-top:8px}
 .effect-style-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px 22px}
 .effect-demo-label{align-self:flex-start;font-size:11px;line-height:1.6;color:var(--accent);background:var(--surface);padding:3px 8px;border-radius:5px;margin-top:2px}
+.effect-input-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:center;gap:8px;height:100%;padding:8px 8px 36px}
+.effect-input-grid img{height:auto;aspect-ratio:1;object-fit:contain;border-radius:6px}
+.effect-input-grid span{display:block;font-size:11px;line-height:1.6;text-align:center;margin-top:5px;color:var(--muted)}
 .hero-effect-preview .effect-compare-media.mode-compare figure,.avatar-gallery .effect-compare-media.mode-compare figure{height:auto;aspect-ratio:1}
 .effect-style-card{display:flex;flex-direction:column;min-width:0;gap:8px}
 .effect-style-image{position:relative;display:block;overflow:hidden;border-radius:12px;background:var(--surface);aspect-ratio:1}

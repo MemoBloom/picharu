@@ -12,7 +12,7 @@ export function EffectComparison({ example, priority = false, initialMode = 'aft
   const style = presentationOf(example);
   return <div className="effect-comparison">
     <div className={`effect-compare-media mode-${mode}`} id={id}>
-      {mode !== 'after' && <figure><img src={example.before} width={880} height={880} alt="編集前の同じ写真" loading={priority ? 'eager' : 'lazy'} /><figcaption>元の写真</figcaption></figure>}
+      {mode !== 'after' && <figure>{example.additionalInputs?.length ? <div className="effect-input-grid">{[{ src: example.before, label: '人物の写真' }, ...example.additionalInputs].map(input => <div key={input.src}><img src={input.src} width={880} height={880} alt={input.label} loading={priority ? 'eager' : 'lazy'} /><span>{input.label}</span></div>)}</div> : <img src={example.before} width={880} height={880} alt="編集前の同じ写真" loading={priority ? 'eager' : 'lazy'} />}<figcaption>{example.additionalInputs?.length ? '入力写真 · 2枚' : '元の写真'}</figcaption></figure>}
       {mode !== 'before' && <figure><img src={example.after} width={880} height={880} alt={`${style.name}の${example.provenance === 'imagegen' ? 'imagegenデモ作例' : '仕上がり例'}`} loading={priority ? 'eager' : 'lazy'} fetchPriority={priority ? 'high' : 'auto'} /><figcaption>{example.provenance === 'imagegen' ? 'デモ作例' : '仕上がり例'} · {style.shortName}</figcaption></figure>}
     </div>
     <div className="effect-compare-controls" role="group" aria-label="写真の表示を切り替える">
@@ -81,6 +81,7 @@ export function ToolEffectShowcase({ example }: { example: EffectExample }) {
       <EffectComparison example={example} priority initialMode="compare" />
       <div className="selected-style-copy"><h2 id={titleId}>{presentation.name}</h2><p>{presentation.description}</p></div>
       <ExampleNote examples={[example]} />
+      {example.capabilityNote && <p className="example-note">{example.capabilityNote}</p>}
     </div>
     <div className="avatar-edit-entry"><ToolAvailability toolId={example.toolId} /><p className="example-note">編集画面で、お好みの色や背景などの設定をご確認ください。</p></div>
   </section>;

@@ -54,7 +54,7 @@ describe('Visual effect discovery interactions', () => {
   });
   it('links each approved demonstration to its own tool and actual original', async () => {
     const host = await render(React.createElement(EffectCards, { examples: publishedEffectDemos }));
-    expect(host.querySelectorAll('a')).toHaveLength(6);
+    expect(host.querySelectorAll('a')).toHaveLength(23);
     for (const [index, example] of publishedEffectDemos.entries()) {
       const card = host.querySelectorAll('a')[index];
       expect(card.getAttribute('href')).toBe(`/ja/tools/${example.toolId}?example=${example.id}`);
@@ -73,5 +73,15 @@ describe('Visual effect discovery interactions', () => {
     await act(async () => before.click());
     expect(host.querySelectorAll('figure')).toHaveLength(1);
     expect(host.querySelector('figure img')?.getAttribute('src')).toBe(demo.before);
+  });
+  it('shows both real inputs for a composite and does not imply production multi-image support', async () => {
+    const demo = publishedEffectDemos.find(example => example.toolId === 'multi_photo_composite')!;
+    const host = await render(React.createElement(ToolEffectShowcase, { example: demo }));
+    expect([...host.querySelectorAll('figure img')].map(image => image.getAttribute('src'))).toEqual([demo.before, demo.additionalInputs![0].src, demo.after]);
+    expect(host.textContent).toContain('入力写真 · 2枚');
+    expect(host.textContent).toContain('複数画像合成は準備中');
+    const before = [...host.querySelectorAll('button')].find(button => button.textContent === '元の写真')!;
+    await act(async () => before.click());
+    expect(host.querySelectorAll('figure img')).toHaveLength(2);
   });
 });

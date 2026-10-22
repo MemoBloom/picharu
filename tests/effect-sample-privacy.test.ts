@@ -9,7 +9,7 @@ describe('Private UI effect samples', () => {
   it('never reads or lists private images in a production build, even when files exist', async () => {
     vi.stubEnv('NODE_ENV', 'production');
     const demos = await getEffectExamples();
-    expect(demos).toHaveLength(6);
+    expect(demos).toHaveLength(23);
     expect(demos.every(example => example.scope === 'published' && example.provenance === 'imagegen')).toBe(true);
     expect(demos.some(example => example.before.includes('/api/local-effect-samples/'))).toBe(false);
     expect(await getLocalEffectExamples()).toEqual([]);
@@ -47,10 +47,10 @@ describe('Private UI effect samples', () => {
     expect(examples.filter(example => example.experimental).map(example => example.id)).toEqual(['clay-felt', 'paper-cut']);
     expect(examples.every(example => example.scope === 'local-preview')).toBe(true);
   });
-  it('uses the approved six-function set in development without opening private experiments', async () => {
+  it('uses only the synthetic demonstration set in development without opening private experiments', async () => {
     vi.stubEnv('NODE_ENV', 'development');
     const demos = await getEffectExamples();
-    expect(new Set(demos.map(example => example.before)).size).toBe(6);
+    expect(new Set(demos.map(example => example.before)).size).toBe(18);
     expect(demos.every(example => example.provenance === 'imagegen')).toBe(true);
     expect(fs.access).not.toHaveBeenCalled();
     expect(fs.readFile).not.toHaveBeenCalled();
