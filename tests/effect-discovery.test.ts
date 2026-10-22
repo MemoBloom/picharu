@@ -58,7 +58,7 @@ describe('Visual effect discovery interactions', () => {
     for (const [index, example] of publishedEffectDemos.entries()) {
       const card = host.querySelectorAll('a')[index];
       expect(card.getAttribute('href')).toBe(`/ja/tools/${example.toolId}?example=${example.id}`);
-      expect(card.querySelector('.effect-original-inset')?.getAttribute('src')).toBe(example.before);
+      expect(card.querySelector('.effect-card-panel img')?.getAttribute('src')).toBe(example.before);
       expect(card.textContent).toContain('デモ作例');
     }
   });

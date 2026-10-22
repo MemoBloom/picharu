@@ -27,11 +27,25 @@ export function ExampleNote({ examples }: { examples: EffectExample[] }) {
   return <p className="example-note">{examples.some(example => example.scope === 'local-preview') && 'ローカル確認用 · '}実際の生成テストによる試作例です。写真によって仕上がりは異なります。</p>;
 }
 
+export function EffectCardComparison({ example }: { example: EffectExample }) {
+  const inputs = [{ src: example.before, label: example.additionalInputs?.length ? '人物の写真' : '元の写真' }, ...(example.additionalInputs || [])];
+  return <span className={`effect-card-comparison${inputs.length > 1 ? ' has-multiple-inputs' : ''}`} role="group" aria-label="元の写真と仕上がりを比較">
+    {inputs.map(input => <span className="effect-card-panel" key={input.src}>
+      <img src={input.src} alt={input.label} width={440} height={440} loading="lazy" />
+      <span>{input.label}</span>
+    </span>)}
+    <span className="effect-card-panel effect-card-result">
+      <img src={example.after} alt={`${presentationOf(example).name}の${example.provenance === 'imagegen' ? 'imagegenデモ作例' : '仕上がり例'}`} width={440} height={440} loading="lazy" />
+      <span>仕上がり</span>
+    </span>
+  </span>;
+}
+
 export function EffectCards({ examples }: { examples: EffectExample[] }) {
   return <div className="effect-style-cards">{examples.map(example => {
     const style = presentationOf(example);
     return <Link key={`${example.toolId}:${example.id}`} className="effect-style-card" href={exampleDetailHref(example)}>
-      <span className="effect-style-image"><img src={example.after} alt={`${style.name}の仕上がり例`} width={440} height={440} loading="lazy" /><img className="effect-original-inset" src={example.before} alt="元の写真" width={64} height={64} loading="lazy" /></span>
+      <span className="effect-style-image"><EffectCardComparison example={example} /></span>
       {example.provenance === 'imagegen' && <span className="effect-demo-label">デモ作例</span>}
       <span className="effect-style-title">{style.name}<Icon name="arrow-right" size={18} /></span>
       <span className="effect-style-description">{style.description}</span>

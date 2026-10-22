@@ -8,8 +8,8 @@ import { api, errorMessage } from '../lib/api';
 import type { Tool } from '../lib/types';
 import { findPublicToolContent, publicToolContent, toolCategories, type PublicToolContent } from '../lib/tool-content';
 import { Icon, Loading, Notice, PageHeading } from './ui';
-import { EffectComparison, ExampleNote, EffectCards } from './effect-showcase';
-import { presentationOf, type EffectExample } from '../lib/effect-examples';
+import { EffectComparison, ExampleNote, EffectCards, EffectCardComparison } from './effect-showcase';
+import type { EffectExample } from '../lib/effect-examples';
 
 function useToolCatalog() {
   const [tools, setTools] = useState<Tool[] | null>(null);
@@ -45,9 +45,9 @@ function ToolRow({ tool, live, checked, examples = [] }: { tool: PublicToolConte
   const example = examples.find(item => item.toolId === tool.tool_id);
   return <Link ref={observed.ref} onClick={observed.onSelect} className="tool-card visual-tool-card" href={`/ja/tools/${tool.tool_id}`}>
     <span className={`visual-tool-cover${example ? '' : ' awaiting-example'}`}>
-      {example ? <><img src={example.after} width={440} height={440} alt={`${presentationOf(example).name}の${example.provenance === 'imagegen' ? 'imagegenデモ作例' : '試作例'}`} loading="lazy" /><img className="effect-original-inset" src={example.before} width={64} height={64} alt="元の写真" loading="lazy" /><span className="cover-caption">{example.provenance === 'imagegen' ? 'デモ作例を見る' : '試作例を見る'}</span></> : <><Icon name={tool.icon} size={40} /><span>仕上がり例は準備中</span></>}
+      {example ? <EffectCardComparison example={example} /> : <><Icon name={tool.icon} size={40} /><span>仕上がり例は準備中</span></>}
     </span>
-    <span className="tool-card-content"><span className="tool-card-title">{tool.name_ja}<Icon name="arrow-right" size={18} /></span><span className="tool-card-description">{tool.description}</span>
+    <span className="tool-card-content">{example && <span className="effect-demo-label">{example.provenance === 'imagegen' ? 'デモ作例' : '試作例'}</span>}<span className="tool-card-title">{tool.name_ja}<Icon name="arrow-right" size={18} /></span><span className="tool-card-description">{tool.description}</span>
       {checked && <span className={`availability ${live?.available ? 'available' : ''}`}>{live?.available ? '利用できます' : '生成は準備中'}</span>}
     </span>
   </Link>;
@@ -71,8 +71,8 @@ export function HomePage({ examples = [] }: { examples?: EffectExample[] }) {
       </div>
       <div className="hero-effect-preview">{featured ? <><EffectComparison example={featured} priority initialMode="compare" /><ExampleNote examples={[featured]} /></> : <figure className="hero-figure hero-source-figure"><Image src="/images/samples/cafe-woman-v1.webp" alt="カフェで頬に手を添える女性のサンプル原画像" width={1000} height={1000} preload sizes="(max-width: 700px) calc(100vw - 40px), 480px" /><figcaption><strong>サンプル原画像</strong><span>AIで作成した写真です。編集後の作例ではありません。</span></figcaption></figure>}</div>
     </section>
-    {examples.length > 0 && <section className="container style-inspiration" id="style-inspiration"><div className="section-heading"><div><h2>写真から、広がる楽しみ。</h2><p>人物も、うちの子も、暮らしの一枚も。小さな元写真と見比べて、気になる仕上がりへ。</p></div><Link className="text-link" href="/ja/tools">ツールを見てみる<Icon name="arrow-right" size={18} /></Link></div><EffectCards examples={examples.slice(0, 6)} /><ExampleNote examples={examples} /></section>}
-    <section className="container home-tools" aria-labelledby="tools-heading"><div className="section-heading"><h2 id="tools-heading">写真で、こんなことも。</h2><Link className="text-link" href="/ja/tools">すべてのツール<Icon name="arrow-right" size={18} /></Link></div>
+    {examples.length > 0 && <section className="container style-inspiration" id="style-inspiration"><div className="section-heading"><div><h2>写真から、広がる楽しみ。</h2><p>人物も、うちの子も、暮らしの一枚も。元の写真と仕上がりを、並べて見比べよう。</p></div><Link className="text-link" href="/ja/tools">ツールを見てみる<Icon name="arrow-right" size={18} /></Link></div><EffectCards examples={examples.slice(0, 6)} /><ExampleNote examples={examples} /></section>}
+    <section className="container home-tools" aria-labelledby="tools-heading"><div className="section-heading"><div><h2 id="tools-heading">写真で、こんなことも。</h2><p>元の写真と仕上がりを、並べて比較。</p></div><Link className="text-link" href="/ja/tools">すべてのツール<Icon name="arrow-right" size={18} /></Link></div>
       <CategoryTabs selected={category} onChange={setCategory} />
       <div className="tool-grid visual-tool-grid">{publicToolContent.filter(tool => tool.category_ja === category).map(tool => <ToolRow key={tool.tool_id} tool={tool} live={tools?.find(item => item.tool_id === tool.tool_id)} checked={tools !== null} examples={examples} />)}</div>
       <p className="section-note">{error ? '利用状況を確認できませんでした。説明と作例は引き続きご覧いただけます。' : tools && !tools.some(tool => tool.available) ? '現在、生成機能は準備中です。説明と作例、編集画面をご覧いただけます。' : '利用できる効果とクレジット数は、編集画面でご確認ください。'}</p>
