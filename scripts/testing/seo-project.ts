@@ -10,7 +10,7 @@ import sharp from 'sharp';
 export async function createSeoTestProject(parent:string){
  const source=resolve(dirname(fileURLToPath(import.meta.url)),'../..'),project=join(parent,'project');
  await mkdir(project);
- const paths=['package.json','package-lock.json','tsconfig.json','apps/web/package.json','apps/web/next.config.ts','apps/web/next-env.d.ts','apps/web/tsconfig.json','apps/web/src','apps/web/public','packages','scripts/seo'];
+ const paths=['package.json','package-lock.json','tsconfig.json','apps/web/package.json','apps/web/next.config.ts','apps/web/next-env.d.ts','apps/web/tsconfig.json','apps/web/src','apps/web/public','packages','scripts/seo','scripts/check-effect-privacy.mjs'];
  const files=execFileSync('git',['ls-files','--cached','--others','--exclude-standard','-z','--',...paths],{cwd:source,encoding:'utf8'}).split('\0').filter(Boolean);
  for(const file of files){
   // No local environments, cloud metadata, private credentials, dependency or build trees are copied as project source.

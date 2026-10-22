@@ -26,7 +26,9 @@ const home=await page('/ja',true);assert(home.includes('WebSite'));assert(home.i
 const directory=await page('/ja/tools',true);for(const id of ['remove_person','remove_object']){assert(!directory.includes('href="/ja/tools/'+id+'"'));assert(!home.includes('href="/ja/tools/'+id+'"'));}for(const t of publicToolContent)assert(directory.includes(`href="/ja/tools/${t.tool_id}"`),'missing crawlable tool link '+t.tool_id);
 await page('/ja/help',true);
 for(const t of publicToolContent){const html=await page('/ja/tools/'+t.tool_id,false,true);
- assert(html.includes(`href="/ja/edit?tool=${t.tool_id}"`),t.tool_id+': editor entry loses the selected tool');
+ const editorLinks=[...html.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map(([,href])=>new URL(href.replaceAll('&amp;','&'),base)).filter(link=>link.origin===new URL(base).origin&&link.pathname==='/ja/edit');
+ assert(editorLinks.some(link=>link.searchParams.getAll('tool').length===1&&link.searchParams.get('tool')===t.tool_id),t.tool_id+': editor entry loses the selected tool');
+ if(t.tool_id==='ai_avatar')assert(editorLinks.some(link=>link.searchParams.get('tool')==='ai_avatar'&&link.searchParams.get('style')==='anime'),t.tool_id+': editor entry loses the selected avatar style');
  const editorial=launchCandidates[t.tool_id];if(editorial){for(const section of editorial.sections)assert(html.includes(section.heading),t.tool_id+': candidate content missing from server HTML');}
  for(const guide of guides.filter(g=>g.related_tools.includes(t.tool_id)))assert(html.includes(`href="${guide.path}"`),t.tool_id+': related guide missing from server HTML');
 }
