@@ -46,6 +46,6 @@ export function AuthGate({children}:{children:ReactNode}){
  const [hydrated,setHydrated]=useState(false);useEffect(()=>setHydrated(true),[]);
  useEffect(()=>{if(hydrated&&ready&&configured&&!user)router.replace(loginHref(next));},[hydrated,ready,configured,user,router,next]);
  if(!hydrated||!ready)return <Loading/>;
- if(!user)return <div className="auth-required"><PageHeading title="ログインして、続きを。" description="写真や編集の履歴を、あなたのアカウントで管理します。"/><Notice>{configured?'ログイン画面に移動します。':'ログイン機能を準備中です。ツールや使い方をご覧いただけます。'}</Notice><div className="button-row"><Link href={loginHref(next)} className="button">ログインへ</Link><Link href="/ja/tools" className="button button-secondary">ツールを見る</Link></div></div>;
+ if(!user)return <div className="auth-required"><PageHeading title="ログインして、続きを。" description="写真や編集の履歴を、あなたのアカウントで管理します。"/><Notice>{configured?'ログイン画面に移動します。':'ログイン機能を準備中です。機能や使い方をご覧いただけます。'}</Notice><div className="button-row"><Link href={loginHref(next)} className="button">ログインへ</Link><Link href="/ja/tools" className="button button-secondary">機能を見る</Link></div></div>;
  return <>{children}</>;
 }

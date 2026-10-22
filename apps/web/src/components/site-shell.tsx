@@ -6,7 +6,7 @@ import { Icon } from './ui';
 import { Brand } from './brand';
 import { LoginNavigation, LoginNavigationFallback } from './login-navigation';
 import { AnalyticsConsent } from './analytics-consent';
-const items=[{href:'/ja/tools',label:'ツール',icon:'tools'},{href:'/ja/edit',label:'写真を編集',mobile:'編集',icon:'edit'},{href:'/ja/pricing',label:'料金',icon:'image'},{href:'/ja/help',label:'サポート',icon:'help'}];
+const items=[{href:'/ja/tools',label:'機能',icon:'tools'},{href:'/ja/edit',label:'写真を編集',mobile:'編集',icon:'edit'},{href:'/ja/pricing',label:'料金プラン',icon:'image'},{href:'/ja/help',label:'サポート',icon:'help'}];
 export function SiteShell({children}:{children:ReactNode}){
  const pathname=usePathname();
  if(pathname==='/admin'||pathname.startsWith('/admin/'))return <>{children}</>;

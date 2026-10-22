@@ -58,7 +58,7 @@ export function LoginPage() {
   }
   return <div className="container page-stack auth-panel surface stack">
     <PageHeading title="ログイン・新規登録" description="写真の続きを、ここから。初めての方は、同じ手順でアカウントを作成できます。" />
-    {!auth.ready ? <Loading label="ログイン状態を確認しています" /> : !auth.configured ? <Notice>ログイン機能はただいま準備中です。ツールの紹介はログインせずにご覧いただけます。</Notice> : auth.user ? error ? <><Notice tone="error">{error}</Notice><button className="button" onClick={() => setVerification(value => value + 1)}>アカウントをもう一度確認</button></> : <Loading label="アカウントを確認しています" /> : <>
+    {!auth.ready ? <Loading label="ログイン状態を確認しています" /> : !auth.configured ? <Notice>ログイン機能はただいま準備中です。機能の紹介はログインせずにご覧いただけます。</Notice> : auth.user ? error ? <><Notice tone="error">{error}</Notice><button className="button" onClick={() => setVerification(value => value + 1)}>アカウントをもう一度確認</button></> : <Loading label="アカウントを確認しています" /> : <>
       <p className="auth-method-note">Google またはメールアドレスで始められます。パスワードの設定は不要です。</p>
       <GoogleSignInButton busy={busy === 'google'} disabled={!!busy} onClick={google} />
       <div className="auth-divider"><span>またはメールアドレスで</span></div>
@@ -70,7 +70,7 @@ export function LoginPage() {
       {error && <Notice tone="error">{error}</Notice>}
       <p className="fine-print">ご利用前に<Link href="/ja/legal/terms">利用規約</Link>と<Link href="/ja/legal/privacy">プライバシーポリシー</Link>をご確認ください。正式な内容は公開準備中です。</p>
     </>}
-    <Link href="/ja/tools" className="text-link">まずはツールを見てみる →</Link>
+    <Link href="/ja/tools" className="text-link">まずは機能を見てみる →</Link>
   </div>;
 }
 

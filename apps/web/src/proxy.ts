@@ -21,7 +21,7 @@ export async function proxy(request: NextRequest) {
     }
   }
   if (isRetiredSeoPath(pathname) || !toolPathExists(pathname) || !guideExists) {
-    return new NextResponse('<!doctype html><html lang="ja"><head><meta name="robots" content="noindex"><title>ページが見つかりません | picmoko</title></head><body><main><h1>ページが見つかりません</h1><p>指定されたページはありません。</p><a href="/ja/tools">ツール一覧に戻る</a></main></body></html>', { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8', 'X-Robots-Tag': 'noindex', 'Cache-Control': 'no-store' } });
+    return new NextResponse('<!doctype html><html lang="ja"><head><meta name="robots" content="noindex"><title>ページが見つかりません | picmoko</title></head><body><main><h1>ページが見つかりません</h1><p>指定されたページはありません。</p><a href="/ja/tools">機能一覧に戻る</a></main></body></html>', { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8', 'X-Robots-Tag': 'noindex', 'Cache-Control': 'no-store' } });
   }
   const response = NextResponse.next();
   if (!indexingEnabled() || isPrivatePath(pathname) || pathname.startsWith('/api/')) response.headers.set('X-Robots-Tag', 'noindex');
