@@ -3,7 +3,7 @@
   "candidates": [
     {
       "tool_id": "change_background",
-      "revision": "git-sha256-230d4e2c96c208424a2c9250",
+      "revision": "git-sha256-9213039695704fb78960b85c",
       "title_zh": "用AI更换照片背景：如何描述要保留的主体与目标背景",
       "description_zh": "介绍换背景时如何选择主体清晰的照片，以及描述背景颜色、地点和光线。头发、透明物体的边缘与阴影需要检查。本功能不保证透明背景输出或完整保留主体。",
       "h1_zh": "分别说明要保留的主体与要更换的背景",

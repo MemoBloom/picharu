@@ -12,3 +12,11 @@
 .accountShell :global(.credit-grid) span,.accountShell :global(.credit-grid) strong{display:block}
 .scrollHint{display:none}
 @media(max-width:760px){.scrollHint{display:block}}
+
+.shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.shortcuts>a{display:flex;align-items:center;gap:16px;min-height:88px;padding:20px 24px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}
+.shortcuts>a:hover{border-color:var(--accent);background:var(--accent-soft)}
+.shortcuts>a>svg{flex-shrink:0;color:var(--accent)}
+.shortcuts>a>svg:last-child{margin-left:auto}
+.shortcuts span{min-width:0}.shortcuts strong{display:block;font-size:16px}.shortcuts small{display:block;margin-top:4px;color:var(--muted);font-size:13px;line-height:1.8}
+@media(max-width:600px){.shortcuts{grid-template-columns:1fr;gap:12px}.shortcuts>a{min-height:80px;padding:16px 20px}}

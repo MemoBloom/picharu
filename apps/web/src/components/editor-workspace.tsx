@@ -341,7 +341,7 @@ export function EditorWorkspace({ initialTool, initialStyle, parentJobId, retryJ
   const submitLabel = busy ? '送信中…' : pending ? '同じ依頼を確認・再試行' : !tool?.available ? '編集機能を準備中' : 'AIで写真を編集';
   const fieldsFor=(fields:Tool['parameter_fields'])=>fields.map(field=><EditorField key={`${toolId}_${field.name}`} field={field} toolId={toolId} value={parameters[field.name]||''} disabled={locked} onChange={value=>updateParameter(field.name,value)}/>);
   return <div className={`container section workspace-page picmoko-workspace${keyboardOpen?' keyboard-open':''}`}>
-    <nav className="breadcrumb" aria-label="パンくず"><Link href="/ja/tools">ツール一覧</Link><span aria-hidden="true">/</span><span>写真を編集</span></nav>
+    <nav className="breadcrumb" aria-label="パンくず"><Link href="/ja/tools">機能一覧</Link><span aria-hidden="true">/</span><span>写真を編集</span></nav>
     <header className="workspace-heading"><h1>写真を、もっと自由に。</h1><p>写真を選んで、好きな仕上がりへ。</p></header>
     <input ref={picker} type="file" accept="image/jpeg,image/png,image/webp" multiple hidden onChange={event=>{if(event.target.files)void addFiles(event.target.files,replacement.current);event.target.value='';replacement.current=null;}}/>
     <div className="editor-grid">

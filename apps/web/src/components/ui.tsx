@@ -10,6 +10,7 @@ export function Icon({name='image',size=24}:{name?:string;size?:number}){
  image:<><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5"/><path d="m21 15-5-5L5 21"/></>,
  edit:<><path d="m14 4 6 6M4 16 16 4a2.8 2.8 0 0 1 4 4L8 20l-5 1z"/></>,
  clock:<><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></>,
+ help:<><circle cx="12" cy="12" r="9"/><path d="M9.5 8.5a2.5 2.5 0 0 1 5 .5c0 2-2.5 2-2.5 4M12 17h.01"/></>,
  home:<><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-8h6v8"/></>,
  tools:<><rect x="3" y="7" width="18" height="14" rx="3"/><path d="M8 7V4h8v3M3 12h18M10 12v3h4v-3"/></>,
  person:<><circle cx="12" cy="7" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></>,
@@ -45,6 +46,6 @@ export function AuthGate({children}:{children:ReactNode}){
  const [hydrated,setHydrated]=useState(false);useEffect(()=>setHydrated(true),[]);
  useEffect(()=>{if(hydrated&&ready&&configured&&!user)router.replace(loginHref(next));},[hydrated,ready,configured,user,router,next]);
  if(!hydrated||!ready)return <Loading/>;
- if(!user)return <div className="auth-required"><PageHeading title="ログインして、続きを。" description="写真や編集の履歴を、あなたのアカウントで管理します。"/><Notice>{configured?'ログイン画面に移動します。':'ログイン機能を準備中です。ツールや使い方をご覧いただけます。'}</Notice><div className="button-row"><Link href={loginHref(next)} className="button">ログインへ</Link><Link href="/ja/tools" className="button button-secondary">ツールを見る</Link></div></div>;
+ if(!user)return <div className="auth-required"><PageHeading title="ログインして、続きを。" description="写真や編集の履歴を、あなたのアカウントで管理します。"/><Notice>{configured?'ログイン画面に移動します。':'ログイン機能を準備中です。機能や使い方をご覧いただけます。'}</Notice><div className="button-row"><Link href={loginHref(next)} className="button">ログインへ</Link><Link href="/ja/tools" className="button button-secondary">機能を見る</Link></div></div>;
  return <>{children}</>;
 }

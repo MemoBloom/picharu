@@ -10,7 +10,7 @@ import { api } from '../lib/api';
 import { useAuth } from '../lib/auth';
 import { safeNext } from '../lib/navigation';
 import type { Credits, Order, CreditPackage, Checkout, Page } from '../lib/types';
-import { AuthGate, ErrorNotice, Loading, Notice, PageHeading } from './ui';
+import { AuthGate, ErrorNotice, Icon, Loading, Notice, PageHeading } from './ui';
 
 type Me = { user_id: string; email: string | null; locale: string };
 type CheckoutIntent = { package_id: string; idempotency_key: string; order_id?: string; return_to: string };
@@ -61,7 +61,11 @@ function AccountContent() {
   }
   useEffect(() => { if (tab === 'orders' && !loadedOrders && !loadingOrders) void loadOrders(); }, [tab, user?.id]);
   function chooseTab(value: typeof tab) { setTab(value); window.history.replaceState(null, '', `/ja/account?tab=${value}`); }
-  return <div className={`container page-stack stack account-page ${consoleStyles.accountShell}`}><div className="account-page-heading"><PageHeading title="マイアカウント" description="クレジットとお支払いの状況を確認できます。" /><LogoutButton/></div>
+  return <div className={`container page-stack stack account-page ${consoleStyles.accountShell}`}><div className="account-page-heading"><PageHeading title="マイページ" description="写真の編集履歴や作品、クレジットをここから確認できます。" /><LogoutButton/></div>
+    <nav className={consoleStyles.shortcuts} aria-label="マイページのショートカット">
+      <Link href="/ja/history"><Icon name="clock" size={24}/><span><strong>編集履歴</strong><small>編集中・完了した写真を確認</small></span><Icon name="arrow-right" size={18}/></Link>
+      <Link href="/ja/help"><Icon name="help" size={24}/><span><strong>サポート</strong><small>使い方や困ったときのヒント</small></span><Icon name="arrow-right" size={18}/></Link>
+    </nav>
     <div className={`tabs ${consoleStyles.tabs}`} role="tablist" aria-label="アカウントメニュー">{accountTabs.map(([value, label]) => <button key={value} id={`tab-${value}`} className={tab === value ? 'tab active' : 'tab'} type="button" role="tab" tabIndex={tab === value ? 0 : -1} aria-selected={tab === value} aria-controls={`panel-${value}`} onClick={() => chooseTab(value)} onKeyDown={event => { const values = accountTabs.map(([value]) => value); const current = values.indexOf(tab); const index = event.key === 'ArrowRight' ? (current + 1) % values.length : event.key === 'ArrowLeft' ? (current + values.length - 1) % values.length : event.key === 'Home' ? 0 : event.key === 'End' ? values.length - 1 : -1; if (index >= 0) { event.preventDefault(); chooseTab(values[index]); const button = document.getElementById(`tab-${values[index]}`); button?.focus(); button?.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } }}>{label}</button>)}</div>
     {!!error && <ErrorNotice error={error} onRetry={() => setRefresh(value => value + 1)} />}
     <section className="surface stack" role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>
@@ -70,7 +74,7 @@ function AccountContent() {
       {tab === 'profile' && <><h2>ログイン情報</h2>{me ? <dl className="profile-details"><div><dt>メールアドレス</dt><dd className="break-anywhere">{me.email ?? 'メールアドレスの登録なし'}</dd></div><div><dt>表示言語</dt><dd>日本語</dd></div></dl> : !error && <Loading />}<p className="muted">メールアドレスの変更・アカウント削除については、ヘルプをご確認ください。</p><Link href="/ja/help" className="text-link">ヘルプを見る</Link></>}
       {tab === 'credits' && <><h2>現在のクレジット</h2>{credits ? <><div className="credit-grid"><div><span className="muted">利用可能</span><strong className="credit-number">{credits.available.toLocaleString('ja-JP')}</strong></div><div><span className="muted">処理中の予約分</span><strong className="credit-number">{credits.reserved.toLocaleString('ja-JP')}</strong></div></div>{credits.status === 'restricted' && <Notice tone="error">現在、このアカウントでは新しい編集を開始できません。購入履歴をご確認のうえ、ヘルプをご覧ください。</Notice>}<p className="muted">処理中の予約分は、新しい編集に利用できません。表示は直近に確認した残高です。</p><div className="button-row"><Link href="/ja/pricing?return_to=%2Fja%2Faccount%3Ftab%3Dcredits" className="button">クレジットを追加する</Link><button type="button" className="button button-secondary" onClick={() => setRefresh(value => value + 1)}>残高を更新</button></div></> : !error && <Loading />}</>}
       {tab === 'credits' && <PersonalLedger />}
-      {tab === 'orders' && <><div className="section-row"><h2>購入履歴</h2><button type="button" className="text-button" onClick={() => void loadOrders()} disabled={loadingOrders}>更新</button></div>{!!orderError && <ErrorNotice error={orderError} onRetry={() => void loadOrders(orders.length > 0)} />}{orders.length ? <OrderList orders={orders} /> : loadedOrders ? <div className="empty-state"><h3>購入履歴はまだありません</h3><p>購入したクレジットとお支払いの状況がここに表示されます。</p><Link href="/ja/pricing" className="button button-secondary">料金を見る</Link></div> : null}{loadingOrders && <Loading label="購入履歴を読み込んでいます" />}{cursor && !loadingOrders && <button className="button button-secondary" type="button" onClick={() => void loadOrders(true)}>もっと見る</button>}</>}
+      {tab === 'orders' && <><div className="section-row"><h2>購入履歴</h2><button type="button" className="text-button" onClick={() => void loadOrders()} disabled={loadingOrders}>更新</button></div>{!!orderError && <ErrorNotice error={orderError} onRetry={() => void loadOrders(orders.length > 0)} />}{orders.length ? <OrderList orders={orders} /> : loadedOrders ? <div className="empty-state"><h3>購入履歴はまだありません</h3><p>購入したクレジットとお支払いの状況がここに表示されます。</p><Link href="/ja/pricing" className="button button-secondary">料金プランを見る</Link></div> : null}{loadingOrders && <Loading label="購入履歴を読み込んでいます" />}{cursor && !loadingOrders && <button className="button button-secondary" type="button" onClick={() => void loadOrders(true)}>もっと見る</button>}</>}
     </section>
   </div>;
 }
@@ -96,14 +100,14 @@ export function PricingPage() {
     } catch (value) { setErrorOrigin('checkout'); setError(value); } finally { purchasing.current = false; setBusy(null); }
   }
   function startNewPurchase() { if (!user || busy) return; if (!window.confirm('別の購入手続きを始めます。前の注文は自動では取り消されません。二重のお支払いがないか購入履歴をご確認ください。')) return; try { sessionStorage.removeItem(checkoutKey(user.id)); setIntent(null); } catch { setError(new Error('Session storage is unavailable')); } }
-  return <div className="container page-stack stack pricing-page"><PageHeading title="必要な分だけ、クレジットを。" description="編集ごとの利用クレジットは、生成する前に確認できます。" />
+  return <div className="container page-stack stack pricing-page"><PageHeading title="料金プラン" description="必要な分だけ、クレジットを。編集ごとの利用クレジットは、生成する前に確認できます。" />
     <Notice>クレジットは生成を開始すると予約されます。購入後は編集画面に戻り、内容を確認してから生成してください。</Notice>
     {intent && <Notice>前回の購入手続きが保存されています。同じプランから手続きを再開できます。{intent.order_id && <> <Link className="text-link" href="/ja/billing/success">お支払い状況を確認</Link></>} <button className="text-button" type="button" disabled={!!busy} onClick={startNewPurchase}>別の購入を始める</button></Notice>}
     {!!error && <ErrorNotice error={error} onRetry={() => { if (errorOrigin === 'checkout' && intent) void purchase(intent.package_id); else setRefresh(value => value + 1); }} />}
     {!packages && !error && <Loading label="プランを読み込んでいます" />}
-    {packages?.length === 0 && <div className="surface empty-state"><h2>購入プランはただいま準備中です</h2><p>プランの公開まで、ツールの紹介をご覧ください。</p><Link className="button button-secondary" href="/ja/tools">ツールを見る</Link></div>}
+    {packages?.length === 0 && <div className="surface empty-state"><h2>購入プランはただいま準備中です</h2><p>プランの公開まで、機能の紹介をご覧ください。</p><Link className="button button-secondary" href="/ja/tools">機能を見る</Link></div>}
     {!!packages?.length && <div className="pricing-grid">{packages.map(plan => <section className="surface stack pricing-card" key={plan.package_id}><h2>{plan.credits.toLocaleString('ja-JP')} <span className="muted">クレジット</span></h2><p className="price-number">{yen(plan.amount_minor)}</p><p className="fine-print">お支払い金額（日本円）</p>{user ? <button type="button" className="button" disabled={!!busy || !!intent && intent.package_id !== plan.package_id} onClick={() => void purchase(plan.package_id)}>{busy === plan.package_id ? 'お支払いページを準備中…' : intent?.package_id === plan.package_id ? '購入手続きを再開' : 'このプランを購入する'}</button> : ready && configured ? <Link href={`/ja/login?next=${encodeURIComponent(`/ja/pricing?return_to=${encodeURIComponent(returnTo)}`)}`} className="button">ログインして購入する</Link> : <button className="button" type="button" disabled>{ready ? 'ログイン機能は準備中です' : '確認しています…'}</button>}</section>)}</div>}
-    <section className="surface stack"><h2>購入の前に</h2><p>利用するクレジットはツールと出力設定によって異なります。編集の確認画面に表示される内容をご確認ください。</p><p>お支払い後、クレジットの反映に時間がかかる場合があります。反映待ちの間に、同じ購入を繰り返さないでください。</p><Link className="text-link" href="/ja/legal/commercial-disclosure">販売条件・返金について →</Link></section>
+    <section className="surface stack"><h2>購入の前に</h2><p>利用するクレジットは機能と出力設定によって異なります。編集の確認画面に表示される内容をご確認ください。</p><p>お支払い後、クレジットの反映に時間がかかる場合があります。反映待ちの間に、同じ購入を繰り返さないでください。</p><Link className="text-link" href="/ja/legal/commercial-disclosure">販売条件・返金について →</Link></section>
     <Link className="text-link" href={returnTo}>← 元の画面に戻る</Link>
   </div>;
 }
