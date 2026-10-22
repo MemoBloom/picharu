@@ -13,6 +13,7 @@ import { ToolChooser } from './tool-chooser';
 import { ImageViewer } from './image-viewer';
 import { partitionFields,missingRequiredFields,fieldLabel } from '../lib/editor-ui';
 import { findToolContent } from '../lib/tool-content';
+import { avatarParameter } from '../lib/effect-examples';
 import type { Credits, ImageAsset, Job, Tool } from '../lib/types';
 import { ErrorNotice, Loading, Notice, Icon } from './ui';
 
@@ -22,14 +23,15 @@ type Recommendations = { source: 'model' | 'fallback'; recommendations: { tool_i
 const roles: Record<Role, string> = { primary: '編集する主画像', subject_reference: '被写体の参考', background_reference: '背景の参考', style_reference: '雰囲気の参考', identity_reference: '人物の参考' };
 const qualities = { standard: '標準', high: '高品質' };
 
-export function EditorWorkspace({ initialTool, parentJobId, retryJobId }: { initialTool?: string; parentJobId?: string; retryJobId?: string }) {
+export function EditorWorkspace({ initialTool, initialStyle, parentJobId, retryJobId }: { initialTool?: string; initialStyle?: string; parentJobId?: string; retryJobId?: string }) {
   const router = useRouter();
   const { user, ready, configured } = useAuth();
   const [tools, setTools] = useState<Tool[]>([]);
   const [toolId, setToolId] = useState(initialTool || 'illustration_photo');
   const [photos, setPhotos] = useState<Photo[]>([]);
   const photosRef = useRef<Photo[]>([]);
-  const [parameters, setParameters] = useState<Record<string, string>>({});
+  const routeStyle = initialTool === 'ai_avatar' ? avatarParameter(initialStyle) : undefined;
+  const [parameters, setParameters] = useState<Record<string, string>>(routeStyle ? { style: routeStyle } : {});
   const [instruction, setInstruction] = useState('');
   const [quality, setQuality] = useState<'standard' | 'high'>('standard');
   const [aspectRatio, setAspectRatio] = useState('preserve');
@@ -63,7 +65,8 @@ export function EditorWorkspace({ initialTool, parentJobId, retryJobId }: { init
   const missingFields = tool ? missingRequiredFields(tool,parameters) : [];
   const uploading = photos.some((photo) => photo.state === 'uploading');
   const locked = busy || restoring || uploading || cooldownUntil > Date.now();
-  const intentQuery = new URLSearchParams({ tool: toolId, ...(parentJobId ? { parent_job_id: parentJobId } : {}), ...(retryJobId ? { retry_job_id: retryJobId } : {}) });
+  const selectedAvatarStyle = toolId === 'ai_avatar' ? avatarParameter(parameters.style) : undefined;
+  const intentQuery = new URLSearchParams({ tool: toolId, ...(selectedAvatarStyle ? { style: selectedAvatarStyle } : {}), ...(parentJobId ? { parent_job_id: parentJobId } : {}), ...(retryJobId ? { retry_job_id: retryJobId } : {}) });
   const loginNext = `/ja/login?next=${encodeURIComponent(`/ja/edit${intentQuery.size ? `?${intentQuery}` : ''}`)}`;
 
   useEffect(()=>{
@@ -104,7 +107,7 @@ export function EditorWorkspace({ initialTool, parentJobId, retryJobId }: { init
     setPhotos([]);
     setPending(undefined);
     setCredits(null);
-    setParameters({});
+    setParameters(routeStyle ? { style: routeStyle } : {});
     setInstruction('');
     setParent(undefined);
     setRecommendation(null);
@@ -153,18 +156,19 @@ export function EditorWorkspace({ initialTool, parentJobId, retryJobId }: { init
         setToolId(selectedTool);
         setParent(selectedParent);
         const keepSettings = Boolean(draft && !hasRouteIntent && (!initialTool || initialTool === draft.toolId));
-        setParameters(keepSettings ? draft!.parameters : {});
+        const applyRouteStyle = !hasRouteIntent && selectedTool === 'ai_avatar' && routeStyle;
+        setParameters({ ...(keepSettings ? draft!.parameters : {}), ...(applyRouteStyle ? { style: routeStyle } : {}) });
         setInstruction(keepSettings ? draft!.instruction : '');
         setQuality(keepSettings ? draft!.quality : 'standard');
         setAspectRatio(keepSettings ? draft!.aspectRatio : 'preserve');
-        setPending(keepSettings ? draft!.pendingRequest : undefined);
+        setPending(keepSettings && (!applyRouteStyle || draft!.parameters.style === routeStyle) ? draft!.pendingRequest : undefined);
       } catch (cause) { if (!cancelled) setError(cause); }
       finally { if (!cancelled && owner.current === userId) { draftOwner.current = userId; setRestoring(false); setHydrated(true); } }
     }
     void restore();
     void api<Credits>('/api/credits').then((data) => { if (!cancelled) setCredits(data); }).catch((cause) => { if (!cancelled) setError(cause); });
     return () => { cancelled = true; };
-  }, [ready, user?.id, initialTool, parentJobId, retryJobId]);
+  }, [ready, user?.id, initialTool, routeStyle, parentJobId, retryJobId]);
 
   useEffect(() => {
     if (!user || !hydrated || draftOwner.current !== user.id) return;
