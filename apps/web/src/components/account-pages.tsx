@@ -10,7 +10,7 @@ import { api } from '../lib/api';
 import { useAuth } from '../lib/auth';
 import { safeNext } from '../lib/navigation';
 import type { Credits, Order, CreditPackage, Checkout, Page } from '../lib/types';
-import { AuthGate, ErrorNotice, Loading, Notice, PageHeading } from './ui';
+import { AuthGate, ErrorNotice, Icon, Loading, Notice, PageHeading } from './ui';
 
 type Me = { user_id: string; email: string | null; locale: string };
 type CheckoutIntent = { package_id: string; idempotency_key: string; order_id?: string; return_to: string };
@@ -61,7 +61,11 @@ function AccountContent() {
   }
   useEffect(() => { if (tab === 'orders' && !loadedOrders && !loadingOrders) void loadOrders(); }, [tab, user?.id]);
   function chooseTab(value: typeof tab) { setTab(value); window.history.replaceState(null, '', `/ja/account?tab=${value}`); }
-  return <div className={`container page-stack stack account-page ${consoleStyles.accountShell}`}><div className="account-page-heading"><PageHeading title="マイアカウント" description="クレジットとお支払いの状況を確認できます。" /><LogoutButton/></div>
+  return <div className={`container page-stack stack account-page ${consoleStyles.accountShell}`}><div className="account-page-heading"><PageHeading title="マイページ" description="写真の編集履歴や作品、クレジットをここから確認できます。" /><LogoutButton/></div>
+    <nav className={consoleStyles.shortcuts} aria-label="マイページのショートカット">
+      <Link href="/ja/history"><Icon name="clock" size={24}/><span><strong>編集履歴</strong><small>編集中・完了した写真を確認</small></span><Icon name="arrow-right" size={18}/></Link>
+      <Link href="/ja/help"><Icon name="help" size={24}/><span><strong>サポート</strong><small>使い方や困ったときのヒント</small></span><Icon name="arrow-right" size={18}/></Link>
+    </nav>
     <div className={`tabs ${consoleStyles.tabs}`} role="tablist" aria-label="アカウントメニュー">{accountTabs.map(([value, label]) => <button key={value} id={`tab-${value}`} className={tab === value ? 'tab active' : 'tab'} type="button" role="tab" tabIndex={tab === value ? 0 : -1} aria-selected={tab === value} aria-controls={`panel-${value}`} onClick={() => chooseTab(value)} onKeyDown={event => { const values = accountTabs.map(([value]) => value); const current = values.indexOf(tab); const index = event.key === 'ArrowRight' ? (current + 1) % values.length : event.key === 'ArrowLeft' ? (current + values.length - 1) % values.length : event.key === 'Home' ? 0 : event.key === 'End' ? values.length - 1 : -1; if (index >= 0) { event.preventDefault(); chooseTab(values[index]); const button = document.getElementById(`tab-${values[index]}`); button?.focus(); button?.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } }}>{label}</button>)}</div>
     {!!error && <ErrorNotice error={error} onRetry={() => setRefresh(value => value + 1)} />}
     <section className="surface stack" role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>

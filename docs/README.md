@@ -46,3 +46,4 @@
 - [剩余19文件逐项审计](verification/RESIDUAL_WORK_AUDIT_2026-10-21.md)：已合入/等效覆盖/需补漏的分类、法律404与数据库回归、文档状态修正。
 - [消除类退出一期](verification/TOOL_RETIREMENT_2026-10-21.md)：当前18活动方向、历史20 ID与幂等/积分兼容。
 - [效果展示与头像详情](design/EFFECT_DISCOVERY.md)：首页真实样例、图片式工具卡片、六风格详情、移动体验及私有素材排除边界；本地开发，未部署。
+- [个人页与支持导航](design/ACCOUNT_SUPPORT_NAVIGATION.md)：编辑历史归入マイページ，全站/手机增加サポート，保留退出和权限边界；本地实现待发布。

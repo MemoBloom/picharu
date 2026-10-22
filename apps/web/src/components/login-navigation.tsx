@@ -19,7 +19,7 @@ function AccountMenu({path}:{path:string}){
  },[open]);
  return <div className="header-account-menu" ref={container}>
   <button ref={trigger} className="header-account" type="button" aria-expanded={open} aria-controls={id} aria-label="マイページ・ログアウト" onClick={()=>setOpen(value=>!value)}><Icon name="person" size={18}/><span>マイページ</span><Icon name="chevron" size={14}/></button>
-  {open&&<div className="account-menu-panel" id={id}><Link href="/ja/account" onClick={()=>setOpen(false)}>マイページを見る</Link><Link href="/ja/history" onClick={()=>setOpen(false)}>編集履歴を見る</Link><LogoutButton className="account-menu-logout"/></div>}
+  {open&&<div className="account-menu-panel" id={id}><Link href="/ja/account" onClick={()=>setOpen(false)}>マイページを見る</Link><Link href="/ja/history" onClick={()=>setOpen(false)}>編集履歴を見る</Link><Link href="/ja/help" onClick={()=>setOpen(false)}>サポート</Link><LogoutButton className="account-menu-logout"/></div>}
  </div>;
 }
 function AccountLink({mobile=false,signedIn=false,href='/ja/login',current=false}:{mobile?:boolean;signedIn?:boolean;href?:string;current?:boolean}){
@@ -31,5 +31,5 @@ export function LoginNavigation({mobile=false}:{mobile?:boolean}){
  const [hydrated,setHydrated]=useState(false);useEffect(()=>setHydrated(true),[]);const signedIn=hydrated&&!!user;
  const target=path==='/ja/login'?query.get('next')||'/ja/edit':path+(query.size?`?${query}`:'');
  if(signedIn&&!mobile)return <AccountMenu key={user!.id} path={path}/>;
- return <AccountLink mobile={mobile} signedIn={signedIn} href={signedIn?'/ja/account':loginHref(target)} current={signedIn?path==='/ja/account':path==='/ja/login'}/>;
+ return <AccountLink mobile={mobile} signedIn={signedIn} href={signedIn?'/ja/account':loginHref(target)} current={signedIn?(path==='/ja/account'||path==='/ja/history'||path.startsWith('/ja/jobs/')):path==='/ja/login'}/>;
 }

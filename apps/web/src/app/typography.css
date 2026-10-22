@@ -98,7 +98,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
   .site-header { position: sticky; top: 0; z-index: 30; }
   .header-account-menu > .header-account { gap: 4px; padding-inline: 8px; font-size: 13px; }
   .header-account-menu > .header-account > svg:first-child { display: none; }
-  .editing-header:has(.header-account-menu) .header-context-link { display: none; }
+  .editing-header .header-context-link { display: flex; justify-content: center; width: 44px; min-width: 44px; border: 1px solid var(--line); border-radius: 50%; color: var(--accent); }
   .mobile-nav { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .mobile-account { color: var(--accent); font-weight: 700; }
   .mobile-account svg { background: var(--accent-soft); border-radius: 8px; box-sizing: content-box; padding: 3px; }
@@ -107,4 +107,9 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
 @media (max-width: 360px) {
   .header-account { gap: 5px; padding-inline: 8px; }
   .editing-header .header-account svg { display: none; }
+}
+
+@media (max-width: 360px) {
+  .editing-header .header-inner { padding-inline: 16px; gap: 8px; }
+  .editing-header .picmoko-wordmark { width: 80px; }
 }
