@@ -12,4 +12,4 @@ This is an account/tool restriction, not a one-request budget or an automatic sh
 
 Validation uses synthetic identities, isolated PGlite, in-memory storage and provider substitutes. No production secrets, user photos, cloud writes or paid calls are required.
 
-The fix/generation-test-allowlist branch disables Vercel Git auto-deployment in apps/web/vercel.json. This branch-only rule does not disable main deployments and is not permission to merge or deploy.
+The fix/generation-test-allowlist branch disables Vercel Git auto-deployment in apps/web/vercel.json. The main branch is also disabled for Git auto-deployment so the authorized PR merge does not deploy. Keep this protection until a separately authorized deployment change; merging is not permission to deploy.
