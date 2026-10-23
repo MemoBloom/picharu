@@ -25,6 +25,8 @@ npm run dev
 
 verify检查OpenAPI一致、类型、业务/契约/媒体测试、PGlite数据库事务和生产构建。原生PostgreSQL17并发测试由CI单独运行。新clone后执行hooks:install启用本地pre-push；CI无需生产密钥。
 
+首次真实生成另受服务端测试账号UUID与固定工具限制，缺少白名单默认拒绝新任务，配置及边界见 [测试账号访问限制](docs/backend/GENERATION_TEST_ACCESS.md)。
+
 ## 接口与实施说明
 
 - [文档导航](docs/README.md)

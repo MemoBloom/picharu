@@ -3,5 +3,12 @@
   "framework": "nextjs",
   "installCommand": "cd ../.. && npm ci --include=dev --workspaces --include-workspace-root",
   "buildCommand": "npm run build",
-  "regions": ["hnd1"]
+  "regions": [
+    "hnd1"
+  ],
+  "git": {
+    "deploymentEnabled": {
+      "fix/generation-test-allowlist": false
+    }
+  }
 }

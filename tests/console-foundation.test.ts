@@ -60,7 +60,7 @@ beforeAll(async () => {
 afterAll(async () => { await pg.close(); });
 beforeEach(async () => {
   vi.unstubAllEnvs();
-  vi.stubEnv('GENERATION_ENABLED', 'true'); vi.stubEnv('MODEL_PROFILES_JSON', JSON.stringify([profile]));
+  vi.stubEnv('GENERATION_TEST_USER_ID', '00000000-0000-4000-8000-000000000001'); vi.stubEnv('GENERATION_ENABLED', 'true'); vi.stubEnv('MODEL_PROFILES_JSON', JSON.stringify([profile]));
   await pg.exec('truncate console_audit,console_roles,console_user_tags,console_collection_periods,analytics_events,console_download_actions,profiles,credit_accounts,edit_jobs,images,rate_buckets,auth.users cascade;');
   await pg.exec("update console_settings set collection_enabled=false,environment='unclassified'");
   await sql('insert into auth.users(id) values($1),($2)', [owner, other]);

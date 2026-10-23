@@ -27,6 +27,7 @@ const profile = {
   verified_tool_ids: ['illustration_photo'], max_images: 1, roles: ['primary'], qualities: ['standard'],
   aspect_ratios: ['1:1'], credits_standard: 3, credits_high: 5, pricing_version: 'offline-fixture-only',
 };
+process.env.GENERATION_TEST_USER_ID = owner;
 process.env.GENERATION_ENABLED = 'true';
 process.env.MODEL_PROFILES_JSON = JSON.stringify([profile]);
 const pg = new PGlite();

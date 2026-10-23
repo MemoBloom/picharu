@@ -5,7 +5,7 @@ import { tools,activeTools,isRetiredTool,getTool,profileForTool,validateToolPara
 import { prompts,snapshot } from '@picjp/prompts';
 import type { Dependencies,Row } from './ports';
 import { ApiError,boundedBytes,failure,json,requestId,response } from './errors';
-import { models,generationEnabled,appOrigin,retentionDays } from './config';
+import { models,generationEnabled,generationTestUserId,generationTestAllowed,appOrigin,retentionDays } from './config';
 import { normalizeImage } from './media';
 import { recommend } from './recommend';
 import { consoleRoute } from './console';
@@ -18,8 +18,8 @@ function jobView(j:Row){return {job_id:j.id,tool_id:j.tool_id,status:j.status,st
 function orderView(o:Row){return {order_id:o.id,package_id:o.package_id,credits:o.credits,amount_minor:o.amount_minor,currency:o.currency,status:o.status,refunded_minor:o.refunded_minor,created_at:o.created_at};}
 function pageRows(rows:Row[],limit:number,project:(r:Row)=>unknown){const selected=rows.slice(0,limit);const last=selected.at(-1);return {items:selected.map(project),next_cursor:rows.length>limit&&last?`${new Date(last.created_at).toISOString()}|${last.id}`:null};}
 function parameterFields(schema:z.AnyZodObject){return Object.entries(schema.shape).map(([name,field])=>{const optional=(field as z.ZodTypeAny).isOptional();let inner=field as z.ZodTypeAny;while(inner instanceof z.ZodOptional||inner instanceof z.ZodDefault)inner=inner._def.innerType;return {name,type:inner instanceof z.ZodEnum?'enum':'string',required:!optional,...(inner instanceof z.ZodEnum?{values:inner.options}:{})};});}
-export function publicTools(){const profiles=models();return activeTools.map(t=>{const profile=profileForTool(t.tool_id,profiles);const available=generationEnabled()&&!!profile&&profile.max_images>=t.minimum_input_count&&profile.roles.includes('primary')&&(t.minimum_input_count===1||profile.roles.some(r=>r!=='primary'));
- return {tool_id:t.tool_id,name_ja:t.name_ja,name_zh:t.name_zh,category:t.category,tool_version:t.tool_version,minimum_input_count:t.minimum_input_count,maximum_input_count:Math.min(t.maximum_input_count,profile?.max_images??4),allowed_roles:profile?.roles??t.allowed_roles,prompt_id:t.default_prompt_id,prompt_version:1,evaluation_state:t.evaluation_state,available,unavailable_reason:available?null:!generationEnabled()?'GENERATION_DISABLED':'UNSUPPORTED_CAPABILITY',parameter_fields:parameterFields(t.parameters_schema),output_options:{qualities:profile?.qualities??[],aspect_ratios:profile?.aspect_ratios??[]},credit_cost:{standard:profile?.credits_standard??null,high:profile?.credits_high??null}};
+export function publicTools(){const profiles=models();return activeTools.map(t=>{const profile=profileForTool(t.tool_id,profiles);const available=generationEnabled()&&generationTestUserId()!==null&&t.tool_id==='illustration_photo'&&!!profile&&profile.max_images>=t.minimum_input_count&&profile.roles.includes('primary')&&(t.minimum_input_count===1||profile.roles.some(r=>r!=='primary'));
+ return {tool_id:t.tool_id,name_ja:t.name_ja,name_zh:t.name_zh,category:t.category,tool_version:t.tool_version,minimum_input_count:t.minimum_input_count,maximum_input_count:Math.min(t.maximum_input_count,profile?.max_images??4),allowed_roles:profile?.roles??t.allowed_roles,prompt_id:t.default_prompt_id,prompt_version:1,evaluation_state:t.evaluation_state,available,unavailable_reason:available?null:(!generationEnabled()||generationTestUserId()===null)?'GENERATION_DISABLED':'UNSUPPORTED_CAPABILITY',parameter_fields:parameterFields(t.parameters_schema),output_options:{qualities:profile?.qualities??[],aspect_ratios:profile?.aspect_ratios??[]},credit_cost:{standard:profile?.credits_standard??null,high:profile?.credits_high??null}};
  });}
 // Frozen reports require the full historical metadata, including retired tools.
 export function analyticsToolCatalog(){
@@ -115,7 +115,7 @@ export function createRouter(deps:Dependencies){return async(request:Request):Pr
  await rate(deps,user.id,'edit',10);const body=await json(request,EditRequest);body.parameters=validateToolParameters(body.tool_id,body.parameters);const hash=requestHash(body);
  const previous=await deps.db.findJob(user.id,body.idempotency_key);if(previous){if(previous.request_hash!==hash)throw new ApiError('IDEMPOTENCY_CONFLICT',409);return response({job_id:previous.id,status:previous.status,credits_reserved:previous.credits_reserved,replayed:true},id,202);}
  if(isRetiredTool(body.tool_id))throw new ApiError('UNSUPPORTED_CAPABILITY',409);
- if(!generationEnabled())throw new ApiError('GENERATION_DISABLED',503);
+ if(!generationTestAllowed(user.id,body.tool_id))throw new ApiError('GENERATION_DISABLED',503);
  const tool=getTool(body.tool_id);const profile=profileForTool(body.tool_id,models());
  if(!profile||body.inputs.length<tool.minimum_input_count||body.inputs.length>profile.max_images||!body.inputs.every(i=>profile.roles.includes(i.role))||!profile.qualities.includes(body.output.quality)||!profile.aspect_ratios.includes(body.output.aspect_ratio))throw new ApiError('UNSUPPORTED_CAPABILITY',409);
  for(const input of body.inputs){const image=await imageFor(deps,user.id,input.image_id);if(image.status!=='ready')throw new ApiError('IMAGE_NOT_READY',409);}
