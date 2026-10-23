@@ -5,9 +5,10 @@ import {useAuth} from '../lib/auth';
 import {coarseDevice} from '../lib/device';
 import {useResultObservation,ResultFeedback} from './analytics-provider';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ApiError, UserFacingError, api } from '../lib/api';
+import { ApiError, errorMessage, api } from '../lib/api';
 import { findHistoricalToolContent as findToolContent } from '../lib/tool-content';
-import { jobStageMessage } from '../lib/job-state';
+import { JobProgress, type PollingState } from './job-progress';
+import { PhotoPreview } from './photo-preview';
 import type { ImageAsset, Job } from '../lib/types';
 import { ImageViewer } from './image-viewer';
 import { AuthGate, ErrorNotice, Loading, Notice, PageHeading } from './ui';
@@ -28,7 +29,12 @@ function JobContent({ jobId }: { jobId: string }) {
   const [original, setOriginal] = useState<ImageAsset | null>(null);
   const [result, setResult] = useState<ImageAsset | null>(null);
   const [error, setError] = useState<unknown>(null);
-  const [imageError, setImageError] = useState<unknown>(null);
+  const [originalError, setOriginalError] = useState<unknown>(null);
+  const [resultError, setResultError] = useState<unknown>(null);
+  const [originalLoading, setOriginalLoading] = useState(true);
+  const [resultLoading, setResultLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState(0);
+  const [polling, setPolling] = useState<PollingState>('live');
   const [actionError, setActionError] = useState<unknown>(null);
   const [busy, setBusy] = useState(false);
   const [showOriginal, setShowOriginal] = useState(false);
@@ -37,7 +43,6 @@ function JobContent({ jobId }: { jobId: string }) {
   const [pollVersion, setPollVersion] = useState(0);
   const [assetsVersion, setAssetsVersion] = useState(0);
   const [confirm, setConfirm] = useState<'cancel' | 'delete' | null>(null);
-  const [slow, setSlow] = useState(false);
   const [retryNotBefore, setRetryNotBefore] = useState(0);
   const dialog = useRef<HTMLDialogElement>(null);
   const latestStatus = useRef<string | undefined>(undefined);
@@ -60,36 +65,41 @@ function JobContent({ jobId }: { jobId: string }) {
     const controller = new AbortController();
     const started = Date.now();
     let failures = 0;
-    function schedule(delay: number) { if (!disposed) timer = setTimeout(() => void refresh(), delay); }
+    let stopped = false;
+    let inFlight = false;
+    function schedule(delay: number) { if (!disposed) timer = setTimeout(() => { timer = undefined; void refresh(); }, delay); }
     async function refresh() {
-      if (disposed || (latestStatus.current && terminal.has(latestStatus.current))) return;
-      if (document.visibilityState === 'hidden') { schedule(1000); return; }
+      if (disposed || stopped || inFlight || (latestStatus.current && terminal.has(latestStatus.current))) return;
+      if (document.visibilityState === 'hidden') { setPolling('paused'); schedule(1000); return; }
+      inFlight = true;
       try {
         const updated = await api<Job>(`/api/jobs/${encodeURIComponent(jobId)}`, { signal: controller.signal });
         if (disposed) return;
         setJob(updated);
+        setLastUpdated(Date.now());
+        setPolling('live');
         latestStatus.current = updated.status;
         setError(null);
         setRetryNotBefore(0);
         failures = 0;
         const elapsed = Date.now() - started;
-        setSlow(elapsed > 60000);
         if (!terminal.has(updated.status)) schedule(elapsed > 120000 ? 15000 : elapsed > 60000 ? 8000 : 4000);
       } catch (cause) {
         if (disposed || controller.signal.aborted) return;
         setError(cause);
         failures += 1;
-        if (cause instanceof ApiError && cause.status !== 429 && !cause.retryable) return;
+        if (cause instanceof ApiError && cause.status !== 429 && !cause.retryable) { stopped = true; setPolling('stopped'); return; }
         const retryAfter = cause instanceof ApiError && cause.retryAfter ? cause.retryAfter * 1000 : Math.min(4000 * 2 ** Math.min(failures, 4), 60000);
         if (cause instanceof ApiError && cause.status === 429) setRetryNotBefore(Date.now() + retryAfter);
-        if (failures >= 5) return;
+        if (failures >= 5) { stopped = true; setPolling('stopped'); return; }
+        setPolling('retrying');
         schedule(retryAfter);
-      }
+      } finally { inFlight = false; }
     }
     latestStatus.current = undefined;
     void refresh();
     const onVisibility = () => {
-      if (document.visibilityState === 'visible' && !(latestStatus.current && terminal.has(latestStatus.current))) {
+      if (document.visibilityState === 'visible' && !stopped && !(latestStatus.current && terminal.has(latestStatus.current))) {
         // Keep an existing backoff timer, including a server supplied Retry-After.
         if (!timer) void refresh();
       }
@@ -102,18 +112,21 @@ function JobContent({ jobId }: { jobId: string }) {
     if (!job) return;
     let disposed = false;
     const controller = new AbortController();
-    async function readAssets() {
-      setImageError(null);
-      const requests = [job!.inputs[0]?.image_id, job!.status === 'completed' && !deleted ? job!.result_image_id : null];
-      const responses = await Promise.allSettled(requests.map((id) => id ? api<ImageAsset>(`/api/images/${encodeURIComponent(id)}`, { signal: controller.signal }) : Promise.resolve(null)));
-      if (disposed) return;
-      const [before, after] = responses;
-      if (before.status === 'fulfilled') setOriginal(before.value);
-      if (after.status === 'fulfilled') setResult(after.value);
-      if (before.status === 'rejected') setImageError(before.reason);
-      if (after.status === 'rejected') setImageError(after.reason);
-    }
-    void readAssets();
+    const originalId = job.inputs[0]?.image_id;
+    const resultId = job.status === 'completed' && !deleted ? job.result_image_id : null;
+    setOriginalError(null); setResultError(null);
+    setOriginalLoading(!!originalId); setResultLoading(!!resultId);
+    if (!originalId) setOriginal(null);
+    if (!resultId) setResult(null);
+    const readAsset = async (id: string, resultAsset: boolean) => {
+      try {
+        const asset = await api<ImageAsset>(`/api/images/${encodeURIComponent(id)}`, { signal: controller.signal });
+        if (!disposed) (resultAsset ? setResult : setOriginal)(asset);
+      } catch (cause) { if (!disposed) (resultAsset ? setResultError : setOriginalError)(cause); }
+      finally { if (!disposed) (resultAsset ? setResultLoading : setOriginalLoading)(false); }
+    };
+    if (originalId) void readAsset(originalId, false);
+    if (resultId) void readAsset(resultId, true);
     return () => { disposed = true; controller.abort(); };
   }, [job?.inputs[0]?.image_id, job?.result_image_id, job?.status, deleted, assetsVersion]);
 
@@ -132,6 +145,7 @@ function JobContent({ jobId }: { jobId: string }) {
       const updated = await api<Job>(`/api/jobs/${encodeURIComponent(jobId)}/cancel`, { method: 'POST' });
       if (!active.current) return;
       setJob(updated);
+      setLastUpdated(Date.now());
       latestStatus.current = updated.status;
       setConfirm(null);
       window.dispatchEvent(new Event('picjp:credits-changed'));
@@ -180,28 +194,23 @@ function JobContent({ jobId }: { jobId: string }) {
   const image = showOriginal ? original : result;
   const resultRef=useResultObservation(jobId,!showOriginal&&!!result?.preview_url&&loadedSrc===result.preview_url&&!deleted);
   return <div className="container section">
-    <PageHeading title={job ? statusText[job.status] || '編集の状況' : '編集の状況'} description={content?.name_ja} backHref="/ja/history" backLabel="編集履歴へ" />
+    <PageHeading title="編集の状況" description={content?.name_ja} backHref="/ja/history" backLabel="編集履歴へ" />
     {!job && !error && <Loading label="編集の状況を確認しています…" />}
     {!!error && <ErrorNotice error={error} onRetry={retryNotBefore > Date.now() ? undefined : () => setPollVersion((value) => value + 1)} />}
+    {job && <JobProgress job={job} lastUpdated={lastUpdated} polling={polling} retryAt={retryNotBefore} onRefresh={() => setPollVersion(value => value + 1)} />}
     {job && <div className="editor-grid job-grid">
       <section className="editor-canvas stack" aria-label="写真のプレビュー">
         {job.status === 'completed' ? <>
           {!deleted&&<ResultFeedback job={jobId} completedAt={job.completed_at}/>}
           <div className="segmented" role="group" aria-label="写真を比較"><button className={!showOriginal ? 'active' : ''} aria-pressed={!showOriginal} onClick={() => setShowOriginal(false)}>仕上がり</button><button className={showOriginal ? 'active' : ''} aria-pressed={showOriginal} onClick={() => setShowOriginal(true)}>元の写真</button></div>
-          {image?.preview_url ? <figure className="editor-photo"><img ref={resultRef} onLoad={()=>setLoadedSrc(image.preview_url!)} src={image.preview_url} alt={showOriginal ? '編集に使用した元の写真' : '編集した仕上がりのプレビュー'} onError={() => setImageError(new UserFacingError('プレビューの有効期限が切れた可能性があります。画像を再読み込みしてください。'))} /><figcaption className="photo-caption">{showOriginal ? '元の写真' : '仕上がりのプレビュー'}</figcaption></figure> : <div className="empty-state panel"><h2>{deleted && !showOriginal ? '仕上がりの画像は削除されました' : 'プレビューを表示できません'}</h2><p>画像が期限切れ、削除済み、または読み込み中の可能性があります。編集履歴は残ります。</p>{!deleted && <button className="button button-secondary" onClick={refreshAssets}>画像を再読み込み</button>}</div>}
+          <PhotoPreview src={image?.preview_url} alt={showOriginal ? '編集に使用した元の写真' : '編集した仕上がりのプレビュー'} caption={showOriginal ? '元の写真' : '仕上がりのプレビュー'} loading={showOriginal ? originalLoading : resultLoading} error={showOriginal ? (originalError ? errorMessage(originalError) : null) : (resultError ? errorMessage(resultError) : null)} emptyLabel={deleted && !showOriginal ? '仕上がりの画像は削除されました。' : 'この画像は削除済み、または保存期限を過ぎています。'} imageRef={resultRef} onLoad={() => setLoadedSrc(image?.preview_url ?? '')} onRetry={deleted && !showOriginal ? undefined : refreshAssets} />
           {image?.preview_url && <ImageViewer src={image.preview_url} alt={showOriginal ? '元の写真' : '仕上がり'} />}<p className="small muted">プレビューは確認用の縮小画像です。保存するときは「画像を保存」を選んでください。</p>
-        </> : <div className="job-preview panel stack">
-          {original?.preview_url && <img src={original.preview_url} alt="編集に使用した写真" className="job-original-preview" />}
-          <div role="status" aria-live="polite"><h2>{statusText[job.status]}</h2><p>{job.status === 'queued' || job.status === 'processing' ? jobStageMessage(job.stage) : job.status === 'cancelled' ? 'この依頼の処理をキャンセルしました。クレジットの残高はアカウントで確認できます。' : '残高と編集内容を確認してから、もう一度お試しください。'}</p></div>
-          {(job.status === 'queued' || job.status === 'processing') && <div className="indeterminate" aria-hidden="true" />}
-        </div>}
-        {!!imageError && <ErrorNotice error={imageError} onRetry={refreshAssets} />}
+        </> : <PhotoPreview src={original?.preview_url} alt="編集に使用した写真" caption="編集に使用した元の写真" loading={originalLoading} error={originalError ? errorMessage(originalError) : null} onRetry={refreshAssets} />}
       </section>
       <aside className="editor-inspector surface stack">
         <div><p className="status-label">編集の詳細</p><h2>{content?.name_ja || '写真の編集'}</h2></div>
         <dl className="detail-list"><div><dt>状態</dt><dd>{statusText[job.status]}</dd></div><div><dt>受付日時</dt><dd>{new Intl.DateTimeFormat('ja-JP', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Tokyo' }).format(new Date(job.created_at))}</dd></div><div><dt>この依頼の予約クレジット</dt><dd>{job.credits_reserved}クレジット</dd></div></dl>
         <p className="small muted">予約数はこの編集の受付時の記録です。現在の利用可能残高は<Link href="/ja/account?tab=credits">アカウント</Link>で確認できます。</p>
-        {slow && !terminal.has(job.status) && <Notice>通常より時間がかかっています。新しく依頼し直さず、履歴からこの編集の状況をご確認ください。</Notice>}
         {(job.status === 'queued' || job.status === 'processing') && <Notice>この画面を閉じても依頼は取り消されません。仕上がりはこのページか編集履歴で確認できます。</Notice>}
         {job.status === 'queued' && <button className="button button-secondary" disabled={busy} onClick={() => setConfirm('cancel')}>この編集をキャンセル</button>}
         {job.status === 'processing' && <p className="small muted">処理が始まった編集はキャンセルできません。</p>}

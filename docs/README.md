@@ -47,3 +47,4 @@
 - [消除类退出一期](verification/TOOL_RETIREMENT_2026-10-21.md)：当前18活动方向、历史20 ID与幂等/积分兼容。
 - [效果展示与头像详情](design/EFFECT_DISCOVERY.md)：首页真实样例、图片式工具卡片、六风格详情、移动体验及私有素材排除边界；本地开发，未部署。
 - [个人页与支持导航](design/ACCOUNT_SUPPORT_NAVIGATION.md)：编辑历史归入マイページ，全站/手机增加サポート，保留退出和权限边界；本地实现待发布。
+- [统一图片预览与任务进度](design/IMAGE_PREVIEW_AND_PROGRESS.md)：上传/处理中/结果共用图片舞台，日文阶段与等待时间、加载/重试/停止反馈；本地预览，未上线。
