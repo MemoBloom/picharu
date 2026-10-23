@@ -63,7 +63,7 @@ beforeAll(async()=>{
 });
 afterAll(async()=>{await pg.close();});
 beforeEach(async()=>{
- vi.unstubAllEnvs();vi.stubEnv('GENERATION_ENABLED','true');vi.stubEnv('MODEL_PROFILES_JSON',JSON.stringify([profile]));vi.stubEnv('STRIPE_SECRET_KEY','sk_test_fixture');vi.stubEnv('STRIPE_WEBHOOK_SECRET','whsec_fixture');vi.stubEnv('APP_ORIGIN','https://picjp.example.invalid');
+ vi.unstubAllEnvs();vi.stubEnv('GENERATION_ENABLED','true');vi.stubEnv('GENERATION_TEST_USER_ID',uid);vi.stubEnv('MODEL_PROFILES_JSON',JSON.stringify([profile]));vi.stubEnv('STRIPE_SECRET_KEY','sk_test_fixture');vi.stubEnv('STRIPE_WEBHOOK_SECRET','whsec_fixture');vi.stubEnv('APP_ORIGIN','https://picjp.example.invalid');
  await pg.exec('truncate auth.users cascade; truncate credit_packages cascade; truncate rate_buckets;');await pg.query('insert into auth.users(id) values($1),($2)',[uid,other]);
  storage=new MemoryStorage();payments=new FakePayments();deps={db:new TestDatabase(),storage,payments,fetch:vi.fn(),now:()=>new Date()};route=createRouter(deps);
 });
@@ -122,12 +122,59 @@ describe('Vercel backend with real PostgreSQL semantics and isolated external po
  });
  it('conflicting replay is 409 and does not create a second task',async()=>{const image=await upload();await credits();await call('/api/edit','POST',edit(image.image_id));const res=await call('/api/edit','POST',edit(image.image_id,{user_instruction:'different'}));expect(res.status).toBe(409);expect((await res.json()).error.code).toBe('IDEMPOTENCY_CONFLICT');});
  it('enforces image ownership and sufficient credits in the real creation transaction',async()=>{const image=await upload();expect((await call('/api/edit','POST',edit(image.image_id))).status).toBe(402);await credits();const foreign=await upload('other');expect((await call('/api/edit','POST',edit(foreign.image_id))).status).toBe(404);expect((await pg.query('select * from edit_jobs')).rows).toHaveLength(0);});
- it('enforces multi-image minimum and stores ordered role/ownership relations',async()=>{const a=await upload();const b=await upload();await credits();expect((await call('/api/edit','POST',edit(a.image_id,{tool_id:'multi_photo_composite'}))).status).toBe(409);
- const res=await call('/api/edit','POST',edit(a.image_id,{tool_id:'multi_photo_composite',inputs:[{image_id:a.image_id,role:'primary'},{image_id:b.image_id,role:'subject_reference'}]}));expect(res.status).toBe(202);expect((await pg.query('select * from job_inputs order by position')).rows.map((r:any)=>r.image_id)).toEqual([a.image_id,b.image_id]);});
+ it('blocks multi-photo creation throughout the restricted first-test rollout',async()=>{
+ const a=await upload();const b=await upload();await credits();
+ for(const inputs of [[{image_id:a.image_id,role:'primary'}],[{image_id:a.image_id,role:'primary'},{image_id:b.image_id,role:'subject_reference'}]]){
+ expect((await call('/api/edit','POST',edit(a.image_id,{tool_id:'multi_photo_composite',inputs}))).status).toBe(503);
+ }
+ expect((await pg.query('select * from job_inputs')).rows).toHaveLength(0);
+ expect(await(await call('/api/credits')).json()).toMatchObject({available:20,reserved:0});
+ });
  it('rejects invented parameters, unknown prompts and unsupported output capabilities before charging',async()=>{const a=await upload();await credits();for(const extra of [{parameters:{secret_provider_flag:'yes'}},{prompt_id:'other_template'},{output:{quality:'high'}}])expect([400,409]).toContain((await call('/api/edit','POST',edit(a.image_id,extra))).status);expect(await(await call('/api/credits')).json()).toMatchObject({available:20,reserved:0});});
  it('cancels queued jobs exactly once and protects active input deletion',async()=>{const a=await upload();await credits();const j=await(await call('/api/edit','POST',edit(a.image_id))).json();expect((await call(`/api/images/${a.image_id}`,'DELETE')).status).toBe(409);expect((await call(`/api/jobs/${j.job_id}/cancel`,'POST')).status).toBe(200);expect((await call(`/api/jobs/${j.job_id}/cancel`,'POST')).status).toBe(200);expect(await(await call('/api/credits')).json()).toMatchObject({available:20,reserved:0});});
  it('blocks an expired asset and tombstones deletion before storage cleanup retries',async()=>{const a=await upload();storage.failDelete=true;const deletion=await(await call(`/api/images/${a.image_id}`,'DELETE')).json();expect(deletion.cleanup_pending).toBe(true);expect((await call(`/api/images/${a.image_id}`)).status).toBe(404);storage.failDelete=false;expect((await(await call(`/api/images/${a.image_id}`,'DELETE')).json()).cleanup_pending).toBe(false);});
  it('requires continuation primary input to equal the completed parent result',async()=>{const a=await upload();await credits();const j=await(await call('/api/edit','POST',edit(a.image_id))).json();const res=await call('/api/edit','POST',edit(a.image_id,{idempotency_key:'continuation_key001',parent_job_id:j.job_id}));expect(res.status).toBe(400);});
+ it.each(['', 'not-a-uuid', '*'])('denies new jobs with invalid test account config %s',async(value)=>{
+ vi.stubEnv('GENERATION_TEST_USER_ID',value);const image=await upload();await credits();
+ const res=await call('/api/edit','POST',edit(image.image_id));expect(res.status).toBe(503);
+ expect((await res.json()).error.code).toBe('GENERATION_DISABLED');
+ const tools=await(await call('/api/tools')).json();expect(tools.tools.every((t:Row)=>!t.available&&t.unavailable_reason==='GENERATION_DISABLED')).toBe(true);
+ expect((await pg.query('select * from edit_jobs')).rows).toHaveLength(0);
+ expect(await(await call('/api/credits')).json()).toMatchObject({available:20,reserved:0});
+ });
+ it('denies a missing test account even when generation is enabled',async()=>{
+ delete process.env.GENERATION_TEST_USER_ID;const image=await upload();await credits();
+ expect((await call('/api/edit','POST',edit(image.image_id))).status).toBe(503);
+ expect((await pg.query('select * from edit_jobs')).rows).toHaveLength(0);
+ });
+ it.each([false,true])('uses authenticated UUID and denies foreign accounts (console=%s)',async(consoleDevice)=>{
+ const image=await upload('other');await pg.query('update credit_accounts set available=20 where owner_id=$1',[other]);
+ const res=await route(new Request('http://localhost/api/edit',{method:'POST',headers:{Authorization:'Bearer other','Content-Type':'application/json',...(consoleDevice?{'X-Picjp-Device':'desktop'}:{})},body:JSON.stringify(edit(image.image_id))}));
+ expect(res.status).toBe(503);expect((await res.json()).error.code).toBe('GENERATION_DISABLED');
+ expect((await pg.query('select * from edit_jobs')).rows).toHaveLength(0);
+ expect((await pg.query("select * from credit_ledger where kind='reserve'")).rows).toHaveLength(0);
+ expect(await(await call('/api/credits','GET',undefined,'other')).json()).toMatchObject({available:20,reserved:0});
+ });
+ it('rejects browser-supplied identity overrides instead of trusting the test UUID',async()=>{
+ const image=await upload('other');
+ const res=await call('/api/edit','POST',{...edit(image.image_id),user_id:uid},'other');expect(res.status).toBe(400);
+ expect((await pg.query('select * from edit_jobs')).rows).toHaveLength(0);
+ });
+ it('denies another configured tool even to the test account without reserving credits',async()=>{
+ vi.stubEnv('MODEL_PROFILES_JSON',JSON.stringify([{...profile,verified_tool_ids:['illustration_photo','anime_photo']}]));
+ const image=await upload();await credits();const res=await call('/api/edit','POST',edit(image.image_id,{tool_id:'anime_photo'}));
+ expect(res.status).toBe(503);expect((await pg.query('select * from edit_jobs')).rows).toHaveLength(0);
+ expect(await(await call('/api/credits')).json()).toMatchObject({available:20,reserved:0});
+ const catalog=await(await call('/api/tools')).json();expect(catalog.tools.filter((t:Row)=>t.available).map((t:Row)=>t.tool_id)).toEqual(['illustration_photo']);
+ expect(JSON.stringify(catalog)).not.toContain(uid);
+ });
+ it('keeps historical replay readable after removing the test account without a second reservation',async()=>{
+ const image=await upload();await credits();const first=await(await call('/api/edit','POST',edit(image.image_id))).json();
+ delete process.env.GENERATION_TEST_USER_ID;vi.stubEnv('GENERATION_ENABLED','false');
+ const replay=await(await call('/api/edit','POST',edit(image.image_id))).json();expect(replay.job_id).toBe(first.job_id);expect(replay.replayed).toBe(true);
+ expect((await pg.query('select * from edit_jobs')).rows).toHaveLength(1);
+ expect(await(await call('/api/credits')).json()).toMatchObject({available:17,reserved:3});
+ });
  it('does not accept generation while the worker path is explicitly disabled',async()=>{vi.stubEnv('GENERATION_ENABLED','false');const a=await upload();await credits();expect((await call('/api/edit','POST',edit(a.image_id))).status).toBe(503);expect((await pg.query('select * from edit_jobs')).rows).toHaveLength(0);});
  it('limits requests persistently instead of relying on instance-local state',async()=>{for(let i=0;i<10;i++)expect((await call('/api/images/upload-url','POST',{mime_type:'image/png',bytes:4})).status).toBe(201);const res=await call('/api/images/upload-url','POST',{mime_type:'image/png',bytes:4});expect(res.status).toBe(429);expect(res.headers.get('Retry-After')).toBe('60');});
  it('paginates jobs with stable cursors and rejects malicious cursor syntax',async()=>{const a=await upload();await credits();await call('/api/edit','POST',edit(a.image_id));await call('/api/edit','POST',edit(a.image_id,{idempotency_key:'second_request_0001'}));const first=await(await call('/api/jobs?limit=1')).json();expect(first.items).toHaveLength(1);expect(first.next_cursor).toBeTruthy();const second=await(await call(`/api/jobs?limit=1&cursor=${encodeURIComponent(first.next_cursor)}`)).json();expect(second.items[0].job_id).not.toBe(first.items[0].job_id);expect((await call('/api/jobs?cursor=bad.or.owner_id.eq.foreign')).status).toBe(400);});
