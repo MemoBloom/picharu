@@ -175,6 +175,21 @@ describe('Vercel backend with real PostgreSQL semantics and isolated external po
  expect((await pg.query('select * from edit_jobs')).rows).toHaveLength(1);
  expect(await(await call('/api/credits')).json()).toMatchObject({available:17,reserved:3});
  });
+ it('wakes only the durable accepted job and retries wake on owner replay without another reservation',async()=>{
+ const wake=vi.fn(async()=>{});deps.wakeJob=wake;const image=await upload();await credits();
+ const first=await(await call('/api/edit','POST',edit(image.image_id))).json();expect(wake).toHaveBeenCalledWith(first.job_id);
+ wake.mockRejectedValueOnce(new Error('PRIVATE_TOKEN_DO_NOT_LOG'));
+ const replay=await(await call('/api/edit','POST',edit(image.image_id))).json();expect(replay.replayed).toBe(true);expect(wake).toHaveBeenCalledTimes(2);
+ expect((await pg.query('select * from edit_jobs')).rows).toHaveLength(1);expect(await(await call('/api/credits')).json()).toMatchObject({available:17,reserved:3});
+ vi.stubEnv('GENERATION_ENABLED','false');await call('/api/edit','POST',edit(image.image_id));expect(wake).toHaveBeenCalledTimes(2);
+ });
+ it('preserves a queued job and its reservation if enqueue fails; denied submissions never wake',async()=>{
+ const wake=vi.fn(async()=>{throw Error('PRIVATE_DISPATCH_FAILURE');});deps.wakeJob=wake;
+ const foreign=await upload('other');expect((await call('/api/edit','POST',edit(foreign.image_id),'other')).status).toBe(503);expect(wake).not.toHaveBeenCalled();
+ const image=await upload();await credits();expect((await call('/api/edit','POST',edit(image.image_id))).status).toBe(202);
+ expect(wake).toHaveBeenCalledTimes(1);expect((await pg.query('select status from edit_jobs')).rows).toEqual([{status:'queued'}]);
+ expect(await(await call('/api/credits')).json()).toMatchObject({available:17,reserved:3});
+ });
  it('does not accept generation while the worker path is explicitly disabled',async()=>{vi.stubEnv('GENERATION_ENABLED','false');const a=await upload();await credits();expect((await call('/api/edit','POST',edit(a.image_id))).status).toBe(503);expect((await pg.query('select * from edit_jobs')).rows).toHaveLength(0);});
  it('limits requests persistently instead of relying on instance-local state',async()=>{for(let i=0;i<10;i++)expect((await call('/api/images/upload-url','POST',{mime_type:'image/png',bytes:4})).status).toBe(201);const res=await call('/api/images/upload-url','POST',{mime_type:'image/png',bytes:4});expect(res.status).toBe(429);expect(res.headers.get('Retry-After')).toBe('60');});
  it('paginates jobs with stable cursors and rejects malicious cursor syntax',async()=>{const a=await upload();await credits();await call('/api/edit','POST',edit(a.image_id));await call('/api/edit','POST',edit(a.image_id,{idempotency_key:'second_request_0001'}));const first=await(await call('/api/jobs?limit=1')).json();expect(first.items).toHaveLength(1);expect(first.next_cursor).toBeTruthy();const second=await(await call(`/api/jobs?limit=1&cursor=${encodeURIComponent(first.next_cursor)}`)).json();expect(second.items[0].job_id).not.toBe(first.items[0].job_id);expect((await call('/api/jobs?cursor=bad.or.owner_id.eq.foreign')).status).toBe(400);});

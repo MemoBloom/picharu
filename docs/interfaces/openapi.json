@@ -31138,6 +31138,185 @@
         }
       }
     },
+    "/internal/v1/run-job": {
+      "post": {
+        "operationId": "workerRunJob",
+        "tags": [
+          "Worker (local implementation)"
+        ],
+        "servers": [
+          {
+            "url": "https://worker.example.invalid",
+            "description": "Undeployed placeholder; Worker implementation is maintained in its separate repository."
+          }
+        ],
+        "summary": "PREPARED — durable Cloud Tasks target for one job",
+        "description": "Opt-in WORKER_AUTORUN_ENABLED endpoint. Advances up to five ready stages for the same job inside a bounded request. Returns 200 only for terminal or missing work; nonterminal/backpressure/future/leased work returns retryable 503 with Retry-After. Duplicate delivery never permits provider resubmission. Does not run global asset cleanup. Requires private worker_job_progress RPC migration before enablement.",
+        "security": [
+          {
+            "GoogleOidc": []
+          }
+        ],
+        "x-implementation-status": "design-only",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkerTrigger"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkerAck"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST, QUERY_TOO_LARGE or INVALID_PROMPT; webhook signature failures also return 400.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Cloud Run platform rejected a missing/invalid Google OIDC ID token before application handling. Platform response body is not the application ErrorEnvelope."
+          },
+          "403": {
+            "description": "Cloud Run IAM denied invocation for this identity or audience. Platform response body is not the application ErrorEnvelope."
+          },
+          "404": {
+            "description": "NOT_FOUND, including resources owned by another user.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "GENERATION_DISABLED or SERVICE_UNAVAILABLE.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Trace UUID.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "X-Contract-Version": {
+                "description": "Protocol version.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "1.0.0"
+                  ]
+                }
+              },
+              "Cache-Control": {
+                "description": "Private responses are not cached.",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "operationId": "internalHealthDesign",

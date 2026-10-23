@@ -10,7 +10,8 @@
     "deploymentEnabled": {
       "fix/generation-test-allowlist": false,
       "main": false,
-      "fix/image-preview-task-progress": false
+      "fix/image-preview-task-progress": false,
+      "feat/automatic-worker-processing": false
     }
   }
 }
