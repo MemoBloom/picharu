@@ -27,6 +27,8 @@ verify检查OpenAPI一致、类型、业务/契约/媒体测试、PGlite数据�
 
 首次真实生成另受服务端测试账号UUID与固定工具限制，缺少白名单默认拒绝新任务，配置及边界见 [测试账号访问限制](docs/backend/GENERATION_TEST_ACCESS.md)。
 
+自动唤醒与连续处理的待部署实现、计时及云配置前置见 [自动任务处理](docs/backend/AUTOMATIC_WORKER_PROCESSING.md)。
+
 ## 接口与实施说明
 
 - [文档导航](docs/README.md)

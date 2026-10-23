@@ -139,3 +139,5 @@ SEO管理员鉴权、草稿可选观察计划、固定基线与不可变复盘�
 ## 双看板加法契约
 
 Console与Analytics字段见packages/contracts/src/{console,analytics}.ts，契约包1.2.0；HTTP和Worker执行协议仍1.0.0，Worker现有固定消费版本不因看板自动升级。管理员快照/分页/CSV及退款事实细则见[ADMIN_ANALYTICS](../backend/ADMIN_ANALYTICS.md)。新增QUERY_TOO_LARGE为有界查询错误；数据缺失/未成熟通过指标状态表达，不返回虚构零。
+
+自动唤醒待部署增量：Cloud Tasks OIDC调用Worker新增/internal/v1/run-job，复用WorkerTrigger与WorkerAck；仅终态/不存在返回200，非终态返回503重试，默认不开放。Web只在持久入队后创建确定名称任务，白名单/单工具限制不变。私有worker_job_progress只读RPC由202610230100迁移提供，公开JobView不变。细节见[自动处理](../backend/AUTOMATIC_WORKER_PROCESSING.md)。

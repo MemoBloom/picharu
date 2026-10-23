@@ -26,6 +26,13 @@ export function analyticsToolCatalog(){
  const available=new Set(publicTools().filter(tool=>tool.available).map(tool=>tool.tool_id));
  return tools.map(tool=>({tool_id:tool.tool_id,name:tool.name_zh,category:tool.category,available:available.has(tool.tool_id)}));
 }
+// Enqueue only durable job IDs. A failed wake never rolls back an already-reserved job.
+async function wakeJob(deps:Dependencies,jobId:string,requestId:string){
+ if(!deps.wakeJob)return;
+ const start=Date.now();let outcome='passed';
+ try{if(await deps.wakeJob(jobId)==='disabled')outcome='disabled';}catch{outcome='failed';}
+ try{console.info(JSON.stringify({event:'worker_dispatch',request_id:requestId,job_id:jobId,outcome,duration_ms:Date.now()-start}));}catch{}
+}
 async function imageFor(deps:Dependencies,userId:string,id:string,allowDeleted=false){const row=await deps.db.one('images',{id,owner_id:userId});if(!row||(!allowDeleted&&row.status==='deleted')||new Date(row.expires_at).getTime()<=deps.now().getTime())throw new ApiError('NOT_FOUND',404);return row;}
 async function imageView(deps:Dependencies,row:Row){return {image_id:row.id,status:row.status,mime_type:row.mime_type??row.declared_mime,bytes:row.bytes??row.declared_bytes,width:row.width??null,height:row.height??null,preview_url:row.status==='ready'?await deps.storage.signGet(row.preview_key):null,expires_at:row.expires_at};}
 async function rate(deps:Dependencies,userId:string,scope:string,limit:number){if(!await deps.db.rpc<boolean>('app_consume_rate_limit',{p_key:`${scope}:${userId}`,p_limit:limit,p_window_seconds:60}))throw new ApiError('RATE_LIMITED',429,true,60);}
@@ -113,7 +120,7 @@ export function createRouter(deps:Dependencies){return async(request:Request):Pr
  if(path==='/api/edit'&&method==='POST'){
  const deviceHeader=request.headers.get('X-Picjp-Device');if(deviceHeader!==null)ConsoleDevice.parse(deviceHeader);
  await rate(deps,user.id,'edit',10);const body=await json(request,EditRequest);body.parameters=validateToolParameters(body.tool_id,body.parameters);const hash=requestHash(body);
- const previous=await deps.db.findJob(user.id,body.idempotency_key);if(previous){if(previous.request_hash!==hash)throw new ApiError('IDEMPOTENCY_CONFLICT',409);return response({job_id:previous.id,status:previous.status,credits_reserved:previous.credits_reserved,replayed:true},id,202);}
+ const previous=await deps.db.findJob(user.id,body.idempotency_key);if(previous){if(previous.request_hash!==hash)throw new ApiError('IDEMPOTENCY_CONFLICT',409);if(['queued','processing'].includes(previous.status)&&generationTestAllowed(user.id,body.tool_id))await wakeJob(deps,previous.id,id);return response({job_id:previous.id,status:previous.status,credits_reserved:previous.credits_reserved,replayed:true},id,202);}
  if(isRetiredTool(body.tool_id))throw new ApiError('UNSUPPORTED_CAPABILITY',409);
  if(!generationTestAllowed(user.id,body.tool_id))throw new ApiError('GENERATION_DISABLED',503);
  const tool=getTool(body.tool_id);const profile=profileForTool(body.tool_id,models());
@@ -121,6 +128,7 @@ export function createRouter(deps:Dependencies){return async(request:Request):Pr
  for(const input of body.inputs){const image=await imageFor(deps,user.id,input.image_id);if(image.status!=='ready')throw new ApiError('IMAGE_NOT_READY',409);}
  let snap;try{snap=snapshot(body,profile);}catch{throw new ApiError('INVALID_PROMPT');}
  const result=await deps.db.rpc(deviceHeader===null?'app_create_job':'app_console_create_job',{...(deviceHeader===null?{}:{p_device:deviceHeader}),p_user_id:user.id,p_idempotency_key:body.idempotency_key,p_request_hash:hash,p_inputs:body.inputs,p_snapshot:snap,p_reserved_credits:body.output.quality==='high'?profile.credits_high:profile.credits_standard,p_parent_job_id:body.parent_job_id??null});
+ await wakeJob(deps,result.job_id,id);
  return response(result,id,202);
  }
  if((path==='/api/jobs'||path==='/api/orders')&&method==='GET'){

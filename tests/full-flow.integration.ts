@@ -152,7 +152,7 @@ function newWorker() {
   child.on('error', rejectPending);
   child.on('exit', () => rejectPending(new Error('Offline Worker exited')));
   stopWorker = () => { child.kill(); };
-  return { drain(limit: number, jobId: string) {
+  return { drain(limit: number, jobId: string, automatic = false) {
     return new Promise<any>((resolve, reject) => {
       const id = `drain-${++sequence}`;
       const timeout = setTimeout(() => { pending.delete(id); child.kill(); reject(new Error('Offline drain exceeded 15 seconds')); }, 15000);
@@ -160,13 +160,13 @@ function newWorker() {
         resolve: value => { clearTimeout(timeout); resolve(value); },
         reject: error => { clearTimeout(timeout); reject(error); },
       });
-      child.send({ id, op: 'drain', limit, jobId });
+      child.send({ id, op: automatic ? 'run-job' : 'drain', limit, jobId });
     });
   } };
 }
 let worker = newWorker();
 const payments = new Proxy({}, { get() { throw new Error('Payments must not be used by this suite'); } }) as Payments;
-const route = createRouter({ db, storage, payments, fetch: globalThis.fetch, now: () => new Date() });
+let route = createRouter({ db, storage, payments, fetch: globalThis.fetch, now: () => new Date() });
 async function request(path: string, method = 'GET', body?: unknown, token = 'owner') {
   return route(new Request(`http://localhost${path}`, { method, headers: {
     Authorization: `Bearer ${token}`, ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
@@ -182,6 +182,7 @@ async function reset() {
   await pg.exec("insert into provider_budgets(provider,model_id,adapter_version,currency,limit_minor,estimate_minor,max_inflight,enabled) values('yomi','gpt-image-2.5','yomi-sync-v1','USD',100,10,1,true)");
   objects.clear(); posts = 0; fault = 'none'; providerMode = 'ok'; worker = newWorker(); observedStages.clear();
   process.env.GENERATION_ENABLED = 'true';
+  route = createRouter({ db, storage, payments, fetch: globalThis.fetch, now: () => new Date() });
 }
 async function upload() {
   const bytes = await sharp({ create: { width: 48, height: 48, channels: 3, background: '#dd4433' } }).jpeg().toBuffer();
@@ -215,6 +216,21 @@ async function finish(id: string) {
 }
 async function count(table: string, where: string) { return Number((await pg.query<{ n: number }>(`select count(*) as n from ${table} where ${where}`)).rows[0].n); }
 const cases: Array<[string, () => Promise<void>]> = [
+  ['one edit submission → durable wake → automatic Worker stages → completed preview/download; duplicate delivery is safe', async () => {
+    const queued = new Set<string>();
+    route = createRouter({ db, storage, payments, fetch: globalThis.fetch, now: () => new Date(), wakeJob: async id => { queued.add(id); } });
+    const {accepted, body} = await create(); assert.deepEqual([...queued], [accepted.job_id]);
+    assert.equal((await view(accepted.job_id)).status, 'queued');
+    const execution = await worker.drain(5, accepted.job_id, true); assert.equal(execution.complete, true);assert.equal(execution.ack.processed, 3);
+    const completed = await view(accepted.job_id);assert.equal(completed.status, 'completed');await credits(17,0);
+    const image = ImageView.parse(await json(`/api/images/${completed.result_image_id}`));
+    assert.equal((await sharp(objects.get(new URL(image.preview_url!).pathname.slice(1))!.bytes).metadata()).format, 'jpeg');
+    const link = DownloadResponse.parse(await json(`/api/images/${image.image_id}/download`));
+    assert.equal((await sharp(objects.get(new URL(link.download_url).pathname.slice(1))!.bytes).metadata()).format, 'png');
+    assert.equal((await json('/api/edit','POST',body,202)).replayed,true);
+    assert.equal((await worker.drain(5,accepted.job_id,true)).complete,true);
+    assert.equal(posts,1);assert.equal(await count('credit_ledger', "kind='consume'"),1);
+  }],
   ['upload → frozen prompt → sync Worker → R2 → atomic credits → preview/download/continuation', async () => {
     const { accepted, body } = await create(); const id = accepted.job_id;
     assert.equal((await view(id)).status, 'queued'); await credits(17, 3);
@@ -335,6 +351,7 @@ try {
   await pg.exec("create schema auth;create table auth.users(id uuid primary key);create role anon;create role authenticated;create role service_role bypassrls;grant usage on schema public,auth to anon,authenticated,service_role;create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;");
   await pg.exec(await readFile('supabase/migrations/202610190001_web_backend.sql', 'utf8'));
   await pg.exec(await readFile('supabase/migrations/202610200400_worker.sql', 'utf8'));
+  await pg.exec(await readFile('supabase/migrations/202610230100_worker_progress.sql', 'utf8'));
   for (const [name, run] of cases) { await reset(); await run(); console.log(`PASS ${name}`); }
   console.log(`Offline full flow: ${cases.length} scenarios passed; real network calls: 0; paid model calls: 0.`);
 } finally { stopWorker?.(); await pg.close(); }

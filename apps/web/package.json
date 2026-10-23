@@ -16,6 +16,8 @@
     "@picjp/prompts": "*",
     "@picjp/tool-config": "*",
     "@supabase/supabase-js": "^2.58.0",
+    "@vercel/oidc": "^4.0.3",
+    "google-auth-library": "^10.9.1",
     "next": "^16.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
